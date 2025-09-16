@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Fragrance Calculator - Philip Riachy, PhD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B5A96, #C06C84);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .signature {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            color: #8B5A96;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8B5A96;
+            box-shadow: 0 0 0 3px rgba(139, 90, 150, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8B5A96, #C06C84);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 3px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 90, 150, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #ff6b6b);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #8B5A96;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .data-table tr.selected {
+            background: #f3e8f8;
+        }
+
+        .result-display {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin: 15px 0;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .result-display.error {
+            background: linear-gradient(135deg, #f44336, #ff6b6b);
+        }
+
+        .note-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .note-badge {
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .note-badge.top { background: #e8f5e8; color: #2e7d32; }
+        .note-badge.middle { background: #fff3e0; color: #f57c00; }
+        .note-badge.base { background: #e3f2fd; color: #1565c0; }
+
+        .note-badge.selected {
+            border-color: #8B5A96;
+            transform: scale(1.05);
+        }
+
+        .fragrance-analysis {
+            background: #f8e8ff;
+            border: 2px solid #8B5A96;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .fragrance-analysis h4 {
+            color: #663366;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .blend-visualization {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .blend-layer {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+        }
+
+        .blend-layer.top { background: #e8f5e8; border-color: #4caf50; }
+        .blend-layer.middle { background: #fff3e0; border-color: #ff9800; }
+        .blend-layer.base { background: #e3f2fd; border-color: #2196f3; }
+
+        .concentration-guide {
+            background: #fff9e6;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+
+        .dilution-calculator {
+            background: #f0f8ff;
+            border: 2px solid #4a90e2;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .recipe-section {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .recipe-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .recipe-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .note-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="signature">Philip Riachy, PhD</div>
+            <h1>Professional Fragrance Calculator</h1>
+            <p class="subtitle">Scientific Essential Oil Blending & Perfume Formulation Tool</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Essential Oil Selection -->
+            <div class="section">
+                <h3>🌸 Essential Oil Selection</h3>
+                
+                <div class="form-group">
+                    <label>Fragrance Note Category</label>
+                    <div class="note-categories">
+                        <div class="note-badge top" onclick="selectNoteCategory('top')">Top Notes</div>
+                        <div class="note-badge middle" onclick="selectNoteCategory('middle')">Middle Notes</div>
+                        <div class="note-badge base" onclick="selectNoteCategory('base')">Base Notes</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Essential Oil</label>
+                    <select id="fragrance-select" class="form-control">
+                        <option value="">Choose an essential oil...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Drops</label>
+                    <input type="number" id="fragrance-drops" class="form-control" step="0.5" min="0">
+                </div>
+                
+                <div>
+                    <button class="btn" onclick="addFragranceToBlend()">Add to Blend</button>
+                    <button class="btn btn-danger" onclick="removeSelectedFragrance()">Remove</button>
+                </div>
+
+                <table class="data-table" id="fragrance-table">
+                    <thead>
+                        <tr>
+                            <th>Essential Oil</th>
+                            <th>Note</th>
+                            <th>Drops</th>
+                            <th>%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="blend-visualization" id="blend-visualization" style="display: none;">
+                    <div class="blend-layer top">
+                        <div><strong>Top Notes</strong></div>
+                        <div id="top-percentage">0%</div>
+                        <div style="font-size: 0.75rem;">First impression, 15-30 min</div>
+                    </div>
+                    <div class="blend-layer middle">
+                        <div><strong>Middle Notes</strong></div>
+                        <div id="middle-percentage">0%</div>
+                        <div style="font-size: 0.75rem;">Heart, 2-4 hours</div>
+                    </div>
+                    <div class="blend-layer base">
+                        <div><strong>Base Notes</strong></div>
+                        <div id="base-percentage">0%</div>
+                        <div style="font-size: 0.75rem;">Foundation, 6+ hours</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="analyzeBlend()">Analyze Blend</button>
+                <div id="blend-result" class="result-display"></div>
+            </div>
+
+            <!-- Concentration Calculator -->
+            <div class="section">
+                <h3>🧪 Concentration Calculator</h3>
+                
+                <div class="concentration-guide">
+                    <h4>Standard Concentrations</h4>
+                    <div style="font-size: 0.8rem;">
+                        <strong>Parfum:</strong> 15-40% fragrance oil<br>
+                        <strong>Eau de Parfum:</strong> 8-15% fragrance oil<br>
+                        <strong>Eau de Toilette:</strong> 4-8% fragrance oil<br>
+                        <strong>Eau de Cologne:</strong> 2-5% fragrance oil<br>
+                        <strong>Body Spray:</strong> 1-3% fragrance oil
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Product Type</label>
+                    <select id="product-type" class="form-control" onchange="updateConcentrationRange()">
+                        <option value="parfum">Parfum (15-40%)</option>
+                        <option value="edp">Eau de Parfum (8-15%)</option>
+                        <option value="edt">Eau de Toilette (4-8%)</option>
+                        <option value="edc">Eau de Cologne (2-5%)</option>
+                        <option value="body">Body Spray (1-3%)</option>
+                        <option value="custom">Custom Concentration</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Desired Concentration (%)</label>
+                    <input type="number" id="target-concentration" class="form-control" step="0.1" min="0" max="50" value="10">
+                </div>
+                
+                <div class="form-group">
+                    <label>Total Volume (ml)</label>
+                    <input type="number" id="total-volume" class="form-control" step="0.1" min="0" value="50">
+                </div>
+
+                <button class="btn btn-success" onclick="calculateDilution()">Calculate Dilution</button>
+                <div id="dilution-result" class="result-display"></div>
+
+                <div class="dilution-calculator" id="dilution-breakdown" style="display: none;">
+                    <h4>Dilution Breakdown</h4>
+                    <div id="dilution-details"></div>
+                </div>
+            </div>
+
+            <!-- Scientific Analysis -->
+            <div class="section">
+                <h3>🔬 Olfactory Science</h3>
+                
+                <div class="fragrance-analysis" id="fragrance-science" style="display: none;">
+                    <h4>Molecular Analysis</h4>
+                    <div id="molecular-analysis"></div>
+                    
+                    <h4>Volatility Assessment</h4>
+                    <div id="volatility-analysis"></div>
+                    
+                    <h4>Harmony Evaluation</h4>
+                    <div id="harmony-analysis"></div>
+                    
+                    <h4>Longevity Prediction</h4>
+                    <div id="longevity-analysis"></div>
+                </div>
+
+                <div id="professional-recommendations" class="fragrance-analysis" style="display: none;">
+                    <h4>🎯 Professional Recommendations</h4>
+                    <div id="recommendations-content"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Skin Type Consideration</label>
+                    <select id="skin-type" class="form-control">
+                        <option value="normal">Normal Skin</option>
+                        <option value="dry">Dry Skin</option>
+                        <option value="oily">Oily Skin</option>
+                        <option value="sensitive">Sensitive Skin</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Climate Consideration</label>
+                    <select id="climate" class="form-control">
+                        <option value="temperate">Temperate Climate</option>
+                        <option value="humid">Humid/Tropical</option>
+                        <option value="dry">Dry/Desert</option>
+                        <option value="cold">Cold Climate</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success" onclick="performScientificAnalysis()">Analyze Olfactory Profile</button>
+            </div>
+
+            <!-- Fragrance Safety -->
+            <div class="section">
+                <h3>⚠️ Safety & Regulations</h3>
+                
+                <div class="form-group">
+                    <label>Product Category</label>
+                    <select id="product-category" class="form-control" onchange="updateSafetyGuidelines()">
+                        <option value="perfume">Fine Fragrance</option>
+                        <option value="cosmetic">Cosmetic Product</option>
+                        <option value="soap">Soap/Wash-off Product</option>
+                        <option value="candle">Candle/Diffuser</option>
+                        <option value="massage">Massage Oil</option>
+                    </select>
+                </div>
+
+                <div id="safety-guidelines" class="fragrance-analysis">
+                    <h4>IFRA Safety Guidelines</h4>
+                    <div id="safety-content">
+                        Select a product category to view specific IFRA guidelines and maximum usage rates.
+                    </div>
+                </div>
+
+                <div id="allergen-assessment" class="fragrance-analysis" style="display: none;">
+                    <h4>Allergen Declaration (EU Requirements)</h4>
+                    <div id="allergen-content"></div>
+                </div>
+
+                <button class="btn btn-success" onclick="assessSafety()">Assess Safety Profile</button>
+                <div id="safety-result" class="result-display"></div>
+            </div>
+        </div>
+
+        <!-- Recipe Generation -->
+        <div class="recipe-section">
+            <h3>📋 Professional Fragrance Formula</h3>
+            
+            <div class="recipe-form">
+                <div>
+                    <div class="form-group">
+                        <label>Formula Name</label>
+                        <input type="text" id="formula-name" class="form-control" placeholder="Elegant Floral Blend">
+                    </div>
+                    <div class="form-group">
+                        <label>Batch Size (ml)</label>
+                        <input type="number" id="batch-size" class="form-control" value="50" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Creator</label>
+                        <input type="text" id="creator-name" class="form-control" placeholder="Perfumer Name">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>Formula ID</label>
+                        <input type="text" id="formula-id" class="form-control" placeholder="FR001">
+                    </div>
+                    <div class="form-group">
+                        <label>Version</label>
+                        <input type="text" id="formula-version" class="form-control" placeholder="v1.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Market</label>
+                        <select id="target-market" class="form-control">
+                            <option value="luxury">Luxury/Niche</option>
+                            <option value="mainstream">Mainstream</option>
+                            <option value="natural">Natural/Organic</option>
+                            <option value="therapeutic">Therapeutic</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>Olfactory Description</label>
+                        <textarea id="olfactory-description" class="form-control" rows="3" placeholder="A sophisticated blend opening with bright citrus notes, developing into a heart of elegant florals..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Technical Notes</label>
+                        <textarea id="technical-notes" class="form-control" rows="3" placeholder="Molecular interactions, stability considerations, manufacturing notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-buttons">
+                <button class="btn btn-success" onclick="generateFragranceFormula()">Generate Formula</button>
+                <button class="btn" onclick="exportFragrancePDF()">Export PDF</button>
+                <button class="btn" onclick="saveFragranceFormula()">Save JSON</button>
+                <button class="btn" onclick="loadFragranceFormula()">Load JSON</button>
+                <button class="btn btn-danger" onclick="clearAllFragranceData()">New Formula</button>
+            </div>
+
+            <div id="fragrance-formula-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Professional Essential Oils Database with Scientific Properties
+        const ESSENTIAL_OILS_DATABASE = {
+            // Top Notes (High Volatility, 15-30 minutes longevity)
+            "Lemon (Citrus limon)": { 
+                category: "top", volatility: "very_high", longevity: 20, 
+                molecular_weight: 136, vapor_pressure: 190,
+                allergens: ["Limonene", "Citral"], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["antimicrobial", "mood_lifting"], 
+                character: "Fresh, bright, zesty, cleansing"
+            },
+            "Orange (Citrus sinensis)": { 
+                category: "top", volatility: "very_high", longevity: 25,
+                molecular_weight: 136, vapor_pressure: 190,
+                allergens: ["Limonene"], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["mood_lifting", "stress_relief"], 
+                character: "Sweet, warm, cheerful, uplifting"
+            },
+            "Bergamot (Citrus bergamia)": { 
+                category: "top", volatility: "very_high", longevity: 30,
+                molecular_weight: 154, vapor_pressure: 170,
+                allergens: ["Limonene", "Linalyl acetate"], max_usage: { perfume: 10, cosmetic: 1 },
+                therapeutic: ["antidepressant", "stress_relief"], 
+                character: "Fresh, complex, Earl Grey tea-like"
+            },
+            "Grapefruit (Citrus paradisi)": { 
+                category: "top", volatility: "very_high", longevity: 22,
+                molecular_weight: 136, vapor_pressure: 185,
+                allergens: ["Limonene"], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["energizing", "detoxifying"], 
+                character: "Tangy, bitter-sweet, energizing"
+            },
+            "Eucalyptus (Eucalyptus globulus)": { 
+                category: "top", volatility: "high", longevity: 45,
+                molecular_weight: 154, vapor_pressure: 240,
+                allergens: [], max_usage: { perfume: 5, cosmetic: 1 },
+                therapeutic: ["decongestant", "antimicrobial"], 
+                character: "Cool, medicinal, penetrating, clearing"
+            },
+            "Peppermint (Mentha piperita)": { 
+                category: "top", volatility: "high", longevity: 35,
+                molecular_weight: 156, vapor_pressure: 220,
+                allergens: [], max_usage: { perfume: 5, cosmetic: 0.5 },
+                therapeutic: ["cooling", "energizing"], 
+                character: "Cool, sharp, invigorating, medicinal"
+            },
+            "Basil (Ocimum basilicum)": { 
+                category: "top", volatility: "high", longevity: 40,
+                molecular_weight: 152, vapor_pressure: 200,
+                allergens: ["Linalool"], max_usage: { perfume: 8, cosmetic: 1 },
+                therapeutic: ["mental_clarity", "stress_relief"], 
+                character: "Green, herbaceous, slightly spicy"
+            },
+
+            // Middle Notes (Medium Volatility, 2-4 hours longevity)
+            "Lavender (Lavandula angustifolia)": { 
+                category: "middle", volatility: "medium", longevity: 180,
+                molecular_weight: 154, vapor_pressure: 120,
+                allergens: ["Linalool", "Linalyl acetate"], max_usage: { perfume: 25, cosmetic: 4 },
+                therapeutic: ["calming", "antiseptic"], 
+                character: "Floral, clean, soothing, herbal"
+            },
+            "Rose (Rosa damascena)": { 
+                category: "middle", volatility: "medium", longevity: 240,
+                molecular_weight: 154, vapor_pressure: 85,
+                allergens: ["Citronellol", "Geraniol"], max_usage: { perfume: 30, cosmetic: 5 },
+                therapeutic: ["aphrodisiac", "mood_balancing"], 
+                character: "Rich, romantic, luxurious, complex"
+            },
+            "Geranium (Pelargonium graveolens)": { 
+                category: "middle", volatility: "medium", longevity: 200,
+                molecular_weight: 154, vapor_pressure: 100,
+                allergens: ["Citronellol", "Geraniol"], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["hormone_balancing", "skin_care"], 
+                character: "Rosy, green, balancing, fresh"
+            },
+            "Ylang Ylang (Cananga odorata)": { 
+                category: "middle", volatility: "medium", longevity: 300,
+                molecular_weight: 204, vapor_pressure: 65,
+                allergens: ["Benzyl benzoate", "Linalool"], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["aphrodisiac", "relaxing"], 
+                character: "Exotic, sweet, heady, tropical"
+            },
+            "Jasmine (Jasminum grandiflorum)": { 
+                category: "middle", volatility: "medium", longevity: 360,
+                molecular_weight: 218, vapor_pressure: 45,
+                allergens: ["Benzyl acetate", "Linalool"], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["aphrodisiac", "confidence_boosting"], 
+                character: "Intoxicating, rich, narcotic, sensual"
+            },
+            "Rosemary (Rosmarinus officinalis)": { 
+                category: "middle", volatility: "medium", longevity: 150,
+                molecular_weight: 154, vapor_pressure: 130,
+                allergens: [], max_usage: { perfume: 10, cosmetic: 2 },
+                therapeutic: ["memory_enhancement", "circulation"], 
+                character: "Herbaceous, camphoraceous, stimulating"
+            },
+            "Clary Sage (Salvia sclarea)": { 
+                category: "middle", volatility: "medium", longevity: 220,
+                molecular_weight: 204, vapor_pressure: 90,
+                allergens: ["Linalyl acetate"], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["hormone_balancing", "euphoric"], 
+                character: "Sweet, herbaceous, wine-like, relaxing"
+            },
+
+            // Base Notes (Low Volatility, 6+ hours longevity)
+            "Sandalwood (Santalum album)": { 
+                category: "base", volatility: "low", longevity: 480,
+                molecular_weight: 220, vapor_pressure: 15,
+                allergens: [], max_usage: { perfume: 40, cosmetic: 8 },
+                therapeutic: ["meditative", "skin_care"], 
+                character: "Creamy, woody, smooth, meditative"
+            },
+            "Patchouli (Pogostemon cablin)": { 
+                category: "base", volatility: "low", longevity: 600,
+                molecular_weight: 222, vapor_pressure: 8,
+                allergens: [], max_usage: { perfume: 30, cosmetic: 5 },
+                therapeutic: ["grounding", "aphrodisiac"], 
+                character: "Earthy, rich, musky, exotic"
+            },
+            "Vetiver (Chrysopogon zizanioides)": { 
+                category: "base", volatility: "low", longevity: 540,
+                molecular_weight: 218, vapor_pressure: 12,
+                allergens: [], max_usage: { perfume: 35, cosmetic: 6 },
+                therapeutic: ["grounding", "cooling"], 
+                character: "Smoky, earthy, sophisticated, masculine"
+            },
+            "Cedarwood (Cedrus atlantica)": { 
+                category: "base", volatility: "low", longevity: 420,
+                molecular_weight: 204, vapor_pressure: 20,
+                allergens: [], max_usage: { perfume: 25, cosmetic: 4 },
+                therapeutic: ["calming", "insect_repelling"], 
+                character: "Woody, dry, pencil-shaving, grounding"
+            },
+            "Frankincense (Boswellia carterii)": { 
+                category: "base", volatility: "low", longevity: 450,
+                molecular_weight: 204, vapor_pressure: 18,
+                allergens: [], max_usage: { perfume: 30, cosmetic: 5 },
+                therapeutic: ["spiritual", "anti-aging"], 
+                character: "Resinous, sacred, warm, meditative"
+            },
+            "Vanilla (Vanilla planifolia)": { 
+                category: "base", volatility: "very_low", longevity: 720,
+                molecular_weight: 152, vapor_pressure: 5,
+                allergens: [], max_usage: { perfume: 35, cosmetic: 6 },
+                therapeutic: ["comforting", "aphrodisiac"], 
+                character: "Sweet, warm, gourmand, comforting"
+            },
+            "Benzoin (Styrax benzoin)": { 
+                category: "base", volatility: "very_low", longevity: 600,
+                molecular_weight: 212, vapor_pressure: 3,
+                allergens: ["Benzyl benzoate"], max_usage: { perfume: 25, cosmetic: 4 },
+                therapeutic: ["warming", "antiseptic"], 
+                character: "Vanilla-like, warm, balsamic, sweet"
+            }
+        };
+
+        // Application State
+        let currentFragranceBlend = {
+            essentialOils: [],
+            selectedCategory: null,
+            analysis: null
+        };
+
+        // Initialize Application
+        function initializeFragranceApp() {
+            console.log('Initializing Professional Fragrance Calculator...');
+            populateFragranceDropdown();
+            setupFragranceEventListeners();
+            updateSafetyGuidelines();
+            console.log('Fragrance Calculator ready!');
+        }
+
+        function populateFragranceDropdown() {
+            const fragranceSelect = document.getElementById('fragrance-select');
+            Object.keys(ESSENTIAL_OILS_DATABASE).sort().forEach(oil => {
+                const option = document.createElement('option');
+                option.value = oil;
+                option.textContent = oil;
+                fragranceSelect.appendChild(option);
+            });
+        }
+
+        function setupFragranceEventListeners() {
+            document.getElementById('fragrance-drops').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addFragranceToBlend();
+            });
+
+            document.getElementById('target-concentration').addEventListener('input', calculateDilution);
+            document.getElementById('total-volume').addEventListener('input', calculateDilution);
+        }
+
+        function selectNoteCategory(category) {
+            document.querySelectorAll('.note-badge').forEach(badge => badge.classList.remove('selected'));
+            document.querySelector(`.note-badge.${category}`).classList.add('selected');
+            
+            currentFragranceBlend.selectedCategory = category;
+            filterFragrancesByCategory(category);
+        }
+
+        function filterFragrancesByCategory(category) {
+            const fragranceSelect = document.getElementById('fragrance-select');
+            fragranceSelect.innerHTML = '<option value="">Choose an essential oil...</option>';
+            
+            Object.entries(ESSENTIAL_OILS_DATABASE).forEach(([name, data]) => {
+                if (data.category === category) {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    fragranceSelect.appendChild(option);
+                }
+            });
+        }
+
+        function addFragranceToBlend() {
+            const fragranceSelect = document.getElementById('fragrance-select');
+            const dropsInput = document.getElementById('fragrance-drops');
+
+            const oilName = fragranceSelect.value;
+            const drops = parseFloat(dropsInput.value);
+
+            if (!oilName) {
+                alert('Please select an essential oil');
+                return;
+            }
+
+            if (!drops || drops <= 0) {
+                alert('Please enter a valid number of drops');
+                dropsInput.focus();
+                return;
+            }
+
+            const oil = {
+                name: oilName,
+                drops: drops,
+                category: ESSENTIAL_OILS_DATABASE[oilName].category,
+                data: ESSENTIAL_OILS_DATABASE[oilName]
+            };
+
+            currentFragranceBlend.essentialOils.push(oil);
+            updateFragranceTable();
+            updateBlendVisualization();
+            
+            // Clear inputs
+            fragranceSelect.value = '';
+            dropsInput.value = '';
+        }
+
+        function updateFragranceTable() {
+            const tbody = document.querySelector('#fragrance-table tbody');
+            tbody.innerHTML = '';
+
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+
+            currentFragranceBlend.essentialOils.forEach((oil, index) => {
+                const percentage = totalDrops > 0 ? (oil.drops / totalDrops * 100) : 0;
+                const row = document.createElement('tr');
+                row.onclick = () => selectTableRow(row, 'fragrance', index);
+                row.innerHTML = `
+                    <td>${oil.name.split('(')[0].trim()}</td>
+                    <td><span class="note-badge ${oil.category}">${oil.category.charAt(0).toUpperCase() + oil.category.slice(1)}</span></td>
+                    <td>${oil.drops.toFixed(1)}</td>
+                    <td>${percentage.toFixed(1)}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateBlendVisualization() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                document.getElementById('blend-visualization').style.display = 'none';
+                return;
+            }
+
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+            
+            const topDrops = currentFragranceBlend.essentialOils
+                .filter(oil => oil.category === 'top')
+                .reduce((sum, oil) => sum + oil.drops, 0);
+            
+            const middleDrops = currentFragranceBlend.essentialOils
+                .filter(oil => oil.category === 'middle')
+                .reduce((sum, oil) => sum + oil.drops, 0);
+            
+            const baseDrops = currentFragranceBlend.essentialOils
+                .filter(oil => oil.category === 'base')
+                .reduce((sum, oil) => sum + oil.drops, 0);
+
+            document.getElementById('top-percentage').textContent = `${((topDrops / totalDrops) * 100).toFixed(1)}%`;
+            document.getElementById('middle-percentage').textContent = `${((middleDrops / totalDrops) * 100).toFixed(1)}%`;
+            document.getElementById('base-percentage').textContent = `${((baseDrops / totalDrops) * 100).toFixed(1)}%`;
+
+            document.getElementById('blend-visualization').style.display = 'grid';
+        }
+
+        function removeSelectedFragrance() {
+            const selectedRow = document.querySelector('#fragrance-table tr.selected');
+            if (!selectedRow) {
+                alert('Please select an essential oil to remove');
+                return;
+            }
+
+            const index = parseInt(selectedRow.dataset.index);
+            currentFragranceBlend.essentialOils.splice(index, 1);
+            updateFragranceTable();
+            updateBlendVisualization();
+        }
+
+        function analyzeBlend() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                alert('Please add essential oils to your blend first');
+                return;
+            }
+
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+            const topDrops = currentFragranceBlend.essentialOils.filter(oil => oil.category === 'top').reduce((sum, oil) => sum + oil.drops, 0);
+            const middleDrops = currentFragranceBlend.essentialOils.filter(oil => oil.category === 'middle').reduce((sum, oil) => sum + oil.drops, 0);
+            const baseDrops = currentFragranceBlend.essentialOils.filter(oil => oil.category === 'base').reduce((sum, oil) => sum + oil.drops, 0);
+
+            const topPercent = (topDrops / totalDrops) * 100;
+            const middlePercent = (middleDrops / totalDrops) * 100;
+            const basePercent = (baseDrops / totalDrops) * 100;
+
+            let analysis = '';
+            let quality = 'good';
+
+            // Analyze blend proportions
+            if (topPercent < 10 && middlePercent < 40 && basePercent > 50) {
+                analysis = 'Heavy base-dominant blend. Excellent longevity but may lack initial impact.';
+                quality = 'average';
+            } else if (topPercent > 60) {
+                analysis = 'Top-heavy blend. Excellent initial impact but poor longevity.';
+                quality = 'average';
+            } else if (topPercent >= 15 && topPercent <= 30 && middlePercent >= 40 && middlePercent <= 60 && basePercent >= 15 && basePercent <= 30) {
+                analysis = 'Perfectly balanced blend following classic perfumery proportions.';
+                quality = 'excellent';
+            } else {
+                analysis = 'Well-structured blend with good development potential.';
+                quality = 'good';
+            }
+
+            currentFragranceBlend.analysis = {
+                totalDrops,
+                topPercent,
+                middlePercent,
+                basePercent,
+                quality,
+                analysis
+            };
+
+            const resultDiv = document.getElementById('blend-result');
+            resultDiv.innerHTML = `
+                <strong>Blend Analysis Complete!</strong><br>
+                Total: ${totalDrops} drops<br>
+                Structure: ${topPercent.toFixed(1)}% / ${middlePercent.toFixed(1)}% / ${basePercent.toFixed(1)}%<br>
+                ${analysis}
+            `;
+            resultDiv.className = `result-display ${quality === 'excellent' ? '' : quality === 'average' ? 'error' : ''}`;
+            resultDiv.style.display = 'block';
+        }
+
+        function updateConcentrationRange() {
+            const productType = document.getElementById('product-type').value;
+            const concentrationInput = document.getElementById('target-concentration');
+            
+            const ranges = {
+                parfum: { min: 15, max: 40, default: 25 },
+                edp: { min: 8, max: 15, default: 12 },
+                edt: { min: 4, max: 8, default: 6 },
+                edc: { min: 2, max: 5, default: 3 },
+                body: { min: 1, max: 3, default: 2 },
+                custom: { min: 0, max: 50, default: 10 }
+            };
+            
+            const range = ranges[productType];
+            concentrationInput.min = range.min;
+            concentrationInput.max = range.max;
+            concentrationInput.value = range.default;
+            
+            calculateDilution();
+        }
+
+        function calculateDilution() {
+            const concentration = parseFloat(document.getElementById('target-concentration').value) || 0;
+            const totalVolume = parseFloat(document.getElementById('total-volume').value) || 0;
+            
+            if (!concentration || !totalVolume) return;
+
+            const fragranceOilVolume = (totalVolume * concentration) / 100;
+            const carrierVolume = totalVolume - fragranceOilVolume;
+            
+            // Convert drops to ml (approximately 20 drops = 1ml)
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+            const concentrateVolume = totalDrops / 20;
+            const dilutionRatio = fragranceOilVolume / concentrateVolume;
+
+            const resultDiv = document.getElementById('dilution-result');
+            resultDiv.innerHTML = `
+                <strong>Dilution Calculated!</strong><br>
+                Fragrance Oil: ${fragranceOilVolume.toFixed(2)}ml<br>
+                Carrier (Ethanol): ${carrierVolume.toFixed(2)}ml<br>
+                Concentration: ${concentration}%
+            `;
+            resultDiv.className = 'result-display';
+            resultDiv.style.display = 'block';
+
+            const detailsDiv = document.getElementById('dilution-details');
+            detailsDiv.innerHTML = `
+                <strong>Detailed Breakdown:</strong><br>
+                Your blend concentrate: ${concentrateVolume.toFixed(2)}ml (${totalDrops} drops)<br>
+                Additional carrier needed: ${(carrierVolume - concentrateVolume + fragranceOilVolume - concentrateVolume).toFixed(2)}ml<br>
+                Dilution ratio: 1:${(dilutionRatio - 1).toFixed(1)}<br>
+                Final volume: ${totalVolume}ml at ${concentration}% concentration
+            `;
+            document.getElementById('dilution-breakdown').style.display = 'block';
+        }
+
+        function performScientificAnalysis() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                alert('Please add essential oils to your blend first');
+                return;
+            }
+
+            const skinType = document.getElementById('skin-type').value;
+            const climate = document.getElementById('climate').value;
+
+            // Molecular Analysis
+            let avgMolecularWeight = 0;
+            let avgVaporPressure = 0;
+            let totalAllergens = new Set();
+            
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                const weight = oil.drops / currentFragranceBlend.essentialOils.reduce((sum, o) => sum + o.drops, 0);
+                avgMolecularWeight += oil.data.molecular_weight * weight;
+                avgVaporPressure += oil.data.vapor_pressure * weight;
+                oil.data.allergens.forEach(allergen => totalAllergens.add(allergen));
+            });
+
+            // Volatility Assessment
+            const volatilityProfile = {
+                very_high: 0, high: 0, medium: 0, low: 0, very_low: 0
+            };
+            
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                volatilityProfile[oil.data.volatility] += oil.drops;
+            });
+
+            // Longevity Prediction
+            const avgLongevity = currentFragranceBlend.essentialOils.reduce((sum, oil) => {
+                const weight = oil.drops / currentFragranceBlend.essentialOils.reduce((sum, o) => sum + o.drops, 0);
+                return sum + (oil.data.longevity * weight);
+            }, 0);
+
+            // Display results
+            document.getElementById('molecular-analysis').innerHTML = `
+                Average molecular weight: ${avgMolecularWeight.toFixed(0)} Da<br>
+                Vapor pressure profile: ${avgVaporPressure.toFixed(0)} Pa<br>
+                Detected allergens: ${Array.from(totalAllergens).join(', ') || 'None detected'}
+            `;
+
+            document.getElementById('volatility-analysis').innerHTML = `
+                Very High: ${volatilityProfile.very_high} drops<br>
+                High: ${volatilityProfile.high} drops<br>
+                Medium: ${volatilityProfile.medium} drops<br>
+                Low: ${volatilityProfile.low} drops<br>
+                Very Low: ${volatilityProfile.very_low} drops
+            `;
+
+            document.getElementById('harmony-analysis').innerHTML = 
+                analyzeHarmony(currentFragranceBlend.essentialOils);
+
+            document.getElementById('longevity-analysis').innerHTML = `
+                Predicted longevity: ${Math.round(avgLongevity / 60)} hours<br>
+                Skin type factor: ${getSkinTypeModifier(skinType)}<br>
+                Climate factor: ${getClimateModifier(climate)}
+            `;
+
+            document.getElementById('fragrance-science').style.display = 'block';
+            generateProfessionalRecommendations();
+        }
+
+        function analyzeHarmony(oils) {
+            const families = {};
+            oils.forEach(oil => {
+                const family = getOlfactoryFamily(oil.name);
+                families[family] = (families[family] || 0) + 1;
+            });
+
+            const familyCount = Object.keys(families).length;
+            if (familyCount <= 2) {
+                return 'Monothematic blend - excellent for signature scents, may lack complexity.';
+            } else if (familyCount <= 4) {
+                return 'Well-balanced harmony with good complexity and coherence.';
+            } else {
+                return 'Complex multi-faceted blend - requires expert balancing to avoid discord.';
+            }
+        }
+
+        function getOlfactoryFamily(oilName) {
+            if (oilName.includes('Citrus') || oilName.includes('Lemon') || oilName.includes('Orange') || oilName.includes('Bergamot') || oilName.includes('Grapefruit')) return 'Citrus';
+            if (oilName.includes('Lavender') || oilName.includes('Rose') || oilName.includes('Geranium') || oilName.includes('Ylang') || oilName.includes('Jasmine')) return 'Floral';
+            if (oilName.includes('Rosemary') || oilName.includes('Basil') || oilName.includes('Clary')) return 'Herbaceous';
+            if (oilName.includes('Sandalwood') || oilName.includes('Cedarwood') || oilName.includes('Vetiver')) return 'Woody';
+            if (oilName.includes('Patchouli') || oilName.includes('Frankincense') || oilName.includes('Benzoin')) return 'Resinous';
+            return 'Aromatic';
+        }
+
+        function getSkinTypeModifier(skinType) {
+            const modifiers = {
+                normal: 'Standard longevity expected',
+                dry: '+20% longevity (oils absorb slowly)',
+                oily: '-15% longevity (oils absorb quickly)',
+                sensitive: 'Reduced projection, standard longevity'
+            };
+            return modifiers[skinType];
+        }
+
+        function getClimateModifier(climate) {
+            const modifiers = {
+                temperate: 'Optimal performance conditions',
+                humid: '+30% projection, -10% longevity',
+                dry: '-20% projection, +15% longevity',
+                cold: '-25% projection, +20% longevity'
+            };
+            return modifiers[climate];
+        }
+
+        function generateProfessionalRecommendations() {
+            if (!currentFragranceBlend.analysis) return;
+
+            let recommendations = '';
+            const analysis = currentFragranceBlend.analysis;
+
+            // Structure recommendations
+            if (analysis.topPercent < 15) {
+                recommendations += '<strong>Enhance Opening:</strong> Add more top notes (citrus, herbs) for immediate impact.<br>';
+            }
+            if (analysis.middlePercent < 40) {
+                recommendations += '<strong>Build Heart:</strong> Increase middle notes (florals, spices) for body and character.<br>';
+            }
+            if (analysis.basePercent < 15) {
+                recommendations += '<strong>Improve Longevity:</strong> Add base notes (woods, resins) for lasting power.<br>';
+            }
+
+            // Molecular recommendations
+            const allergenCount = new Set();
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                oil.data.allergens.forEach(allergen => allergenCount.add(allergen));
+            });
+
+            if (allergenCount.size > 3) {
+                recommendations += '<strong>Allergen Management:</strong> Consider reducing allergenic components for broader appeal.<br>';
+            }
+
+            // Professional application
+            if (analysis.quality === 'excellent') {
+                recommendations += '<strong>🎯 Commercial Potential:</strong> Excellent structure for luxury perfume market.';
+            } else {
+                recommendations += '<strong>💡 Development:</strong> Good foundation - fine-tune proportions for commercial viability.';
+            }
+
+            document.getElementById('recommendations-content').innerHTML = recommendations;
+            document.getElementById('professional-recommendations').style.display = 'block';
+        }
+
+        function updateSafetyGuidelines() {
+            const category = document.getElementById('product-category').value;
+            
+            const guidelines = {
+                perfume: 'Fine fragrances allow highest concentrations. IFRA Category 4 applies (no restrictions for most oils).',
+                cosmetic: 'Leave-on products require careful consideration. IFRA Category 5 applies with specific limits.',
+                soap: 'Wash-off products generally allow higher usage rates. IFRA Category 9 applies.',
+                candle: 'Non-skin contact applications. Focus on flash point and thermal stability.',
+                massage: 'Direct skin contact for extended periods. IFRA Category 4 with dermal limits.'
+            };
+
+            document.getElementById('safety-content').innerHTML = guidelines[category];
+        }
+
+        function assessSafety() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                alert('Please add essential oils to your blend first');
+                return;
+            }
+
+            const category = document.getElementById('product-category').value;
+            let safetyIssues = [];
+            let allergens = new Set();
+
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                const maxUsage = oil.data.max_usage[category === 'perfume' ? 'perfume' : 'cosmetic'];
+                const currentUsage = (oil.drops / currentFragranceBlend.essentialOils.reduce((sum, o) => sum + o.drops, 0)) * 100;
+                
+                if (currentUsage > maxUsage) {
+                    safetyIssues.push(`${oil.name.split('(')[0].trim()}: ${currentUsage.toFixed(1)}% exceeds max ${maxUsage}%`);
+                }
+
+                oil.data.allergens.forEach(allergen => allergens.add(allergen));
+            });
+
+            let safetyResult = '';
+            if (safetyIssues.length === 0) {
+                safetyResult = 'All components within IFRA safety limits.';
+                document.getElementById('safety-result').className = 'result-display';
+            } else {
+                safetyResult = 'Safety concerns detected - see allergen assessment.';
+                document.getElementById('safety-result').className = 'result-display error';
+            }
+
+            document.getElementById('safety-result').innerHTML = safetyResult;
+            document.getElementById('safety-result').style.display = 'block';
+
+            if (allergens.size > 0) {
+                document.getElementById('allergen-content').innerHTML = `
+                    <strong>Required declarations (>0.001% in leave-on, >0.01% in rinse-off):</strong><br>
+                    ${Array.from(allergens).join(', ')}<br><br>
+                    ${safetyIssues.length > 0 ? '<strong>Usage Violations:</strong><br>' + safetyIssues.join('<br>') : ''}
+                `;
+                document.getElementById('allergen-assessment').style.display = 'block';
+            }
+        }
+
+        // Recipe Generation Functions
+        function generateFragranceFormula() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                alert('Please add essential oils to your blend first');
+                return;
+            }
+
+            const formulaName = document.getElementById('formula-name').value || 'Professional Fragrance Formula';
+            const batchSize = parseFloat(document.getElementById('batch-size').value) || 50;
+            const creator = document.getElementById('creator-name').value || 'Unknown Perfumer';
+            const olfactoryDesc = document.getElementById('olfactory-description').value;
+            const technicalNotes = document.getElementById('technical-notes').value;
+
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+
+            let formulaHTML = `
+                <div style="background: white; border-radius: 8px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3>${formulaName}</h3>
+                    <p><strong>Perfumer:</strong> ${creator} | <strong>Batch Size:</strong> ${batchSize}ml | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                        <thead>
+                            <tr style="background: #8B5A96; color: white;">
+                                <th style="padding: 12px; text-align: left;">Essential Oil</th>
+                                <th style="padding: 12px; text-align: left;">Note Category</th>
+                                <th style="padding: 12px; text-align: left;">Drops</th>
+                                <th style="padding: 12px; text-align: left;">Percentage</th>
+                                <th style="padding: 12px; text-align: left;">Character</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                const percentage = (oil.drops / totalDrops * 100);
+                formulaHTML += `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">${oil.name}</td>
+                        <td style="padding: 10px;"><span class="note-badge ${oil.category}">${oil.category.charAt(0).toUpperCase() + oil.category.slice(1)}</span></td>
+                        <td style="padding: 10px;">${oil.drops.toFixed(1)}</td>
+                        <td style="padding: 10px;">${percentage.toFixed(1)}%</td>
+                        <td style="padding: 10px; font-size: 0.8rem;">${oil.data.character}</td>
+                    </tr>
+                `;
+            });
+
+            formulaHTML += `
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; padding: 15px; background: #f8e8ff; border-radius: 8px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #8B5A96;">${((currentFragranceBlend.essentialOils.filter(oil => oil.category === 'top').reduce((sum, oil) => sum + oil.drops, 0) / totalDrops) * 100).toFixed(1)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Top Notes</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #8B5A96;">${((currentFragranceBlend.essentialOils.filter(oil => oil.category === 'middle').reduce((sum, oil) => sum + oil.drops, 0) / totalDrops) * 100).toFixed(1)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Middle Notes</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #8B5A96;">${((currentFragranceBlend.essentialOils.filter(oil => oil.category === 'base').reduce((sum, oil) => sum + oil.drops, 0) / totalDrops) * 100).toFixed(1)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Base Notes</div>
+                        </div>
+                    </div>
+            `;
+
+            if (currentFragranceBlend.analysis) {
+                formulaHTML += `
+                    <div style="margin-top: 15px; padding: 15px; background: #f0f8ff; border-radius: 6px; font-size: 0.9rem; border: 2px solid #8B5A96;">
+                        <h4 style="color: #663366; margin-bottom: 8px;">Scientific Analysis</h4>
+                        ${currentFragranceBlend.analysis.analysis}<br>
+                        <strong>Predicted Longevity:</strong> ${document.getElementById('longevity-analysis') ? document.getElementById('longevity-analysis').innerHTML : 'Calculate scientific analysis first'}
+                    </div>
+                `;
+            }
+
+            if (olfactoryDesc) {
+                formulaHTML += `
+                    <h4 style="color: #8B5A96; margin-top: 20px;">Olfactory Profile:</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; white-space: pre-wrap;">${olfactoryDesc}</div>
+                `;
+            }
+
+            if (technicalNotes) {
+                formulaHTML += `
+                    <h4 style="color: #8B5A96; margin-top: 20px;">Technical Notes:</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; white-space: pre-wrap;">${technicalNotes}</div>
+                `;
+            }
+
+            formulaHTML += '</div>';
+
+            document.getElementById('fragrance-formula-display').innerHTML = formulaHTML;
+        }
+
+        function exportFragrancePDF() {
+            if (currentFragranceBlend.essentialOils.length === 0) {
+                alert('Please add essential oils to your blend first');
+                return;
+            }
+
+            if (!window.jspdf) {
+                alert('PDF library not loaded. Please refresh the page and try again.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            const formulaName = document.getElementById('formula-name').value || 'Professional Fragrance Formula';
+            const creator = document.getElementById('creator-name').value || 'Unknown Perfumer';
+
+            let yPosition = 20;
+
+            // Header
+            pdf.setFontSize(16);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(formulaName, 20, yPosition);
+            yPosition += 12;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('Professional Fragrance Calculator - Philip Riachy, PhD', 140, 15);
+            pdf.text(`Perfumer: ${creator} | Date: ${new Date().toLocaleDateString()}`, 20, yPosition);
+            yPosition += 15;
+
+            // Essential Oils
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Essential Oil Formula', 20, yPosition);
+            yPosition += 8;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            const totalDrops = currentFragranceBlend.essentialOils.reduce((sum, oil) => sum + oil.drops, 0);
+            
+            currentFragranceBlend.essentialOils.forEach(oil => {
+                const percentage = (oil.drops / totalDrops * 100);
+                pdf.text(`${oil.name.split('(')[0].trim()}`, 20, yPosition);
+                pdf.text(`${oil.category}`, 80, yPosition);
+                pdf.text(`${oil.drops.toFixed(1)} drops`, 110, yPosition);
+                pdf.text(`${percentage.toFixed(1)}%`, 150, yPosition);
+                yPosition += 4;
+            });
+            yPosition += 10;
+
+            // Structure Analysis
+            if (currentFragranceBlend.analysis) {
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Blend Structure', 20, yPosition);
+                yPosition += 8;
+
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`Top Notes: ${currentFragranceBlend.analysis.topPercent.toFixed(1)}%`, 20, yPosition);
+                pdf.text(`Middle Notes: ${currentFragranceBlend.analysis.middlePercent.toFixed(1)}%`, 70, yPosition);
+                pdf.text(`Base Notes: ${currentFragranceBlend.analysis.basePercent.toFixed(1)}%`, 120, yPosition);
+                yPosition += 6;
+                
+                const lines = pdf.splitTextToSize(currentFragranceBlend.analysis.analysis, 170);
+                lines.forEach(line => {
+                    pdf.text(line, 20, yPosition);
+                    yPosition += 4;
+                });
+                yPosition += 5;
+            }
+
+            // Olfactory Description
+            const olfactoryDesc = document.getElementById('olfactory-description').value;
+            if (olfactoryDesc) {
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Olfactory Profile:', 20, yPosition);
+                yPosition += 6;
+
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+                const lines = pdf.splitTextToSize(olfactoryDesc, 170);
+                lines.forEach(line => {
+                    if (yPosition > 270) return;
+                    pdf.text(line, 20, yPosition);
+                    yPosition += 3;
+                });
+            }
+
+            const fileName = `${formulaName.replace(/[^a-z0-9]/gi, '_')}_Fragrance_Formula.pdf`;
+            pdf.save(fileName);
+        }
+
+        // Data Management Functions
+        function saveFragranceFormula() {
+            const formulaName = document.getElementById('formula-name').value || 'fragrance_formula';
+            
+            const data = {
+                blend: currentFragranceBlend,
+                formulaDetails: {
+                    name: document.getElementById('formula-name').value,
+                    id: document.getElementById('formula-id').value,
+                    version: document.getElementById('formula-version').value,
+                    creator: document.getElementById('creator-name').value,
+                    batchSize: document.getElementById('batch-size').value,
+                    targetMarket: document.getElementById('target-market').value,
+                    olfactoryDescription: document.getElementById('olfactory-description').value,
+                    technicalNotes: document.getElementById('technical-notes').value
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `${formulaName.replace(/[^a-z0-9]/gi, '_')}_fragrance_formula.json`;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+        }
+
+        function loadFragranceFormula() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        currentFragranceBlend = data.blend || {
+                            essentialOils: [],
+                            selectedCategory: null,
+                            analysis: null
+                        };
+                        
+                        if (data.formulaDetails) {
+                            document.getElementById('formula-name').value = data.formulaDetails.name || '';
+                            document.getElementById('formula-id').value = data.formulaDetails.id || '';
+                            document.getElementById('formula-version').value = data.formulaDetails.version || '';
+                            document.getElementById('creator-name').value = data.formulaDetails.creator || '';
+                            document.getElementById('batch-size').value = data.formulaDetails.batchSize || '50';
+                            document.getElementById('target-market').value = data.formulaDetails.targetMarket || 'luxury';
+                            document.getElementById('olfactory-description').value = data.formulaDetails.olfactoryDescription || '';
+                            document.getElementById('technical-notes').value = data.formulaDetails.technicalNotes || '';
+                        }
+                        
+                        updateFragranceTable();
+                        updateBlendVisualization();
+                        
+                        alert('Fragrance formula loaded successfully!');
+                        
+                    } catch (error) {
+                        console.error('Error loading formula:', error);
+                        alert('Error loading formula file. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        function clearAllFragranceData() {
+            if (confirm('Are you sure you want to clear all data and start a new fragrance formula?')) {
+                currentFragranceBlend = {
+                    essentialOils: [],
+                    selectedCategory: null,
+                    analysis: null
+                };
+                
+                // Clear form fields
+                document.getElementById('formula-name').value = '';
+                document.getElementById('formula-id').value = '';
+                document.getElementById('formula-version').value = '';
+                document.getElementById('creator-name').value = '';
+                document.getElementById('batch-size').value = '50';
+                document.getElementById('target-market').value = 'luxury';
+                document.getElementById('olfactory-description').value = '';
+                document.getElementById('technical-notes').value = '';
+                
+                // Clear inputs
+                document.getElementById('fragrance-select').value = '';
+                document.getElementById('fragrance-drops').value = '';
+                
+                // Reset displays
+                updateFragranceTable();
+                updateBlendVisualization();
+                document.querySelectorAll('.note-badge').forEach(badge => badge.classList.remove('selected'));
+                document.getElementById('blend-result').style.display = 'none';
+                document.getElementById('dilution-result').style.display = 'none';
+                document.getElementById('dilution-breakdown').style.display = 'none';
+                document.getElementById('fragrance-science').style.display = 'none';
+                document.getElementById('professional-recommendations').style.display = 'none';
+                document.getElementById('safety-result').style.display = 'none';
+                document.getElementById('allergen-assessment').style.display = 'none';
+                document.getElementById('fragrance-formula-display').innerHTML = '';
+                
+                // Repopulate dropdown
+                populateFragranceDropdown();
+                
+                alert('Started new fragrance formula!');
+            }
+        }
+
+        // Utility Functions
+        function selectTableRow(row, type, index) {
+            const table = row.closest('table');
+            table.querySelectorAll('tr').forEach(tr => tr.classList.remove('selected'));
+            row.classList.add('selected');
+            row.dataset.index = index;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeFragranceApp);
+    </script>
+</body>
+</html>
