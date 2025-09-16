@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional HLB Calculator - Cosmetic Formulation Tool</title>
+    <style>
+        /* WordPress-safe styling with hlb- prefix */
+        .hlb-calculator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .hlb-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .hlb-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hlb-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hlb-main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .hlb-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #667eea;
+        }
+
+        .hlb-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hlb-form-group {
+            margin-bottom: 20px;
+        }
+
+        .hlb-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .hlb-form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .hlb-form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hlb-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .hlb-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .hlb-btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .hlb-btn-danger {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .hlb-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .hlb-data-table th,
+        .hlb-data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .hlb-data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 500;
+        }
+
+        .hlb-data-table tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .hlb-data-table tr.selected {
+            background-color: #e3f2fd;
+            border-left: 4px solid #667eea;
+        }
+
+        .hlb-result-display {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4f1d4 100%);
+            border-radius: 8px;
+            border-left: 5px solid #4caf50;
+            display: none;
+        }
+
+        .hlb-result-display.error {
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd4d4 100%);
+            border-left-color: #f44336;
+        }
+
+        .hlb-result-display.warning {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left-color: #ff9800;
+        }
+
+        .hlb-recipe-section {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-top: 30px;
+        }
+
+        .hlb-recipe-output {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            border-left: 5px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .hlb-winsor-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .hlb-winsor-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .hlb-winsor-card.hlb-optimal {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4f1d4 100%);
+            border-left-color: #4caf50;
+        }
+
+        .hlb-winsor-card h5 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .hlb-winsor-card p {
+            margin: 8px 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .hlb-winsor-card p strong {
+            color: #667eea;
+        }
+
+        .hlb-optimal p strong {
+            color: #4caf50;
+        }
+
+        .hlb-troubleshooting-steps {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #ff9800;
+            margin: 15px 0;
+        }
+
+        .hlb-troubleshooting-steps h5 {
+            color: #e65100;
+            margin: 0 0 15px 0;
+        }
+
+        .hlb-troubleshooting-steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .hlb-troubleshooting-steps li {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .hlb-main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .hlb-header h1 {
+                font-size: 2em;
+            }
+            
+            .hlb-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hlb-calculator-container">
+        <!-- Header -->
+        <div class="hlb-header">
+            <h1>🧪 HLB Calculator</h1>
+            <p class="hlb-subtitle">Professional Hydrophilic-Lipophilic Balance Calculator for Cosmetic Formulation</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="hlb-main-content">
+            <!-- Oil Phase Section -->
+            <div class="hlb-section">
+                <h3>🫒 Oil Phase Selection</h3>
+                
+                <div class="hlb-form-group">
+                    <label for="hlb-oil-select">Select Oil/Ingredient</label>
+                    <select id="hlb-oil-select" class="hlb-form-control">
+                        <option value="">Choose an oil...</option>
+                    </select>
+                </div>
+                
+                <div class="hlb-form-group">
+                    <label for="hlb-oil-percentage">Percentage (%)</label>
+                    <input type="number" id="hlb-oil-percentage" class="hlb-form-control" step="0.1" min="0" max="100">
+                </div>
+                
+                <div>
+                    <button class="hlb-btn" onclick="hlbAddOilToFormulation()">Add Oil</button>
+                    <button class="hlb-btn hlb-btn-danger" onclick="hlbRemoveSelectedOil()">Remove</button>
+                </div>
+
+                <table class="hlb-data-table" id="hlb-oils-table">
+                    <thead>
+                        <tr>
+                            <th>Oil</th>
+                            <th>RHLB</th>
+                            <th>%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <button class="hlb-btn hlb-btn-success" onclick="hlbCalculateRequiredHLB()">Calculate Required HLB</button>
+                <div id="hlb-rhlb-result" class="hlb-result-display"></div>
+            </div>
+
+            <!-- Surfactant Phase Section -->
+            <div class="hlb-section">
+                <h3>🧪 Surfactant System</h3>
+                
+                <div class="hlb-form-group">
+                    <label for="hlb-surfactant-total">Surfactant System (% of Oil Phase)</label>
+                    <input type="number" id="hlb-surfactant-total" class="hlb-form-control" step="0.1" min="0" value="25">
+                </div>
+                
+                <div class="hlb-form-group">
+                    <label for="hlb-surfactant-1">Primary Surfactant</label>
+                    <select id="hlb-surfactant-1" class="hlb-form-control">
+                        <option value="">Select surfactant...</option>
+                    </select>
+                </div>
+                
+                <div class="hlb-form-group">
+                    <label for="hlb-surfactant-2">Secondary Surfactant</label>
+                    <select id="hlb-surfactant-2" class="hlb-form-control">
+                        <option value="">Select surfactant...</option>
+                    </select>
+                </div>
+
+                <button class="hlb-btn hlb-btn-success" onclick="hlbCalculateSurfactantRatios()">Calculate Ratios</button>
+                <div id="hlb-surfactant-result" class="hlb-result-display"></div>
+            </div>
+        </div>
+
+        <!-- Other Ingredients Section -->
+        <div class="hlb-section">
+            <h3>🌿 Other Ingredients</h3>
+            
+            <div class="hlb-form-group">
+                <label for="hlb-other-name">Ingredient Name</label>
+                <input type="text" id="hlb-other-name" class="hlb-form-control" placeholder="e.g., Preservative, Fragrance">
+            </div>
+            
+            <div class="hlb-form-group">
+                <label for="hlb-other-percentage">Percentage (%)</label>
+                <input type="number" id="hlb-other-percentage" class="hlb-form-control" step="0.1" min="0">
+            </div>
+            
+            <div>
+                <button class="hlb-btn" onclick="hlbAddOtherIngredient()">Add Ingredient</button>
+                <button class="hlb-btn hlb-btn-danger" onclick="hlbRemoveSelectedOther()">Remove</button>
+            </div>
+
+            <table class="hlb-data-table" id="hlb-others-table">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Recipe Generation -->
+        <div class="hlb-recipe-section">
+            <h3>📋 Complete Formulation</h3>
+            <button class="hlb-btn hlb-btn-success" onclick="hlbGenerateCompleteRecipe()">Generate Complete Recipe</button>
+            <div id="hlb-complete-result" class="hlb-result-display"></div>
+            <div class="hlb-recipe-output" id="hlb-recipe-output"></div>
+            
+            <button class="hlb-btn" onclick="hlbExportPDF()" id="hlb-export-btn" style="display: none;">
+                📄 Export PDF Recipe
+            </button>
+        </div>
+
+        <!-- Winsor Troubleshooting Guide -->
+        <div class="hlb-recipe-section">
+            <h3>🔬 Emulsion Troubleshooting Guide</h3>
+            <p><strong>Use this guide to diagnose and fix emulsion problems based on Winsor emulsion types</strong></p>
+            
+            <div class="hlb-form-group">
+                <label for="hlb-emulsion-behavior">What do you observe in your emulsion?</label>
+                <select id="hlb-emulsion-behavior" class="hlb-form-control" onchange="hlbAnalyzeEmulsionBehavior()">
+                    <option value="">Select observed behavior...</option>
+                    <option value="winsor1">Creamy layer at bottom, clear oil layer on top</option>
+                    <option value="winsor2">Clear water layer at bottom, creamy layer on top</option>
+                    <option value="winsor3">Three phases: water bottom, creamy middle, oil top</option>
+                    <option value="winsor4">Single homogeneous phase, stable emulsion</option>
+                    <option value="unstable">Immediate separation, no stable emulsion</option>
+                    <option value="too-thick">Emulsion too thick/viscous</option>
+                    <option value="too-thin">Emulsion too thin/runny</option>
+                    <option value="phase-inversion">Emulsion inverts during mixing</option>
+                </select>
+            </div>
+
+            <div id="hlb-troubleshooting-result" class="hlb-result-display" style="display: none;">
+                <!-- Troubleshooting advice will appear here -->
+            </div>
+
+            <div class="hlb-winsor-guide" style="margin-top: 30px;">
+                <h4>🧪 Understanding Winsor Emulsion Types</h4>
+                <div class="hlb-winsor-types">
+                    <div class="hlb-winsor-card">
+                        <h5>Winsor I (Type I)</h5>
+                        <p><strong>Observation:</strong> Creamy emulsion at bottom, excess oil on top</p>
+                        <p><strong>Phase:</strong> Oil-in-water (O/W) microemulsion</p>
+                        <p><strong>HLB Range:</strong> Too high (>optimal)</p>
+                        <p><strong>Surfactant:</strong> Too hydrophilic</p>
+                    </div>
+                    
+                    <div class="hlb-winsor-card">
+                        <h5>Winsor II (Type II)</h5>
+                        <p><strong>Observation:</strong> Clear water at bottom, creamy layer on top</p>
+                        <p><strong>Phase:</strong> Water-in-oil (W/O) microemulsion</p>
+                        <p><strong>HLB Range:</strong> Too low (<optimal)</p>
+                        <p><strong>Surfactant:</strong> Too lipophilic</p>
+                    </div>
+                    
+                    <div class="hlb-winsor-card">
+                        <h5>Winsor III (Type III)</h5>
+                        <p><strong>Observation:</strong> Three phases with middle microemulsion</p>
+                        <p><strong>Phase:</strong> Bicontinuous microemulsion</p>
+                        <p><strong>HLB Range:</strong> Near optimal but unstable</p>
+                        <p><strong>Surfactant:</strong> Close to balance point</p>
+                    </div>
+                    
+                    <div class="hlb-winsor-card hlb-optimal">
+                        <h5>Winsor IV (Type IV) ✅</h5>
+                        <p><strong>Observation:</strong> Single, stable, homogeneous phase</p>
+                        <p><strong>Phase:</strong> Stable microemulsion</p>
+                        <p><strong>HLB Range:</strong> Optimal match</p>
+                        <p><strong>Surfactant:</strong> Perfect balance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        // HLB Calculator JavaScript with hlb- prefixes for WordPress compatibility
+        let hlbCurrentFormulation = {
+            oils: [],
+            others: [],
+            requiredHLB: null,
+            surfactantSystem: null
+        };
+
+        // Comprehensive oil database with RHLB values
+        const HLB_OILS_DATABASE = {
+            "Apricot Kernel Oil": 7.00, "Argan Oil": 7.00, "Avocado Oil": 7.00,
+            "Baobab Oil": 6.00, "Black Seed Oil": 7.00, "Borage Oil": 7.00,
+            "Camellia Oil": 7.00, "Carrot Seed Oil": 6.00, "Chia Seed Oil": 7.00,
+            "Coconut Oil": 8.00, "Cranberry Seed Oil": 7.00, "Evening Primrose Oil": 7.00,
+            "Grapeseed Oil": 7.00, "Jojoba Oil": 6.50, "Marula Oil": 6.00,
+            "Olive Oil": 7.00, "Pomegranate Seed Oil": 6.00, "Rosehip Oil": 7.00,
+            "Safflower Oil": 6.00, "Sea Buckthorn Oil": 7.00, "Sunflower Oil": 7.00,
+            "Sweet Almond Oil": 7.00, "Vitamin E Oil": 6.00, "Watermelon Seed Oil": 7.00,
+            "Rose Oil": 7.00, "Hazelnut Oil": 11.70, "Hemp Seed Oil": 7.00,
+            "Karanja Seed Oil": 8.00, "Kukui Nut Oil": 7.00, "Macadamia Oil": 7.00,
+            "Mango Seed Oil": 7.00, "Meadowfoam Seed Oil": 6.00, "Neem Oil": 9.00,
+            "Palm Oil": 10.00, "Peanut Oil": 6.00, "Pistachio Seed Oil": 7.00,
+            "Red Raspberry Seed Oil": 7.00, "Rose Hip Oil": 7.00, "Sacha Inchi Oil": 8.50,
+            "Soybean Oil": 6.00, "Tamanu Oil": 8.00, "Wheat Germ Oil": 7.00,
+            "Shea Butter": 8.00, "Cocoa Butter": 6.00, "Mango Butter": 8.00,
+            "Kokum Butter": 8.00, "Beeswax": 12.00, "Candelilla Wax": 14.50,
+            "Carnauba Wax": 15.00, "Ceresin Wax": 8.00, "Paraffin Wax": 10.00,
+            "Caprylic/Capric Triglyceride": 5.00, "C12-15 Alkyl Benzoate": 13.00,
+            "Ethylhexyl Palmitate": 8.00, "Isopropyl Myristate": 11.50,
+            "Isopropyl Palmitate": 11.50, "Cetyl Ethylhexanoate": 1.00,
+            "Butyl Stearate": 11.00, "Cetyl Palmitate": 10.00,
+            "Cetyl Alcohol": 15.50, "Stearyl Alcohol": 15.50, "Cetearyl Alcohol": 15.50,
+            "Behenyl Alcohol": 16.00, "Oleyl Alcohol": 13.50,
+            "Dimethicone": 5.00, "Cyclomethicone": 7.50, "Cyclopentasiloxane": 7.50,
+            "Lavender Oil": 12.00, "Lemon Peel Oil": 12.00, "Peppermint Oil": 12.30,
+            "Rosemary Oil": 15.00, "Thyme Oil": 9.30, "Eucalyptus Oil": 9.80,
+            "Geranium Oil": 12.00, "Citronella Oil": 12.60,
+            "Squalane": 7.00, "Tocopherol (Vitamin E)": 6.00, "Retinyl Palmitate": 6.00,
+            "Mineral Oil": 10.00, "Petrolatum": 7.50, "Lanolin": 10.00
+        };
+
+        const HLB_SURFACTANTS_DATABASE = {
+            "Polysorbate 20 (Tween 20)": 16.67, "Polysorbate 22": 15.00, "Polysorbate 23": 16.00,
+            "Polysorbate 24": 17.00, "Polysorbate 60 (Tween 60)": 14.90,
+            "Polysorbate 80 (Tween 80)": 15.00, "Polysorbate 85 (Tween 85)": 11.00,
+            "Sorbitan Monolaurate (Span 20)": 9.00, "Sorbitan Palmitate (Span 40)": 6.70,
+            "Sorbitan Monostearate (Span 60)": 5.00, "Sorbitan Monooleate (Span 80)": 4.00,
+            "Sorbitan Trioleate (Span 85)": 2.00, "Sorbitan Tristearate (Span 65)": 2.00,
+            "Sorbitan Oleate": 4.30, "Sorbitan Isostearate": 4.70, "Sorbitan Olivate": 4.50,
+            "Glyceryl Stearate": 3.80, "Glyceryl Oleate": 3.40, "Glyceryl Monostearate": 4.00,
+            "Glyceryl Dilaurate": 7.50, "Glyceryl Distearate": 3.00, "Glyceryl Dioleate": 2.80,
+            "PEG-8 Stearate": 11.60, "PEG-20 Stearate": 15.00, "PEG-40 Stearate": 16.90,
+            "PEG-100 Stearate": 18.80, "PEG-6 Oleate": 10.50, "PEG-20 Oleate": 15.30,
+            "PEG-400 Dioleate": 11.70, "PEG-400 Distearate": 11.40, "PEG-8 Laurate": 13.10,
+            "PEG-20 Laurate": 16.20, "PEG-32 Laurate": 16.50, "PEG-400 Dilaurate": 15.00,
+            "Ceteareth-20": 15.20, "Ceteth-20": 15.70, "Steareth-20": 15.30,
+            "Oleth-20": 15.30, "Laureth-23": 16.90, "Decyl Glucoside": 12.10,
+            "Coco Glucoside": 11.40, "Caprylyl/Capryl Glucoside": 12.40, "Sodium Stearoyl Lactylate": 8.30,
+            "Lecithin": 7.60, "Poloxamer 188": 29.00, "Poloxamer 407": 22.00
+        };
+
+        // Initialize the calculator
+        function hlbInitializeApp() {
+            hlbPopulateDropdowns();
+        }
+
+        function hlbPopulateDropdowns() {
+            const oilSelect = document.getElementById('hlb-oil-select');
+            oilSelect.innerHTML = '<option value="">Choose an oil...</option>';
+            
+            Object.keys(HLB_OILS_DATABASE).sort().forEach(oil => {
+                const option = document.createElement('option');
+                option.value = oil;
+                option.textContent = oil;
+                oilSelect.appendChild(option);
+            });
+
+            const surfactant1Select = document.getElementById('hlb-surfactant-1');
+            const surfactant2Select = document.getElementById('hlb-surfactant-2');
+            
+            [surfactant1Select, surfactant2Select].forEach(select => {
+                select.innerHTML = '<option value="">Select surfactant...</option>';
+                Object.keys(HLB_SURFACTANTS_DATABASE).sort().forEach(surfactant => {
+                    const option = document.createElement('option');
+                    option.value = surfactant;
+                    option.textContent = surfactant;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Oil Functions
+        function hlbAddOilToFormulation() {
+            const select = document.getElementById('hlb-oil-select');
+            const percentageInput = document.getElementById('hlb-oil-percentage');
+
+            const oilName = select.value;
+            const percentage = parseFloat(percentageInput.value);
+
+            if (!oilName) {
+                alert('Please select an oil');
+                select.focus();
+                return;
+            }
+
+            if (!percentage || percentage <= 0 || percentage > 100) {
+                alert('Please enter a valid percentage (0-100)');
+                percentageInput.focus();
+                return;
+            }
+
+            const existingIndex = hlbCurrentFormulation.oils.findIndex(oil => oil.name === oilName);
+            if (existingIndex !== -1) {
+                hlbCurrentFormulation.oils[existingIndex].percentage = percentage;
+            } else {
+                hlbCurrentFormulation.oils.push({
+                    name: oilName,
+                    rhlb: HLB_OILS_DATABASE[oilName],
+                    percentage: percentage
+                });
+            }
+
+            hlbUpdateOilsTable();
+            hlbClearOilInputs();
+        }
+
+        function hlbUpdateOilsTable() {
+            const tbody = document.getElementById('hlb-oils-table').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+
+            hlbCurrentFormulation.oils.forEach((oil, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${oil.name}</td>
+                    <td>${oil.rhlb.toFixed(2)}</td>
+                    <td>${oil.percentage.toFixed(1)}%</td>
+                `;
+                row.onclick = () => hlbSelectTableRow(row, 'oil', index);
+            });
+        }
+
+        function hlbRemoveSelectedOil() {
+            const selectedRow = document.querySelector('#hlb-oils-table tr.selected');
+            if (!selectedRow) {
+                alert('Please select an oil to remove');
+                return;
+            }
+
+            const index = parseInt(selectedRow.dataset.index);
+            hlbCurrentFormulation.oils.splice(index, 1);
+            hlbUpdateOilsTable();
+        }
+
+        function hlbClearOilInputs() {
+            document.getElementById('hlb-oil-select').value = '';
+            document.getElementById('hlb-oil-percentage').value = '';
+        }
+
+        // Required HLB Calculation
+        function hlbCalculateRequiredHLB() {
+            if (hlbCurrentFormulation.oils.length === 0) {
+                alert('Please add oils to calculate Required HLB');
+                return;
+            }
+
+            const totalPercentage = hlbCurrentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
+            
+            if (Math.abs(totalPercentage - 100) > 0.1) {
+                alert(`Oil percentages should total 100%. Current total: ${totalPercentage.toFixed(1)}%`);
+                return;
+            }
+
+            let weightedHLB = 0;
+            hlbCurrentFormulation.oils.forEach(oil => {
+                weightedHLB += (oil.rhlb * oil.percentage) / 100;
+            });
+
+            hlbCurrentFormulation.requiredHLB = weightedHLB;
+
+            const resultDiv = document.getElementById('hlb-rhlb-result');
+            resultDiv.innerHTML = `<strong>Required HLB: ${weightedHLB.toFixed(2)}</strong>`;
+            resultDiv.className = 'hlb-result-display';
+            resultDiv.style.display = 'block';
+        }
+
+        // Surfactant Calculations
+        function hlbCalculateSurfactantRatios() {
+            if (!hlbCurrentFormulation.requiredHLB) {
+                alert('Please calculate Required HLB first');
+                return;
+            }
+
+            const surf1Name = document.getElementById('hlb-surfactant-1').value;
+            const surf2Name = document.getElementById('hlb-surfactant-2').value;
+
+            if (!surf1Name || !surf2Name) {
+                alert('Please select both surfactants');
+                return;
+            }
+
+            if (surf1Name === surf2Name) {
+                alert('Please choose different surfactants');
+                return;
+            }
+
+            const surf1HLB = HLB_SURFACTANTS_DATABASE[surf1Name];
+            const surf2HLB = HLB_SURFACTANTS_DATABASE[surf2Name];
+            const targetHLB = hlbCurrentFormulation.requiredHLB;
+
+            if (targetHLB < Math.min(surf1HLB, surf2HLB) || targetHLB > Math.max(surf1HLB, surf2HLB)) {
+                alert('Target HLB is outside the range of selected surfactants. Please choose different ones.');
+                return;
+            }
+
+            const ratio1 = (targetHLB - surf2HLB) / (surf1HLB - surf2HLB);
+            const ratio2 = 1 - ratio1;
+
+            if (ratio1 < 0 || ratio1 > 1) {
+                const resultDiv = document.getElementById('hlb-surfactant-result');
+                resultDiv.innerHTML = 'Cannot achieve target HLB with these surfactants';
+                resultDiv.className = 'hlb-result-display error';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            hlbCurrentFormulation.surfactantSystem = {
+                surfactant1: { name: surf1Name, hlb: surf1HLB, ratio: ratio1 },
+                surfactant2: { name: surf2Name, hlb: surf2HLB, ratio: ratio2 }
+            };
+
+            const resultDiv = document.getElementById('hlb-surfactant-result');
+            resultDiv.innerHTML = `
+                <strong>Surfactant Ratios:</strong><br>
+                ${surf1Name}: ${(ratio1 * 100).toFixed(1)}%<br>
+                ${surf2Name}: ${(ratio2 * 100).toFixed(1)}%
+            `;
+            resultDiv.className = 'hlb-result-display';
+            resultDiv.style.display = 'block';
+        }
+
+        // Other Ingredients Functions
+        function hlbAddOtherIngredient() {
+            const nameInput = document.getElementById('hlb-other-name');
+            const percentageInput = document.getElementById('hlb-other-percentage');
+
+            const name = nameInput.value.trim();
+            const percentage = parseFloat(percentageInput.value);
+
+            if (!name) {
+                alert('Please enter an ingredient name');
+                nameInput.focus();
+                return;
+            }
+
+            if (!percentage || percentage <= 0) {
+                alert('Please enter a valid percentage');
+                percentageInput.focus();
+                return;
+            }
+
+            const existingIndex = hlbCurrentFormulation.others.findIndex(ingredient => ingredient.name === name);
+            if (existingIndex !== -1) {
+                hlbCurrentFormulation.others[existingIndex].percentage = percentage;
+            } else {
+                hlbCurrentFormulation.others.push({
+                    name: name,
+                    percentage: percentage
+                });
+            }
+
+            hlbUpdateOthersTable();
+            hlbClearOtherInputs();
+        }
+
+        function hlbUpdateOthersTable() {
+            const tbody = document.getElementById('hlb-others-table').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+
+            hlbCurrentFormulation.others.forEach((ingredient, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${ingredient.name}</td>
+                    <td>${ingredient.percentage.toFixed(1)}%</td>
+                `;
+                row.onclick = () => hlbSelectTableRow(row, 'other', index);
+            });
+        }
+
+        function hlbRemoveSelectedOther() {
+            const selectedRow = document.querySelector('#hlb-others-table tr.selected');
+            if (!selectedRow) {
+                alert('Please select an ingredient to remove');
+                return;
+            }
+
+            const index = parseInt(selectedRow.dataset.index);
+            hlbCurrentFormulation.others.splice(index, 1);
+            hlbUpdateOthersTable();
+        }
+
+        function hlbClearOtherInputs() {
+            document.getElementById('hlb-other-name').value = '';
+            document.getElementById('hlb-other-percentage').value = '';
+        }
+
+        // Complete Recipe Generation
+        function hlbGenerateCompleteRecipe() {
+            if (!hlbValidateFormulation()) return;
+
+            const oilTotal = hlbCurrentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
+            const surfactantRatio = parseFloat(document.getElementById('hlb-surfactant-total').value) || 0;
+            const surfactantTotal = oilTotal * (surfactantRatio / 100);
+            const otherTotal = hlbCurrentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
+            const waterPhase = 100 - oilTotal - surfactantTotal - otherTotal;
+
+            if (waterPhase < 0) {
+                alert('Total exceeds 100%. Please adjust percentages.');
+                return;
+            }
+
+            const recipe = hlbGenerateRecipeText(oilTotal, surfactantTotal, otherTotal, waterPhase);
+            document.getElementById('hlb-recipe-output').textContent = recipe;
+
+            const resultDiv = document.getElementById('hlb-complete-result');
+            resultDiv.innerHTML = `
+                <strong>✅ Complete Formulation Generated!</strong><br>
+                Oil Phase: ${oilTotal.toFixed(1)}%<br>
+                Surfactant System: ${surfactantTotal.toFixed(1)}%<br>
+                Other Ingredients: ${otherTotal.toFixed(1)}%<br>
+                Water Phase: ${waterPhase.toFixed(1)}%<br>
+                Required HLB: ${hlbCurrentFormulation.requiredHLB.toFixed(2)}
+            `;
+            resultDiv.className = 'hlb-result-display';
+            resultDiv.style.display = 'block';
+
+            document.getElementById('hlb-export-btn').style.display = 'inline-block';
+        }
+
+        function hlbGenerateRecipeText(oilTotal, surfactantTotal, otherTotal, waterPhase) {
+            let recipe = "COSMETIC FORMULATION\n";
+            recipe += "=" .repeat(50) + "\n\n";
+            
+            recipe += "OIL PHASE (" + oilTotal.toFixed(1) + "%):\n";
+            hlbCurrentFormulation.oils.forEach(oil => {
+                recipe += `• ${oil.name}: ${oil.percentage.toFixed(1)}%\n`;
+            });
+            
+            if (hlbCurrentFormulation.surfactantSystem) {
+                recipe += `\nSURFACTANT SYSTEM (${surfactantTotal.toFixed(1)}%):\n`;
+                const surf1Amount = (surfactantTotal * hlbCurrentFormulation.surfactantSystem.surfactant1.ratio).toFixed(2);
+                const surf2Amount = (surfactantTotal * hlbCurrentFormulation.surfactantSystem.surfactant2.ratio).toFixed(2);
+                recipe += `• ${hlbCurrentFormulation.surfactantSystem.surfactant1.name}: ${surf1Amount}%\n`;
+                recipe += `• ${hlbCurrentFormulation.surfactantSystem.surfactant2.name}: ${surf2Amount}%\n`;
+            }
+            
+            if (hlbCurrentFormulation.others.length > 0) {
+                recipe += `\nOTHER INGREDIENTS (${otherTotal.toFixed(1)}%):\n`;
+                hlbCurrentFormulation.others.forEach(ingredient => {
+                    recipe += `• ${ingredient.name}: ${ingredient.percentage.toFixed(1)}%\n`;
+                });
+            }
+            
+            recipe += `\nWATER PHASE: ${waterPhase.toFixed(1)}%\n`;
+            recipe += `• Distilled Water: ${waterPhase.toFixed(1)}%\n\n`;
+            
+            recipe += "FORMULATION DETAILS:\n";
+            recipe += `• Required HLB: ${hlbCurrentFormulation.requiredHLB.toFixed(2)}\n`;
+            recipe += `• Total: 100.0%\n\n`;
+            
+            recipe += "MANUFACTURING INSTRUCTIONS:\n";
+            recipe += "1. Heat oil phase to 70°C\n";
+            recipe += "2. Heat water phase to 75°C\n";
+            recipe += "3. Add oil phase to water phase with mixing\n";
+            recipe += "4. Cool with continuous mixing to 40°C\n";
+            recipe += "5. Add heat-sensitive ingredients below 40°C\n";
+            recipe += "6. Mix until homogeneous\n";
+            recipe += "7. Check pH and adjust if necessary\n\n";
+            
+            recipe += "⚠️ Always perform stability testing before commercial use!\n";
+            
+            return recipe;
+        }
+
+        // PDF Export function
+        function hlbExportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const recipeText = document.getElementById('hlb-recipe-output').textContent;
+            const lines = doc.splitTextToSize(recipeText, 180);
+            
+            doc.setFontSize(16);
+            doc.text('HLB Formulation Recipe', 20, 20);
+            doc.setFontSize(12);
+            doc.text(lines, 20, 35);
+            
+            doc.save('hlb-formulation.pdf');
+        }
+
+        // Winsor Troubleshooting Function
+        function hlbAnalyzeEmulsionBehavior() {
+            const behavior = document.getElementById('hlb-emulsion-behavior').value;
+            const resultDiv = document.getElementById('hlb-troubleshooting-result');
+            
+            if (!behavior) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+
+            let diagnosis = '';
+            let solutions = '';
+            let winsorType = '';
+
+            switch (behavior) {
+                case 'winsor1':
+                    winsorType = 'Winsor Type I';
+                    diagnosis = 'Your surfactant system is too hydrophilic (HLB too high). The emulsion favors the water phase, creating an oil-in-water microemulsion with excess oil floating on top.';
+                    solutions = `
+                        <h5>🔧 Solutions to Fix Winsor Type I:</h5>
+                        <ol>
+                            <li><strong>Lower the HLB:</strong> Add more lipophilic surfactant (lower HLB)</li>
+                            <li><strong>Increase oil-loving surfactant ratio:</strong> Use more Span-type surfactants</li>
+                            <li><strong>Add co-surfactants:</strong> Include medium-chain alcohols (cetyl alcohol)</li>
+                            <li><strong>Adjust oil phase:</strong> Try more polar oils or reduce oil percentage</li>
+                            <li><strong>Temperature adjustment:</strong> Lower formulation temperature if using ethoxylated surfactants</li>
+                        </ol>`;
+                    break;
+
+                case 'winsor2':
+                    winsorType = 'Winsor Type II';
+                    diagnosis = 'Your surfactant system is too lipophilic (HLB too low). The emulsion favors the oil phase, creating a water-in-oil microemulsion with excess water at the bottom.';
+                    solutions = `
+                        <h5>🔧 Solutions to Fix Winsor Type II:</h5>
+                        <ol>
+                            <li><strong>Raise the HLB:</strong> Add more hydrophilic surfactant (higher HLB)</li>
+                            <li><strong>Increase water-loving surfactant ratio:</strong> Use more Tween-type surfactants</li>
+                            <li><strong>Add ionic surfactants:</strong> Include small amounts of sodium stearoyl lactylate</li>
+                            <li><strong>Adjust water phase:</strong> Add electrolytes or increase water percentage</li>
+                            <li><strong>Temperature adjustment:</strong> Raise formulation temperature if using ethoxylated surfactants</li>
+                        </ol>`;
+                    break;
+
+                case 'winsor3':
+                    winsorType = 'Winsor Type III';
+                    diagnosis = 'Your HLB is very close to optimal, but the system is at the phase transition point. This creates ultra-low interfacial tension but poor stability.';
+                    solutions = `
+                        <h5>🔧 Solutions to Fix Winsor Type III:</h5>
+                        <ol>
+                            <li><strong>Fine-tune HLB:</strong> Make small adjustments (±0.5 HLB units)</li>
+                            <li><strong>Increase surfactant concentration:</strong> Add more total surfactant</li>
+                            <li><strong>Add co-emulsifiers:</strong> Include fatty alcohols or fatty acids</li>
+                            <li><strong>Modify mixing:</strong> Use high-shear homogenization</li>
+                            <li><strong>Add thickeners:</strong> Include polymeric thickeners for stability</li>
+                        </ol>`;
+                    break;
+
+                case 'winsor4':
+                    winsorType = 'Winsor Type IV - OPTIMAL! ✅';
+                    diagnosis = 'Perfect! Your HLB is optimally matched. You have achieved a stable, single-phase microemulsion with excellent clarity and stability.';
+                    solutions = `
+                        <h5>🎉 Congratulations - Optimal Formulation!</h5>
+                        <ol>
+                            <li><strong>Document your formula:</strong> Record exact percentages and conditions</li>
+                            <li><strong>Scale up carefully:</strong> Maintain same mixing order and temperature</li>
+                            <li><strong>Stability test:</strong> Check freeze/thaw and temperature cycling</li>
+                            <li><strong>pH optimization:</strong> Fine-tune pH for maximum stability</li>
+                            <li><strong>Preserve carefully:</strong> Add appropriate preservative system</li>
+                        </ol>`;
+                    break;
+
+                case 'unstable':
+                    winsorType = 'Unstable System';
+                    diagnosis = 'Your emulsion lacks stability due to insufficient or incorrect surfactant selection. This could be due to HLB mismatch, insufficient surfactant concentration, or incompatible ingredients.';
+                    solutions = `
+                        <h5>🔧 Solutions for Unstable Emulsions:</h5>
+                        <ol>
+                            <li><strong>Recalculate HLB:</strong> Verify your Required HLB calculation</li>
+                            <li><strong>Increase surfactant amount:</strong> Try 20-30% of oil phase weight</li>
+                            <li><strong>Check mixing method:</strong> Use proper homogenization technique</li>
+                            <li><strong>Temperature matching:</strong> Ensure oil and water phases are same temperature</li>
+                            <li><strong>Add stabilizers:</strong> Include thickening agents or co-emulsifiers</li>
+                            <li><strong>Phase addition order:</strong> Add oil phase to water phase slowly</li>
+                        </ol>`;
+                    break;
+
+                case 'too-thick':
+                    winsorType = 'Viscosity Issue - Too Thick';
+                    diagnosis = 'Your emulsion may have formed a gel network or lamellar phase structures. This can happen with high concentrations of fatty alcohols or when HLB creates very stable interfacial films.';
+                    solutions = `
+                        <h5>🔧 Solutions for Over-Thick Emulsions:</h5>
+                        <ol>
+                            <li><strong>Reduce fatty alcohols:</strong> Lower cetyl/stearyl alcohol content</li>
+                            <li><strong>Increase water phase:</strong> Dilute to reduce viscosity</li>
+                            <li><strong>Adjust HLB slightly:</strong> Move away from liquid crystal formation</li>
+                            <li><strong>Add penetration enhancers:</strong> Include light esters like IPM</li>
+                            <li><strong>Temperature processing:</strong> Process at higher temperature to break gel networks</li>
+                            <li><strong>Homogenization:</strong> Use high-shear mixing to break structure</li>
+                        </ol>`;
+                    break;
+
+                case 'too-thin':
+                    winsorType = 'Viscosity Issue - Too Thin';
+                    diagnosis = 'Your emulsion lacks sufficient structure-building ingredients or the HLB may be creating a system with very low viscosity droplets.';
+                    solutions = `
+                        <h5>🔧 Solutions for Thin Emulsions:</h5>
+                        <ol>
+                            <li><strong>Add thickening agents:</strong> Include xanthan gum, carbomer, or HPMC</li>
+                            <li><strong>Increase fatty alcohols:</strong> Add cetyl alcohol or cetearyl alcohol</li>
+                            <li><strong>Add waxes:</strong> Include small amounts of emulsifying wax</li>
+                            <li><strong>Increase surfactant:</strong> Higher surfactant can increase viscosity</li>
+                            <li><strong>Electrolyte addition:</strong> Small amounts of salt can thicken O/W emulsions</li>
+                            <li><strong>Phase ratio:</strong> Increase internal phase percentage</li>
+                        </ol>`;
+                    break;
+
+                case 'phase-inversion':
+                    winsorType = 'Phase Inversion During Processing';
+                    diagnosis = 'Your emulsion is changing from O/W to W/O (or vice versa) during mixing. This often happens near the HLB balance point or due to temperature changes during processing.';
+                    solutions = `
+                        <h5>🔧 Solutions for Phase Inversion:</h5>
+                        <ol>
+                            <li><strong>Adjust HLB away from inversion point:</strong> Move ±2 HLB units from current value</li>
+                            <li><strong>Control processing temperature:</strong> Avoid PIT (Phase Inversion Temperature) zone</li>
+                            <li><strong>Modify mixing speed:</strong> Too high speed can cause inversion</li>
+                            <li><strong>Change phase ratio:</strong> Adjust oil:water ratio away from 50:50</li>
+                            <li><strong>Add ionic stabilizers:</strong> Include charged surfactants to prevent inversion</li>
+                            <li><strong>Sequential addition:</strong> Add phases very slowly during critical region</li>
+                        </ol>`;
+                    break;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="hlb-troubleshooting-steps">
+                    <h4>🔬 Diagnosis: ${winsorType}</h4>
+                    <p><strong>What's happening:</strong> ${diagnosis}</p>
+                    ${solutions}
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+                    <p><strong>💡 Pro Tip:</strong> Make one change at a time and test. Small adjustments (0.5-1.0 HLB units) often solve the problem. Always document your modifications!</p>
+                </div>
+            `;
+            
+            resultDiv.className = 'hlb-result-display';
+            resultDiv.style.display = 'block';
+        }
+
+        // Utility Functions
+        function hlbSelectTableRow(row, type, index) {
+            const table = row.closest('table');
+            table.querySelectorAll('tr').forEach(tr => tr.classList.remove('selected'));
+            row.classList.add('selected');
+            row.dataset.index = index;
+        }
+
+        function hlbValidateFormulation() {
+            if (hlbCurrentFormulation.oils.length === 0) {
+                alert('Please add oils to your formulation');
+                return false;
+            }
+            
+            if (!hlbCurrentFormulation.requiredHLB) {
+                alert('Please calculate the Required HLB');
+                return false;
+            }
+            
+            if (!hlbCurrentFormulation.surfactantSystem) {
+                alert('Please calculate surfactant ratios');
+                return false;
+            }
+            
+            const oilTotal = hlbCurrentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
+            const surfactantRatio = parseFloat(document.getElementById('hlb-surfactant-total').value) || 0;
+            const surfactantTotal = oilTotal * (surfactantRatio / 100);
+            const otherTotal = hlbCurrentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
+            
+            if (oilTotal + surfactantTotal + otherTotal > 100) {
+                alert('Total percentages exceed 100%. Please adjust your formulation.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', hlbInitializeApp);
+    </script>
+</body>
+</html>
