@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Scientific Soap Calculator - Philip Riachy, PhD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .signature {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            color: #FF6B35;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 3px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #ff6b6b);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #FF6B35;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .data-table tr.selected {
+            background: #ffe8e0;
+        }
+
+        .result-display {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin: 15px 0;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .result-display.error {
+            background: linear-gradient(135deg, #f44336, #ff6b6b);
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #ffe8e0;
+            border-radius: 8px;
+        }
+
+        .property-item {
+            text-align: center;
+        }
+
+        .property-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FF6B35;
+        }
+
+        .property-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .scientific-analysis {
+            background: #e8f4f8;
+            border: 2px solid #4a90a4;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .scientific-analysis h4 {
+            color: #2c5282;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .quality-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .quality-excellent { background: #c6f6d5; color: #22543d; }
+        .quality-good { background: #bee3f8; color: #2a4365; }
+        .quality-average { background: #faf089; color: #744210; }
+        .quality-poor { background: #fed7d7; color: #742a2a; }
+
+        .fatty-acid-detailed {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .lye-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .lye-option {
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .lye-option.active {
+            border-color: #FF6B35;
+            background: #ffe8e0;
+            color: #FF6B35;
+        }
+
+        .lye-option:hover {
+            border-color: #FF6B35;
+        }
+
+        .dual-lye-controls {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .dual-lye-controls.active {
+            display: block;
+        }
+
+        .recipe-section {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .recipe-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .recipe-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ins-calculator {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .ins-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #856404;
+            text-align: center;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .fatty-acid-detailed {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="signature">Philip Riachy, PhD</div>
+            <h1>Advanced Scientific Soap Calculator</h1>
+            <p class="subtitle">Scientific Saponification Calculator with Fatty Acid Analysis</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Oil Phase Section -->
+            <div class="section">
+                <h3>🫒 Oil & Fat Selection</h3>
+                
+                <div class="form-group">
+                    <label>Select Oil/Fat</label>
+                    <select id="oil-select" class="form-control">
+                        <option value="">Choose an oil or fat...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Weight (g)</label>
+                    <input type="number" id="oil-weight" class="form-control" step="0.1" min="0">
+                </div>
+                
+                <div>
+                    <button class="btn" onclick="addOilToRecipe()">Add Oil</button>
+                    <button class="btn btn-danger" onclick="removeSelectedOil()">Remove</button>
+                </div>
+
+                <table class="data-table" id="oils-table">
+                    <thead>
+                        <tr>
+                            <th>Oil/Fat</th>
+                            <th>Weight (g)</th>
+                            <th>%</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="fatty-acid-detailed" id="fatty-acid-profile" style="display: none;">
+                    <div class="property-item">
+                        <div class="property-value" id="lauric-value">0</div>
+                        <div class="property-label">Lauric (C12:0)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="myristic-value">0</div>
+                        <div class="property-label">Myristic (C14:0)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="palmitic-value">0</div>
+                        <div class="property-label">Palmitic (C16:0)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="stearic-value">0</div>
+                        <div class="property-label">Stearic (C18:0)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="oleic-value">0</div>
+                        <div class="property-label">Oleic (C18:1)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="linoleic-value">0</div>
+                        <div class="property-label">Linoleic (C18:2)</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="ricinoleic-value">0</div>
+                        <div class="property-label">Ricinoleic</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="iodine-value">0</div>
+                        <div class="property-label">Iodine Value</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-value" id="sap-value">0</div>
+                        <div class="property-label">SAP Value</div>
+                    </div>
+                </div>
+
+                <div class="ins-calculator" id="ins-calculator" style="display: none;">
+                    <div class="property-label" style="text-align: center; margin-bottom: 5px;">INS Value (SAP - Iodine)</div>
+                    <div class="ins-value" id="ins-value">0</div>
+                </div>
+            </div>
+
+            <!-- Lye Calculation Section -->
+            <div class="section">
+                <h3>🧪 Lye System</h3>
+                
+                <div class="form-group">
+                    <label>Lye Type</label>
+                    <div class="lye-selector">
+                        <div class="lye-option active" onclick="selectLyeType('naoh')" id="naoh-option">
+                            NaOH<br><small>Sodium Hydroxide (Hard Bars)</small>
+                        </div>
+                        <div class="lye-option" onclick="selectLyeType('koh')" id="koh-option">
+                            KOH<br><small>Potassium Hydroxide (Liquid Soap)</small>
+                        </div>
+                    </div>
+                    <div class="lye-option" onclick="selectLyeType('dual')" id="dual-option">
+                        Dual Lye System<br><small>NaOH + KOH Combination</small>
+                    </div>
+                </div>
+
+                <div class="dual-lye-controls" id="dual-lye-controls">
+                    <div class="form-group">
+                        <label>NaOH Percentage (%)</label>
+                        <input type="number" id="naoh-percentage" class="form-control" value="90" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>KOH Percentage (%)</label>
+                        <input type="number" id="koh-percentage" class="form-control" value="10" min="0" max="100" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Superfat (%)</label>
+                    <input type="number" id="superfat" class="form-control" value="0" min="0" max="20" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Lye Concentration (%)</label>
+                    <input type="number" id="lye-concentration" class="form-control" value="33" min="25" max="50" step="0.5">
+                </div>
+
+                <button class="btn btn-success" onclick="calculateLye()">Calculate Lye & Water</button>
+                <div id="lye-result" class="result-display"></div>
+            </div>
+
+            <!-- Scientific Analysis Section -->
+            <div class="section">
+                <h3>🔬 Scientific Analysis</h3>
+                
+                <div class="scientific-analysis" id="soap-analysis" style="display: none;">
+                    <h4>Cleansing Power Analysis</h4>
+                    <div id="cleansing-analysis"></div>
+                    
+                    <h4>Hardness & Longevity</h4>
+                    <div id="hardness-analysis"></div>
+                    
+                    <h4>Conditioning Properties</h4>
+                    <div id="conditioning-analysis"></div>
+                    
+                    <h4>Lather Characteristics</h4>
+                    <div id="lather-analysis"></div>
+                    
+                    <h4>Stability & Shelf Life</h4>
+                    <div id="stability-analysis"></div>
+                </div>
+
+                <div id="formulation-recommendations" class="scientific-analysis" style="display: none;">
+                    <h4>🎯 Professional Recommendations</h4>
+                    <div id="recommendations-content"></div>
+                </div>
+            </div>
+
+            <!-- Soap Additives Section -->
+            <div class="section">
+                <h3>🧪 Scientific Additives</h3>
+                
+                <div class="form-group">
+                    <label>Additive Category</label>
+                    <select id="additive-category" class="form-control" onchange="filterAdditives()">
+                        <option value="">All Categories</option>
+                        <option value="Hardness Modifier">Hardness Modifiers</option>
+                        <option value="Lather Enhancer">Lather Enhancers</option>
+                        <option value="Moisturizing Agent">Moisturizing Agents</option>
+                        <option value="Chelator">Chelators</option>
+                        <option value="Antioxidant">Antioxidants</option>
+                        <option value="Performance Modifier">Performance Modifiers</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Additive</label>
+                    <select id="additive-select" class="form-control" onchange="showAdditiveInfo()">
+                        <option value="">Choose an additive...</option>
+                    </select>
+                </div>
+                
+                <div id="additive-info" class="scientific-analysis" style="display: none;">
+                    <h4 id="additive-name-display"></h4>
+                    <div id="additive-details"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="text" id="additive-amount" class="form-control" placeholder="e.g., 2% oil weight, 1 tsp/lb">
+                </div>
+                
+                <div>
+                    <button class="btn" onclick="addAdditiveToRecipe()">Add Additive</button>
+                    <button class="btn btn-danger" onclick="removeSelectedAdditive()">Remove</button>
+                </div>
+
+                <table class="data-table" id="additives-used-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Additive</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div id="additive-interactions" class="scientific-analysis" style="display: none;">
+                    <h4>⚗️ Additive Interactions & Warnings</h4>
+                    <div id="interactions-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Summary Section -->
+        <div class="recipe-section">
+            <h3>📊 Complete Scientific Recipe</h3>
+            
+            <div class="recipe-form">
+                <div>
+                    <div class="form-group">
+                        <label>Recipe Name</label>
+                        <input type="text" id="recipe-name" class="form-control" placeholder="Scientific Soap Formula">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Oil Weight</label>
+                        <input type="text" id="total-oils" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Required Lye</label>
+                        <input type="text" id="total-lye" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Required Water</label>
+                        <input type="text" id="total-water" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>Recipe ID</label>
+                        <input type="text" id="recipe-id" class="form-control" placeholder="SF001">
+                    </div>
+                    <div class="form-group">
+                        <label>Soap Type</label>
+                        <select id="soap-type" class="form-control">
+                            <option value="Cold Process">Cold Process</option>
+                            <option value="Hot Process">Hot Process</option>
+                            <option value="Liquid Soap">Liquid Soap</option>
+                            <option value="Rebatch">Rebatch</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Ingredients</label>
+                        <input type="text" id="additives-name" class="form-control" placeholder="Essential oils, colorants">
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="text" id="additives-amount" class="form-control" placeholder="20g, 2% of oils">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>Notes & Instructions</label>
+                        <textarea id="recipe-notes" class="form-control" rows="6" placeholder="Scientific notes, temperature guidelines, special instructions..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-buttons">
+                <button class="btn btn-success" onclick="generateSoapRecipe()">Generate Scientific Recipe</button>
+                <button class="btn" onclick="exportSoapToPDF()">Export PDF</button>
+                <button class="btn" onclick="saveSoapRecipe()">Save JSON</button>
+                <button class="btn" onclick="loadSoapRecipe()">Load JSON</button>
+                <button class="btn btn-danger" onclick="clearAllSoapData()">New Recipe</button>
+                <button class="btn" onclick="addAdditive()">Add Additive</button>
+            </div>
+
+            <table class="data-table" id="additives-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Additive</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div id="soap-recipe-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Scientific Soap Database with complete fatty acid profiles and SAP values
+        const OILS_DATABASE = {
+            // Common Base Oils
+            "Olive Oil": { 
+                sap_naoh: 0.134, sap_koh: 0.190, iodine: 85,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 13, stearic: 3, oleic: 71, linoleic: 10, linolenic: 1, ricinoleic: 0 }
+            },
+            "Coconut Oil": { 
+                sap_naoh: 0.190, sap_koh: 0.268, iodine: 10,
+                fatty_acids: { lauric: 47, myristic: 18, palmitic: 9, stearic: 3, oleic: 8, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Palm Oil": { 
+                sap_naoh: 0.142, sap_koh: 0.200, iodine: 53,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 44, stearic: 5, oleic: 39, linoleic: 10, linolenic: 0, ricinoleic: 0 }
+            },
+            "Castor Oil": { 
+                sap_naoh: 0.128, sap_koh: 0.180, iodine: 85,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 2, stearic: 1, oleic: 4, linoleic: 4, linolenic: 0, ricinoleic: 89 }
+            },
+            "Sweet Almond Oil": { 
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 99,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 2, oleic: 69, linoleic: 17, linolenic: 0, ricinoleic: 0 }
+            },
+            "Avocado Oil": { 
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 86,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 20, stearic: 2, oleic: 58, linoleic: 12, linolenic: 1, ricinoleic: 0 }
+            },
+            "Jojoba Oil": { 
+                sap_naoh: 0.069, sap_koh: 0.097, iodine: 82,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 1, stearic: 0, oleic: 5, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Cocoa Butter": { 
+                sap_naoh: 0.137, sap_koh: 0.194, iodine: 37,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 25, stearic: 37, oleic: 33, linoleic: 3, linolenic: 0, ricinoleic: 0 }
+            },
+            "Shea Butter": { 
+                sap_naoh: 0.128, sap_koh: 0.181, iodine: 59,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 4, stearic: 40, oleic: 48, linoleic: 6, linolenic: 0, ricinoleic: 0 }
+            },
+            "Sunflower Oil": { 
+                sap_naoh: 0.134, sap_koh: 0.189, iodine: 133,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 4, oleic: 19, linoleic: 68, linolenic: 0, ricinoleic: 0 }
+            },
+            "Babassu Oil": { 
+                sap_naoh: 0.175, sap_koh: 0.247, iodine: 15,
+                fatty_acids: { lauric: 44, myristic: 16, palmitic: 8, stearic: 3, oleic: 12, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Palm Kernel Oil": { 
+                sap_naoh: 0.156, sap_koh: 0.220, iodine: 18,
+                fatty_acids: { lauric: 48, myristic: 16, palmitic: 8, stearic: 3, oleic: 15, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Lard": { 
+                sap_naoh: 0.138, sap_koh: 0.195, iodine: 60,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 26, stearic: 14, oleic: 44, linoleic: 10, linolenic: 1, ricinoleic: 0 }
+            },
+            "Tallow (Beef)": { 
+                sap_naoh: 0.140, sap_koh: 0.197, iodine: 42,
+                fatty_acids: { lauric: 0, myristic: 3, palmitic: 24, stearic: 19, oleic: 43, linoleic: 3, linolenic: 1, ricinoleic: 0 }
+            },
+            
+            // Individual Fatty Acids (for advanced formulation)
+            "Lauric Acid": {
+                sap_naoh: 0.280, sap_koh: 0.395, iodine: 0,
+                fatty_acids: { lauric: 100, myristic: 0, palmitic: 0, stearic: 0, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Myristic Acid": {
+                sap_naoh: 0.246, sap_koh: 0.347, iodine: 0,
+                fatty_acids: { lauric: 0, myristic: 100, palmitic: 0, stearic: 0, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Palmitic Acid": {
+                sap_naoh: 0.219, sap_koh: 0.309, iodine: 0,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 100, stearic: 0, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Stearic Acid": {
+                sap_naoh: 0.197, sap_koh: 0.278, iodine: 0,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 100, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Oleic Acid": {
+                sap_naoh: 0.199, sap_koh: 0.280, iodine: 90,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 0, oleic: 100, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Linoleic Acid": {
+                sap_naoh: 0.200, sap_koh: 0.282, iodine: 181,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 0, oleic: 0, linoleic: 100, linolenic: 0, ricinoleic: 0 }
+            },
+            "Linolenic Acid": {
+                sap_naoh: 0.202, sap_koh: 0.285, iodine: 274,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 0, oleic: 0, linoleic: 0, linolenic: 100, ricinoleic: 0 }
+            },
+            "Ricinoleic Acid": {
+                sap_naoh: 0.188, sap_koh: 0.265, iodine: 85,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 0, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 100 }
+            }
+        };
+
+        // Comprehensive Soap Additives Database based on molecular science
+        const ADDITIVES_DATABASE = {
+            // Hardness Modifiers
+            "Salt (Sodium Chloride)": {
+                category: "Hardness Modifier",
+                usageRate: "1-3% by oil weight",
+                maxRate: 5,
+                mechanism: "Disrupts hydrogen-bonded water structures, creates ionic interactions for compact crystalline arrangements",
+                effects: ["Faster unmolding (6 hours)", "Immediate hardness", "20-30% longer bar life", "May cause brittleness at >5%"],
+                instructions: "Dissolve in lye water. Optimal: 1-3% by oil weight."
+            },
+            "Sodium Lactate": {
+                category: "Hardness Modifier", 
+                usageRate: "1-3% by oil weight",
+                maxRate: 5,
+                mechanism: "Lactate forms hydrogen bonds with fatty acids, acts as bridging molecule between soap crystals",
+                effects: ["Long-term hardness", "Maintains flexibility", "Clean mold release", "Humectant properties"],
+                instructions: "Add to cooled lye water. Excellent for intricate molds. 1-3% by oil weight."
+            },
+            "Stearic Acid": {
+                category: "Hardness Modifier",
+                usageRate: "0.5-1% (CP), up to 28% (HP shaving)",
+                maxRate: 28,
+                mechanism: "18-carbon chain creates van der Waals interactions, forms acid-soap complexes",
+                effects: ["Strong crystalline structure", "Excellent for shaving soaps", "Requires >80°C to prevent false trace"],
+                instructions: "Melt with oils >80°C. Can cause false trace if too cool."
+            },
+            
+            // Lather Enhancers
+            "Sugar (Sucrose)": {
+                category: "Lather Enhancer",
+                usageRate: "1-2 tbsp per pound oils",
+                maxRate: 10,
+                mechanism: "8 hydroxyl groups reduce surface tension from 72 mN/m to ~24 mN/m, improve bubble formation",
+                effects: ["Dramatically increased bubble volume", "Faster lather formation", "Improved bubble stability"],
+                instructions: "Dissolve in lye water or add at trace. Start with 1 tbsp per pound."
+            },
+            "Sorbitol": {
+                category: "Lather Enhancer",
+                usageRate: "5% by oil weight (optimal)",
+                maxRate: 8,
+                mechanism: "Superior surface activity, reduces Ostwald ripening, increases solution viscosity",
+                effects: ["Most abundant lather of all enhancers", "Excellent foam stabilization", "Silky texture"],
+                instructions: "Add at trace. 5% by oil weight produces optimal results."
+            },
+            "Beer": {
+                category: "Lather Enhancer",
+                usageRate: "Replace 25-50% of water",
+                maxRate: 100,
+                mechanism: "Natural sugars from malted grains, proteins create Gibbs-Marangoni effect",
+                effects: ["Exceptional lather stability", "Complex sugar profile benefits", "Natural conditioning"],
+                instructions: "Boil to remove alcohol, cool completely. Replace portion of water weight."
+            },
+            "Honey": {
+                category: "Lather Enhancer",
+                usageRate: "1 tsp per pound oils",
+                maxRate: 3,
+                mechanism: "Complex sugar profile, natural enzymes enhance lather texture",
+                effects: ["Silky, luxurious lather", "Natural humectant", "Antimicrobial properties"],
+                instructions: "Add at trace. Start with 1 tsp per pound, max 1 tbsp."
+            },
+            
+            // Moisturizing Agents
+            "Glycerin": {
+                category: "Moisturizing Agent",
+                usageRate: "1-5% additional (5% natural)",
+                maxRate: 10,
+                mechanism: "3 hydroxyl groups form hydrogen bonds, attracts atmospheric moisture",
+                effects: ["Superior humectant properties", "Reduces transepidermal water loss", "May draw moisture from skin in low humidity"],
+                instructions: "Naturally produced ~5%. Additional amounts at trace. Use carefully in dry climates."
+            },
+            "Milk Powder": {
+                category: "Moisturizing Agent",
+                usageRate: "1-2 tbsp per pound oils",
+                maxRate: 4,
+                mechanism: "Casein proteins (80%) form protective films, whey proteins provide bioactive peptides",
+                effects: ["Protective protein films", "Gentle cleansing", "Amino acid nutrition", "Natural conditioning"],
+                instructions: "Mix with oils or add at trace. Can also replace water portion in lye solution."
+            },
+            "Bentonite Clay": {
+                category: "Moisturizing Agent",
+                usageRate: "1 tsp per pound oils",
+                maxRate: 2,
+                mechanism: "Highest cation-exchange capacity, electromagnetic charges attract toxins",
+                effects: ["Strongest absorptive properties", "Best for oily skin", "Natural detoxification"],
+                instructions: "Pre-mix with equal distilled water. Add at trace. Start with 1 tsp per pound."
+            },
+            "Kaolin Clay": {
+                category: "Moisturizing Agent", 
+                usageRate: "1 tsp - 1 tbsp per pound oils",
+                maxRate: 3,
+                mechanism: "Lowest CEC, gentle exfoliation, provides 'slip' properties",
+                effects: ["Gentlest clay action", "Improves lather texture", "Mild exfoliation", "Increases hardness"],
+                instructions: "Pre-mix with water. Very gentle, can use up to 1 tbsp per pound."
+            },
+            "French Green Clay": {
+                category: "Moisturizing Agent",
+                usageRate: "1 tsp per pound oils", 
+                maxRate: 2,
+                mechanism: "Medium CEC, iron oxide content, balanced detoxification",
+                effects: ["Natural green coloration", "Balanced detox properties", "Medium absorption"],
+                instructions: "Pre-mix with distilled water. Natural colorant plus skin benefits."
+            },
+            
+            // Functional Additives - Chelators
+            "EDTA (Tetrasodium)": {
+                category: "Chelator",
+                usageRate: "0.1-0.5% by oil weight",
+                maxRate: 1,
+                mechanism: "6 chelating sites form 1:1 complexes with metal ions, 100-1000x more effective at pH 7",
+                effects: ["Strongest metal ion binding", "Prevents oxidation catalysis", "Improves lather in hard water"],
+                instructions: "Add to lye water. Most effective chelator. 0.1-0.5% by oil weight."
+            },
+            "Citric Acid": {
+                category: "Chelator",
+                usageRate: "0.1-0.2% by oil weight + NaOH",
+                maxRate: 0.5,
+                mechanism: "Must be neutralized to sodium citrate (10g citric + 6g NaOH), provides biodegradable chelation",
+                effects: ["Eco-friendly chelation", "Requires lye adjustment", "pH buffering"],
+                instructions: "Calculate extra NaOH needed (6g NaOH per 10g citric acid). Add citric to lye water."
+            },
+            "Sodium Gluconate": {
+                category: "Chelator",
+                usageRate: "0.1-0.5% by oil weight",
+                maxRate: 1,
+                mechanism: "2 gluconate ions per metal ion, 60% biodegradation in 10 days",
+                effects: ["Biodegradable alternative to EDTA", "Environmentally preferred", "Good metal binding"],
+                instructions: "Add to lye water. Environmentally friendly EDTA alternative."
+            },
+            
+            // Functional Additives - Antioxidants  
+            "Rosemary Oleoresin Extract (ROE)": {
+                category: "Antioxidant",
+                usageRate: "0.05% by oil weight",
+                maxRate: 0.1,
+                mechanism: "7% carnosic acid content, phenolic diterpenes stable to 200°C, semi-occlusive protection",
+                effects: ["Superior oxidation prevention", "Heat stable", "More effective than vitamin E", "Long-lasting protection"],
+                instructions: "Add to oils at purchase, not during soap making. 4-8 drops per pound oils."
+            },
+            "Vitamin E (Mixed Tocopherols)": {
+                category: "Antioxidant",
+                usageRate: "0.1-0.5% by oil weight", 
+                maxRate: 1,
+                mechanism: "Phenolic compounds interrupt free radical chain reactions",
+                effects: ["Antioxidant protection", "Skin conditioning", "Extends oil shelf life"],
+                instructions: "Add to oils or at trace. Less effective than ROE but more available."
+            },
+            
+            // Performance Modifiers
+            "Silk Proteins (Hydrolyzed)": {
+                category: "Performance Modifier",
+                usageRate: "1-2% by oil weight",
+                maxRate: 5,
+                mechanism: "18-19 amino acid chains, high serine content provides water-binding and film-forming",
+                effects: ["Luxurious lather feel", "Protein conditioning", "Film-forming properties", "Improved lather stability"],
+                instructions: "Dissolve in lye water or add at trace. Creates silky, luxurious feel."
+            },
+            "Lanolin": {
+                category: "Performance Modifier",
+                usageRate: "1-5% by oil weight",
+                maxRate: 10,
+                mechanism: "Complex sterol esters hold 50% weight in water, penetrates stratum corneum",
+                effects: ["Deep moisturization", "Longer-lasting conditioning", "Superior water retention"],
+                instructions: "Melt with oils. Excellent for very dry skin formulations."
+            },
+            "Allantoin": {
+                category: "Performance Modifier",
+                usageRate: "0.5-2% by oil weight",
+                maxRate: 2,
+                mechanism: "Keratolytic effects increase water content in extracellular matrix",
+                effects: ["Promotes healthy tissue formation", "Increases skin water content", "Healing properties"],
+                instructions: "Add below 50°C. Disperse carefully. FDA approved 0.5-2.0%."
+            }
+        };
+
+        // Application State
+        let currentSoapRecipe = {
+            oils: [],
+            additives: [],
+            scientificAdditives: [],
+            lyeType: 'naoh',
+            lyeCalculation: null
+        };
+
+        // Initialize Application
+        function initializeSoapApp() {
+            console.log('Initializing Advanced Soap Calculator...');
+            populateOilDropdown();
+            populateAdditiveDropdown();
+            setupSoapEventListeners();
+            updateNaOHPercentage();
+            console.log('Advanced Soap Calculator ready!');
+        }
+
+        function populateOilDropdown() {
+            const oilSelect = document.getElementById('oil-select');
+            Object.keys(OILS_DATABASE).sort().forEach(oil => {
+                const option = document.createElement('option');
+                option.value = oil;
+                option.textContent = oil;
+                oilSelect.appendChild(option);
+            });
+        }
+
+        function populateAdditiveDropdown() {
+            const additiveSelect = document.getElementById('additive-select');
+            Object.keys(ADDITIVES_DATABASE).sort().forEach(additive => {
+                const option = document.createElement('option');
+                option.value = additive;
+                option.textContent = additive;
+                additiveSelect.appendChild(option);
+            });
+        }
+
+        function filterAdditives() {
+            const categoryFilter = document.getElementById('additive-category').value;
+            const additiveSelect = document.getElementById('additive-select');
+            
+            // Clear current options
+            additiveSelect.innerHTML = '<option value="">Choose an additive...</option>';
+            
+            // Filter and populate
+            Object.keys(ADDITIVES_DATABASE).forEach(additive => {
+                const data = ADDITIVES_DATABASE[additive];
+                if (!categoryFilter || data.category === categoryFilter) {
+                    const option = document.createElement('option');
+                    option.value = additive;
+                    option.textContent = additive;
+                    additiveSelect.appendChild(option);
+                }
+            });
+        }
+
+        function showAdditiveInfo() {
+            const additiveName = document.getElementById('additive-select').value;
+            const infoDiv = document.getElementById('additive-info');
+            const nameDisplay = document.getElementById('additive-name-display');
+            const detailsDiv = document.getElementById('additive-details');
+
+            if (!additiveName) {
+                infoDiv.style.display = 'none';
+                return;
+            }
+
+            const data = ADDITIVES_DATABASE[additiveName];
+            nameDisplay.textContent = `${additiveName} (${data.category})`;
+            
+            let detailsHTML = `
+                <p><strong>Usage Rate:</strong> ${data.usageRate}</p>
+                <p><strong>Mechanism:</strong> ${data.mechanism}</p>
+                <p><strong>Effects:</strong></p>
+                <ul>
+                    ${data.effects.map(effect => `<li>${effect}</li>`).join('')}
+                </ul>
+                <p><strong>Instructions:</strong> ${data.instructions}</p>
+            `;
+            
+            detailsDiv.innerHTML = detailsHTML;
+            infoDiv.style.display = 'block';
+        }
+
+        function addAdditiveToRecipe() {
+            const additiveName = document.getElementById('additive-select').value;
+            const amount = document.getElementById('additive-amount').value.trim();
+
+            if (!additiveName) {
+                alert('Please select an additive');
+                return;
+            }
+
+            if (!amount) {
+                alert('Please enter an amount');
+                return;
+            }
+
+            const additiveData = ADDITIVES_DATABASE[additiveName];
+            const scientificAdditive = {
+                name: additiveName,
+                category: additiveData.category,
+                amount: amount,
+                usageRate: additiveData.usageRate,
+                mechanism: additiveData.mechanism
+            };
+
+            currentSoapRecipe.scientificAdditives.push(scientificAdditive);
+            updateScientificAdditivesTable();
+            analyzeAdditiveInteractions();
+            
+            // Clear inputs
+            document.getElementById('additive-select').value = '';
+            document.getElementById('additive-amount').value = '';
+            document.getElementById('additive-info').style.display = 'none';
+        }
+
+        function removeSelectedAdditive() {
+            const selectedRow = document.querySelector('#additives-used-table tr.selected');
+            if (!selectedRow) {
+                alert('Please select an additive to remove');
+                return;
+            }
+
+            const index = parseInt(selectedRow.dataset.index);
+            currentSoapRecipe.scientificAdditives.splice(index, 1);
+            updateScientificAdditivesTable();
+            analyzeAdditiveInteractions();
+        }
+
+        function updateScientificAdditivesTable() {
+            const table = document.getElementById('additives-used-table');
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            if (currentSoapRecipe.scientificAdditives.length === 0) {
+                table.style.display = 'none';
+                return;
+            }
+
+            currentSoapRecipe.scientificAdditives.forEach((additive, index) => {
+                const row = document.createElement('tr');
+                row.onclick = () => selectTableRow(row, 'scientific-additive', index);
+                row.innerHTML = `
+                    <td>${additive.name}</td>
+                    <td><span class="quality-indicator quality-good">${additive.category}</span></td>
+                    <td>${additive.amount}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.style.display = 'table';
+        }
+
+        function analyzeAdditiveInteractions() {
+            if (currentSoapRecipe.scientificAdditives.length === 0) {
+                document.getElementById('additive-interactions').style.display = 'none';
+                return;
+            }
+
+            const categories = currentSoapRecipe.scientificAdditives.map(a => a.category);
+            const names = currentSoapRecipe.scientificAdditives.map(a => a.name);
+            
+            let interactions = [];
+            let warnings = [];
+
+            // Analyze beneficial combinations
+            if (categories.includes('Hardness Modifier') && names.includes('Salt (Sodium Chloride)') && names.includes('Sodium Lactate')) {
+                interactions.push('<span class="quality-indicator quality-excellent">Synergy</span> Salt + Sodium Lactate: Complementary hardness mechanisms - immediate + long-term benefits.');
+            }
+
+            if (categories.includes('Chelator') && categories.includes('Antioxidant')) {
+                interactions.push('<span class="quality-indicator quality-excellent">Synergy</span> Chelator + Antioxidant: Multiplicative protection against oxidation and rancidity.');
+            }
+
+            if (categories.includes('Lather Enhancer') && names.some(name => name.includes('Sugar') || name.includes('Sorbitol'))) {
+                interactions.push('<span class="quality-indicator quality-good">Enhancement</span> Sugar-based lather enhancers work exceptionally well with high coconut oil formulations.');
+            }
+
+            // Analyze potential issues
+            if (categories.filter(c => c === 'Hardness Modifier').length > 2) {
+                warnings.push('<span class="quality-indicator quality-average">Caution</span> Multiple hardness modifiers may cause brittleness. Monitor total concentration.');
+            }
+
+            if (names.includes('Citric Acid')) {
+                warnings.push('<span class="quality-indicator quality-average">Important</span> Citric acid requires additional NaOH calculation (6g NaOH per 10g citric acid).');
+            }
+
+            if (categories.filter(c => c === 'Chelator').length > 1) {
+                warnings.push('<span class="quality-indicator quality-average">Note</span> Multiple chelators may interfere with colorants and beneficial trace minerals.');
+            }
+
+            if (names.includes('Stearic Acid')) {
+                warnings.push('<span class="quality-indicator quality-average">Temperature</span> Stearic acid requires processing >80°C to prevent false trace.');
+            }
+
+            let interactionsHTML = '';
+            if (interactions.length > 0) {
+                interactionsHTML += '<h5>Beneficial Interactions:</h5>' + interactions.map(i => `<p>${i}</p>`).join('');
+            }
+            if (warnings.length > 0) {
+                interactionsHTML += '<h5>Formulation Notes:</h5>' + warnings.map(w => `<p>${w}</p>`).join('');
+            }
+
+            if (interactionsHTML) {
+                document.getElementById('interactions-content').innerHTML = interactionsHTML;
+                document.getElementById('additive-interactions').style.display = 'block';
+            } else {
+                document.getElementById('additive-interactions').style.display = 'none';
+            }
+        }
+
+        function setupSoapEventListeners() {
+            document.getElementById('oil-weight').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addOilToRecipe();
+            });
+
+            document.getElementById('additives-amount').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addAdditive();
+            });
+
+            document.getElementById('naoh-percentage').addEventListener('input', updateKOHPercentage);
+            document.getElementById('koh-percentage').addEventListener('input', updateNaOHPercentage);
+        }
+
+        // Lye Type Selection
+        function selectLyeType(type) {
+            document.querySelectorAll('.lye-option').forEach(option => option.classList.remove('active'));
+            document.getElementById(`${type}-option`).classList.add('active');
+            
+            const dualControls = document.getElementById('dual-lye-controls');
+            if (type === 'dual') {
+                dualControls.classList.add('active');
+            } else {
+                dualControls.classList.remove('active');
+            }
+            
+            currentSoapRecipe.lyeType = type;
+        }
+
+        function updateKOHPercentage() {
+            const naohPct = parseFloat(document.getElementById('naoh-percentage').value) || 0;
+            const kohPct = 100 - naohPct;
+            document.getElementById('koh-percentage').value = kohPct.toFixed(1);
+        }
+
+        function updateNaOHPercentage() {
+            const kohPct = parseFloat(document.getElementById('koh-percentage').value) || 0;
+            const naohPct = 100 - kohPct;
+            document.getElementById('naoh-percentage').value = naohPct.toFixed(1);
+        }
+
+        // Oil Management Functions
+        function addOilToRecipe() {
+            const oilSelect = document.getElementById('oil-select');
+            const weightInput = document.getElementById('oil-weight');
+
+            const oilName = oilSelect.value;
+            const weight = parseFloat(weightInput.value);
+
+            if (!oilName) {
+                alert('Please select an oil');
+                return;
+            }
+
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                weightInput.focus();
+                return;
+            }
+
+            const oil = {
+                name: oilName,
+                weight: weight,
+                sap_naoh: OILS_DATABASE[oilName].sap_naoh,
+                sap_koh: OILS_DATABASE[oilName].sap_koh,
+                iodine: OILS_DATABASE[oilName].iodine,
+                fatty_acids: OILS_DATABASE[oilName].fatty_acids
+            };
+
+            currentSoapRecipe.oils.push(oil);
+            updateOilsTable();
+            updateFattyAcidProfile();
+            updateTotalOilWeight();
+            performScientificAnalysis();
+            
+            // Clear inputs
+            oilSelect.value = '';
+            weightInput.value = '';
+            oilSelect.focus();
+        }
+
+        function updateOilsTable() {
+            const tbody = document.querySelector('#oils-table tbody');
+            tbody.innerHTML = '';
+
+            const totalWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+
+            currentSoapRecipe.oils.forEach((oil, index) => {
+                const percentage = totalWeight > 0 ? (oil.weight / totalWeight * 100) : 0;
+                const row = document.createElement('tr');
+                row.onclick = () => selectTableRow(row, 'oil', index);
+                row.innerHTML = `
+                    <td>${oil.name}</td>
+                    <td>${oil.weight.toFixed(1)}g</td>
+                    <td>${percentage.toFixed(1)}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function removeSelectedOil() {
+            const selectedRow = document.querySelector('#oils-table tr.selected');
+            if (!selectedRow) {
+                alert('Please select an oil to remove');
+                return;
+            }
+
+            const index = parseInt(selectedRow.dataset.index);
+            currentSoapRecipe.oils.splice(index, 1);
+            updateOilsTable();
+            updateFattyAcidProfile();
+            updateTotalOilWeight();
+            performScientificAnalysis();
+        }
+
+        function updateFattyAcidProfile() {
+            if (currentSoapRecipe.oils.length === 0) {
+                document.getElementById('fatty-acid-profile').style.display = 'none';
+                document.getElementById('ins-calculator').style.display = 'none';
+                document.getElementById('soap-analysis').style.display = 'none';
+                document.getElementById('formulation-recommendations').style.display = 'none';
+                return;
+            }
+
+            const totalWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+            
+            const fattyAcidProfile = {
+                lauric: 0, myristic: 0, palmitic: 0, stearic: 0,
+                oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 0
+            };
+
+            let weightedSapValue = 0;
+            let weightedIodineValue = 0;
+
+            currentSoapRecipe.oils.forEach(oil => {
+                const percentage = oil.weight / totalWeight;
+                Object.keys(fattyAcidProfile).forEach(acid => {
+                    if (oil.fatty_acids[acid]) {
+                        fattyAcidProfile[acid] += oil.fatty_acids[acid] * percentage;
+                    }
+                });
+                weightedSapValue += oil.sap_naoh * 1000 * percentage; // Convert to mg KOH/g
+                weightedIodineValue += oil.iodine * percentage;
+            });
+
+            // Update fatty acid display
+            document.getElementById('lauric-value').textContent = Math.round(fattyAcidProfile.lauric) + '%';
+            document.getElementById('myristic-value').textContent = Math.round(fattyAcidProfile.myristic) + '%';
+            document.getElementById('palmitic-value').textContent = Math.round(fattyAcidProfile.palmitic) + '%';
+            document.getElementById('stearic-value').textContent = Math.round(fattyAcidProfile.stearic) + '%';
+            document.getElementById('oleic-value').textContent = Math.round(fattyAcidProfile.oleic) + '%';
+            document.getElementById('linoleic-value').textContent = Math.round(fattyAcidProfile.linoleic) + '%';
+            document.getElementById('ricinoleic-value').textContent = Math.round(fattyAcidProfile.ricinoleic) + '%';
+            document.getElementById('iodine-value').textContent = Math.round(weightedIodineValue);
+            document.getElementById('sap-value').textContent = Math.round(weightedSapValue);
+
+            // Calculate and display INS value
+            const insValue = Math.round(weightedSapValue - weightedIodineValue);
+            document.getElementById('ins-value').textContent = insValue;
+            
+            document.getElementById('fatty-acid-profile').style.display = 'grid';
+            document.getElementById('ins-calculator').style.display = 'block';
+
+            // Store calculated values for analysis
+            currentSoapRecipe.calculatedProfile = {
+                ...fattyAcidProfile,
+                sapValue: weightedSapValue,
+                iodineValue: weightedIodineValue,
+                insValue: insValue
+            };
+        }
+
+        function performScientificAnalysis() {
+            if (!currentSoapRecipe.calculatedProfile) return;
+
+            const profile = currentSoapRecipe.calculatedProfile;
+            
+            // Calculate key metrics
+            const cleansingPower = profile.lauric + profile.myristic;
+            const hardness = profile.palmitic + profile.stearic;
+            const conditioning = profile.oleic + profile.linoleic + profile.ricinoleic;
+            const bubblyLather = profile.lauric + profile.myristic + profile.ricinoleic;
+            const stableLather = profile.palmitic + profile.stearic + profile.ricinoleic;
+            const polyunsaturated = profile.linoleic + profile.linolenic;
+
+            // Cleansing Analysis
+            let cleansingAnalysis = '';
+            if (cleansingPower < 12) {
+                cleansingAnalysis = `<span class="quality-indicator quality-poor">Low ${cleansingPower.toFixed(1)}%</span> - May lack cleansing power. Consider adding coconut or palm kernel oil.`;
+            } else if (cleansingPower < 22) {
+                cleansingAnalysis = `<span class="quality-indicator quality-good">Optimal ${cleansingPower.toFixed(1)}%</span> - Balanced cleansing power following professional guidelines (15-25%).`;
+            } else if (cleansingPower < 30) {
+                cleansingAnalysis = `<span class="quality-indicator quality-average">High ${cleansingPower.toFixed(1)}%</span> - Strong cleansing. May strip natural oils. Consider increasing superfat to 8-10%.`;
+            } else {
+                cleansingAnalysis = `<span class="quality-indicator quality-poor">Excessive ${cleansingPower.toFixed(1)}%</span> - Very harsh. Recommend reducing lauric/myristic oils significantly.`;
+            }
+
+            // Hardness Analysis
+            let hardnessAnalysis = '';
+            if (hardness < 25) {
+                hardnessAnalysis = `<span class="quality-indicator quality-poor">Soft ${hardness.toFixed(1)}%</span> - Bars may be too soft. Add palmitic/stearic acids for durability.`;
+            } else if (hardness < 45) {
+                hardnessAnalysis = `<span class="quality-indicator quality-excellent">Optimal ${hardness.toFixed(1)}%</span> - Professional range (30-40%) for balanced hardness and longevity.`;
+            } else if (hardness < 55) {
+                hardnessAnalysis = `<span class="quality-indicator quality-average">High ${hardness.toFixed(1)}%</span> - Very hard bars. May reduce lather quality.`;
+            } else {
+                hardnessAnalysis = `<span class="quality-indicator quality-poor">Excessive ${hardness.toFixed(1)}%</span> - Waxy texture likely. Reduce hard fats.`;
+            }
+
+            // Conditioning Analysis
+            let conditioningAnalysis = '';
+            if (conditioning < 30) {
+                conditioningAnalysis = `<span class="quality-indicator quality-poor">Low ${conditioning.toFixed(1)}%</span> - May be drying. Increase oleic acid content.`;
+            } else if (conditioning < 50) {
+                conditioningAnalysis = `<span class="quality-indicator quality-good">Balanced ${conditioning.toFixed(1)}%</span> - Good conditioning properties for daily use.`;
+            } else if (conditioning < 65) {
+                conditioningAnalysis = `<span class="quality-indicator quality-excellent">High ${conditioning.toFixed(1)}%</span> - Excellent for sensitive or dry skin.`;
+            } else {
+                conditioningAnalysis = `<span class="quality-indicator quality-average">Very High ${conditioning.toFixed(1)}%</span> - May produce slimy lather texture.`;
+            }
+
+            // Lather Analysis
+            let latherAnalysis = `
+                <strong>Bubbly Lather:</strong> ${bubblyLather.toFixed(1)}% (Lauric + Myristic + Ricinoleic)<br>
+                <strong>Stable Lather:</strong> ${stableLather.toFixed(1)}% (Palmitic + Stearic + Ricinoleic)<br>
+            `;
+            
+            if (profile.ricinoleic > 0) {
+                latherAnalysis += `<span class="quality-indicator quality-excellent">Castor Enhancement</span> - Ricinoleic acid will dramatically improve lather speed and stability.`;
+            }
+
+            // Stability Analysis
+            let stabilityAnalysis = '';
+            if (polyunsaturated < 10) {
+                stabilityAnalysis = `<span class="quality-indicator quality-excellent">Excellent ${polyunsaturated.toFixed(1)}%</span> - Long shelf life expected.`;
+            } else if (polyunsaturated < 15) {
+                stabilityAnalysis = `<span class="quality-indicator quality-good">Good ${polyunsaturated.toFixed(1)}%</span> - Stable with proper storage.`;
+            } else if (polyunsaturated < 20) {
+                stabilityAnalysis = `<span class="quality-indicator quality-average">Moderate ${polyunsaturated.toFixed(1)}%</span> - Use antioxidants, store cool/dark.`;
+            } else {
+                stabilityAnalysis = `<span class="quality-indicator quality-poor">Poor ${polyunsaturated.toFixed(1)}%</span> - High rancidity risk. Immediate use recommended.`;
+            }
+
+            // Update analysis display
+            document.getElementById('cleansing-analysis').innerHTML = cleansingAnalysis;
+            document.getElementById('hardness-analysis').innerHTML = hardnessAnalysis;
+            document.getElementById('conditioning-analysis').innerHTML = conditioningAnalysis;
+            document.getElementById('lather-analysis').innerHTML = latherAnalysis;
+            document.getElementById('stability-analysis').innerHTML = stabilityAnalysis;
+
+            // Generate professional recommendations
+            generateRecommendations(profile, cleansingPower, hardness, conditioning, polyunsaturated);
+
+            document.getElementById('soap-analysis').style.display = 'block';
+        }
+
+        function generateRecommendations(profile, cleansing, hardness, conditioning, polyunsaturated) {
+            let recommendations = '';
+
+            // INS Value Assessment
+            if (profile.insValue < 140) {
+                recommendations += `<strong>⚠️ INS Value Low (${profile.insValue}):</strong> Soap may be too soft. Historic target was 160 INS.<br><br>`;
+            } else if (profile.insValue > 180) {
+                recommendations += `<strong>⚠️ INS Value High (${profile.insValue}):</strong> Soap may be too hard. Consider softening oils.<br><br>`;
+            } else {
+                recommendations += `<strong>✅ INS Value Good (${profile.insValue}):</strong> Within optimal range for balanced soap properties.<br><br>`;
+            }
+
+            // Specific formulation advice
+            if (cleansing < 15) {
+                recommendations += `<strong>Increase Cleansing:</strong> Add 5-10% coconut oil or palm kernel oil.<br>`;
+            }
+            if (cleansing > 25) {
+                recommendations += `<strong>Reduce Harshness:</strong> Replace some coconut oil with palm oil or increase superfat to 8-10%.<br>`;
+            }
+            if (hardness < 30) {
+                recommendations += `<strong>Improve Hardness:</strong> Add palm oil, cocoa butter, or stearic acid.<br>`;
+            }
+            if (conditioning < 40) {
+                recommendations += `<strong>Enhance Conditioning:</strong> Increase olive oil, sweet almond oil, or avocado oil content.<br>`;
+            }
+            if (polyunsaturated > 15) {
+                recommendations += `<strong>Stability Concerns:</strong> Reduce sunflower/safflower oils. Add vitamin E or rosemary extract.<br>`;
+            }
+
+            // Professional application suggestions
+            if (cleansing > 20 && hardness > 35) {
+                recommendations += `<br><strong>🧼 Application:</strong> Excellent for oily skin, mechanics soap, or kitchen use.`;
+            } else if (conditioning > 50 && cleansing < 18) {
+                recommendations += `<br><strong>🫧 Application:</strong> Ideal for sensitive skin, baby soap, or facial bars.`;
+            } else {
+                recommendations += `<br><strong>🛁 Application:</strong> Well-balanced for general body soap and daily use.`;
+            }
+
+            document.getElementById('recommendations-content').innerHTML = recommendations;
+            document.getElementById('formulation-recommendations').style.display = 'block';
+        }
+
+        function updateTotalOilWeight() {
+            const totalWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+            document.getElementById('total-oils').value = `${totalWeight.toFixed(1)}g`;
+        }
+
+        // Lye Calculation Functions
+        function calculateLye() {
+            if (currentSoapRecipe.oils.length === 0) {
+                alert('Please add oils to your recipe first');
+                return;
+            }
+
+            const totalOilWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+            const superfat = parseFloat(document.getElementById('superfat').value) || 0;
+            const lyeConcentration = parseFloat(document.getElementById('lye-concentration').value) || 33;
+
+            let totalLyeNeeded = 0;
+            let lyeBreakdown = '';
+
+            if (currentSoapRecipe.lyeType === 'naoh') {
+                currentSoapRecipe.oils.forEach(oil => {
+                    totalLyeNeeded += oil.weight * oil.sap_naoh;
+                });
+                lyeBreakdown = `NaOH: ${(totalLyeNeeded * (1 - superfat/100)).toFixed(1)}g`;
+                
+            } else if (currentSoapRecipe.lyeType === 'koh') {
+                currentSoapRecipe.oils.forEach(oil => {
+                    totalLyeNeeded += oil.weight * oil.sap_koh;
+                });
+                lyeBreakdown = `KOH: ${(totalLyeNeeded * (1 - superfat/100)).toFixed(1)}g`;
+                
+            } else {
+                const naohPercent = parseFloat(document.getElementById('naoh-percentage').value) / 100;
+                const kohPercent = parseFloat(document.getElementById('koh-percentage').value) / 100;
+                
+                let naohNeeded = 0;
+                let kohNeeded = 0;
+                
+                currentSoapRecipe.oils.forEach(oil => {
+                    naohNeeded += oil.weight * oil.sap_naoh * naohPercent;
+                    kohNeeded += oil.weight * oil.sap_koh * kohPercent;
+                });
+                
+                naohNeeded *= (1 - superfat/100);
+                kohNeeded *= (1 - superfat/100);
+                
+                totalLyeNeeded = naohNeeded + kohNeeded;
+                lyeBreakdown = `NaOH: ${naohNeeded.toFixed(1)}g, KOH: ${kohNeeded.toFixed(1)}g`;
+            }
+
+            const adjustedLye = totalLyeNeeded * (1 - superfat/100);
+            const waterNeeded = adjustedLye * ((100 - lyeConcentration) / lyeConcentration);
+
+            currentSoapRecipe.lyeCalculation = {
+                totalLye: adjustedLye,
+                waterNeeded: waterNeeded,
+                breakdown: lyeBreakdown
+            };
+
+            document.getElementById('total-lye').value = `${adjustedLye.toFixed(1)}g`;
+            document.getElementById('total-water').value = `${waterNeeded.toFixed(1)}g`;
+
+            const resultDiv = document.getElementById('lye-result');
+            resultDiv.innerHTML = `
+                <strong>Lye Calculation Complete!</strong><br>
+                ${lyeBreakdown}<br>
+                Water: ${waterNeeded.toFixed(1)}g<br>
+                Superfat: ${superfat}%<br>
+                Concentration: ${lyeConcentration}%
+            `;
+            resultDiv.className = 'result-display';
+            resultDiv.style.display = 'block';
+        }
+
+        // Additives Management
+        function addAdditive() {
+            const name = document.getElementById('additives-name').value.trim();
+            const amount = document.getElementById('additives-amount').value.trim();
+
+            if (!name || !amount) {
+                alert('Please enter both additive name and amount');
+                return;
+            }
+
+            currentSoapRecipe.additives.push({ name, amount });
+            updateAdditivesTable();
+            
+            document.getElementById('additives-name').value = '';
+            document.getElementById('additives-amount').value = '';
+        }
+
+        function updateAdditivesTable() {
+            const table = document.getElementById('additives-table');
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            if (currentSoapRecipe.additives.length === 0) {
+                table.style.display = 'none';
+                return;
+            }
+
+            currentSoapRecipe.additives.forEach((additive, index) => {
+                const row = document.createElement('tr');
+                row.onclick = () => selectTableRow(row, 'additive', index);
+                row.innerHTML = `
+                    <td>${additive.name}</td>
+                    <td>${additive.amount}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.style.display = 'table';
+        }
+
+        // Recipe Generation
+        function generateSoapRecipe() {
+            if (!validateSoapRecipe()) return;
+
+            const recipeName = document.getElementById('recipe-name').value || 'Scientific Soap Formula';
+            const soapType = document.getElementById('soap-type').value;
+            const notes = document.getElementById('recipe-notes').value.trim();
+
+            const totalOilWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+
+            let recipeHTML = `
+                <div style="background: white; border-radius: 8px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3>${recipeName}</h3>
+                    <p><strong>Type:</strong> ${soapType} | <strong>Total Oils:</strong> ${totalOilWeight.toFixed(1)}g | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                        <thead>
+                            <tr style="background: #FF6B35; color: white;">
+                                <th style="padding: 12px; text-align: left;">Ingredient</th>
+                                <th style="padding: 12px; text-align: left;">Weight</th>
+                                <th style="padding: 12px; text-align: left;">Percentage</th>
+                                <th style="padding: 12px; text-align: left;">SAP Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // Oils
+            currentSoapRecipe.oils.forEach(oil => {
+                const percentage = (oil.weight / totalOilWeight * 100);
+                recipeHTML += `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">${oil.name}</td>
+                        <td style="padding: 10px;">${oil.weight.toFixed(1)}g</td>
+                        <td style="padding: 10px;">${percentage.toFixed(1)}%</td>
+                        <td style="padding: 10px;">${(oil.sap_naoh * 1000).toFixed(0)} mg KOH/g</td>
+                    </tr>
+                `;
+            });
+
+            // Lye
+            if (currentSoapRecipe.lyeCalculation) {
+                recipeHTML += `
+                    <tr style="border-bottom: 1px solid #ddd; background: #f9f9f9;">
+                        <td style="padding: 10px;"><strong>Lye</strong></td>
+                        <td style="padding: 10px;"><strong>${currentSoapRecipe.lyeCalculation.totalLye.toFixed(1)}g</strong></td>
+                        <td style="padding: 10px;">-</td>
+                        <td style="padding: 10px;">${currentSoapRecipe.lyeCalculation.breakdown}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd; background: #f9f9f9;">
+                        <td style="padding: 10px;"><strong>Water</strong></td>
+                        <td style="padding: 10px;"><strong>${currentSoapRecipe.lyeCalculation.waterNeeded.toFixed(1)}g</strong></td>
+                        <td style="padding: 10px;">-</td>
+                        <td style="padding: 10px;">Distilled Water</td>
+                    </tr>
+                `;
+            }
+
+            // Additives
+            currentSoapRecipe.additives.forEach(additive => {
+                recipeHTML += `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">${additive.name}</td>
+                        <td style="padding: 10px;">${additive.amount}</td>
+                        <td style="padding: 10px;">-</td>
+                        <td style="padding: 10px;">General Additive</td>
+                    </tr>
+                `;
+            });
+
+            // Scientific Additives
+            currentSoapRecipe.scientificAdditives.forEach(additive => {
+                recipeHTML += `
+                    <tr style="border-bottom: 1px solid #ddd; background: #f0f8ff;">
+                        <td style="padding: 10px;"><strong>${additive.name}</strong></td>
+                        <td style="padding: 10px;"><strong>${additive.amount}</strong></td>
+                        <td style="padding: 10px;">-</td>
+                        <td style="padding: 10px;">${additive.category}</td>
+                    </tr>
+                `;
+            });
+
+            recipeHTML += `
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; padding: 15px; background: #ffe8e0; border-radius: 8px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${Math.round(currentSoapRecipe.calculatedProfile.lauric + currentSoapRecipe.calculatedProfile.myristic)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Cleansing Power</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${Math.round(currentSoapRecipe.calculatedProfile.palmitic + currentSoapRecipe.calculatedProfile.stearic)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Hardness</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${Math.round(currentSoapRecipe.calculatedProfile.oleic + currentSoapRecipe.calculatedProfile.linoleic)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Conditioning</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${currentSoapRecipe.calculatedProfile.insValue}</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">INS Value</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${Math.round(currentSoapRecipe.calculatedProfile.iodineValue)}</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Iodine Value</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FF6B35;">${Math.round(currentSoapRecipe.calculatedProfile.linoleic + currentSoapRecipe.calculatedProfile.linolenic)}%</div>
+                            <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Polyunsaturated</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 15px; background: #e8f4f8; border-radius: 6px; font-size: 0.9rem; border: 2px solid #4a90a4;">
+                        <h4 style="color: #2c5282; margin-bottom: 8px;">Scientific Analysis Summary</h4>
+                        ${document.getElementById('cleansing-analysis').innerHTML}<br>
+                        ${document.getElementById('hardness-analysis').innerHTML}<br>
+                        ${document.getElementById('conditioning-analysis').innerHTML}<br>
+                        ${document.getElementById('stability-analysis').innerHTML}
+                    </div>
+
+                    ${currentSoapRecipe.scientificAdditives.length > 0 ? `
+                    <div style="margin-top: 15px; padding: 15px; background: #f0f8ff; border-radius: 6px; font-size: 0.85rem; border: 2px solid #4a90e2;">
+                        <h4 style="color: #2c5282; margin-bottom: 8px;">Scientific Additive Analysis</h4>
+                        ${currentSoapRecipe.scientificAdditives.map(additive => {
+                            const data = ADDITIVES_DATABASE[additive.name];
+                            return `
+                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #4a90e2;">
+                                    <strong>${additive.name}</strong> (${additive.category}) - ${additive.amount}<br>
+                                    <em>Mechanism:</em> ${data.mechanism}<br>
+                                    <em>Effects:</em> ${data.effects.slice(0,2).join(', ')}
+                                </div>
+                            `;
+                        }).join('')}
+                        ${document.getElementById('interactions-content') && document.getElementById('interactions-content').innerHTML ? 
+                            `<div style="margin-top: 8px; padding: 8px; background: #fffbf0; border-radius: 4px;">
+                                <strong>Additive Interactions:</strong><br>
+                                ${document.getElementById('interactions-content').innerHTML}
+                            </div>` : ''}
+                    </div>
+                    ` : ''}
+            `;
+
+            if (notes) {
+                recipeHTML += `
+                    <h4 style="color: #FF6B35; margin-top: 20px;">Scientific Notes & Instructions:</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; white-space: pre-wrap;">${notes}</div>
+                `;
+            }
+
+            recipeHTML += '</div>';
+
+            document.getElementById('soap-recipe-display').innerHTML = recipeHTML;
+        }
+
+        function exportSoapToPDF() {
+            if (!validateSoapRecipe()) return;
+
+            if (!window.jspdf) {
+                alert('PDF library not loaded. Please refresh the page and try again.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            const recipeName = document.getElementById('recipe-name').value || 'Scientific Soap Formula';
+            const soapType = document.getElementById('soap-type').value;
+            const notes = document.getElementById('recipe-notes').value.trim();
+
+            let yPosition = 20;
+
+            // Header
+            pdf.setFontSize(16);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(recipeName, 20, yPosition);
+            yPosition += 12;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('Advanced Scientific Soap Calculator - Philip Riachy, PhD', 140, 15);
+            pdf.text(`Type: ${soapType} | Date: ${new Date().toLocaleDateString()}`, 20, yPosition);
+            yPosition += 15;
+
+            // Scientific Analysis Summary
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Scientific Analysis', 20, yPosition);
+            yPosition += 8;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(`Cleansing Power: ${Math.round(currentSoapRecipe.calculatedProfile.lauric + currentSoapRecipe.calculatedProfile.myristic)}%`, 20, yPosition);
+            pdf.text(`Hardness: ${Math.round(currentSoapRecipe.calculatedProfile.palmitic + currentSoapRecipe.calculatedProfile.stearic)}%`, 70, yPosition);
+            pdf.text(`INS Value: ${currentSoapRecipe.calculatedProfile.insValue}`, 120, yPosition);
+            yPosition += 5;
+            pdf.text(`Conditioning: ${Math.round(currentSoapRecipe.calculatedProfile.oleic + currentSoapRecipe.calculatedProfile.linoleic)}%`, 20, yPosition);
+            pdf.text(`Iodine Value: ${Math.round(currentSoapRecipe.calculatedProfile.iodineValue)}`, 70, yPosition);
+            pdf.text(`Polyunsaturated: ${Math.round(currentSoapRecipe.calculatedProfile.linoleic + currentSoapRecipe.calculatedProfile.linolenic)}%`, 120, yPosition);
+            yPosition += 12;
+
+            // Oils
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Oils & Fats', 20, yPosition);
+            yPosition += 8;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            const totalOilWeight = currentSoapRecipe.oils.reduce((sum, oil) => sum + oil.weight, 0);
+            
+            currentSoapRecipe.oils.forEach(oil => {
+                const percentage = (oil.weight / totalOilWeight * 100);
+                pdf.text(`${oil.name}`, 20, yPosition);
+                pdf.text(`${oil.weight.toFixed(1)}g`, 80, yPosition);
+                pdf.text(`${percentage.toFixed(1)}%`, 110, yPosition);
+                pdf.text(`SAP: ${(oil.sap_naoh * 1000).toFixed(0)}`, 140, yPosition);
+                yPosition += 4;
+            });
+            yPosition += 5;
+
+            // Lye Solution
+            if (currentSoapRecipe.lyeCalculation) {
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Lye Solution', 20, yPosition);
+                yPosition += 8;
+
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(currentSoapRecipe.lyeCalculation.breakdown, 20, yPosition);
+                yPosition += 4;
+                pdf.text(`Water: ${currentSoapRecipe.lyeCalculation.waterNeeded.toFixed(1)}g`, 20, yPosition);
+                pdf.text(`Superfat: ${document.getElementById('superfat').value}%`, 80, yPosition);
+                pdf.text(`Concentration: ${document.getElementById('lye-concentration').value}%`, 130, yPosition);
+                yPosition += 10;
+            }
+
+            // Additives
+            if (currentSoapRecipe.additives.length > 0 || currentSoapRecipe.scientificAdditives.length > 0) {
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Additives', 20, yPosition);
+                yPosition += 8;
+
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+                
+                // General additives
+                currentSoapRecipe.additives.forEach(additive => {
+                    pdf.text(`${additive.name}: ${additive.amount}`, 20, yPosition);
+                    yPosition += 4;
+                });
+                
+                // Scientific additives
+                currentSoapRecipe.scientificAdditives.forEach(additive => {
+                    pdf.text(`${additive.name} (${additive.category}): ${additive.amount}`, 20, yPosition);
+                    yPosition += 4;
+                });
+                yPosition += 5;
+            }
+
+            // Fatty Acid Profile
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Fatty Acid Profile', 20, yPosition);
+            yPosition += 8;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(`Lauric: ${Math.round(currentSoapRecipe.calculatedProfile.lauric)}%`, 20, yPosition);
+            pdf.text(`Myristic: ${Math.round(currentSoapRecipe.calculatedProfile.myristic)}%`, 60, yPosition);
+            pdf.text(`Palmitic: ${Math.round(currentSoapRecipe.calculatedProfile.palmitic)}%`, 100, yPosition);
+            pdf.text(`Stearic: ${Math.round(currentSoapRecipe.calculatedProfile.stearic)}%`, 140, yPosition);
+            yPosition += 4;
+            pdf.text(`Oleic: ${Math.round(currentSoapRecipe.calculatedProfile.oleic)}%`, 20, yPosition);
+            pdf.text(`Linoleic: ${Math.round(currentSoapRecipe.calculatedProfile.linoleic)}%`, 60, yPosition);
+            pdf.text(`Ricinoleic: ${Math.round(currentSoapRecipe.calculatedProfile.ricinoleic)}%`, 100, yPosition);
+            yPosition += 8;
+
+            // Scientific Recommendations
+            const recommendations = document.getElementById('recommendations-content').textContent;
+            if (recommendations) {
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Professional Recommendations:', 20, yPosition);
+                yPosition += 6;
+
+                pdf.setFontSize(7);
+                pdf.setFont(undefined, 'normal');
+                const lines = pdf.splitTextToSize(recommendations.replace(/[•⚠️✅🧼🫧🛁]/g, ''), 170);
+                lines.slice(0, 8).forEach(line => {
+                    if (yPosition > 270) return; // Avoid page overflow
+                    pdf.text(line, 20, yPosition);
+                    yPosition += 3;
+                });
+            }
+
+            // Notes
+            if (notes && yPosition < 250) {
+                yPosition += 5;
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Scientific Notes:', 20, yPosition);
+                yPosition += 6;
+
+                pdf.setFontSize(7);
+                pdf.setFont(undefined, 'normal');
+                const lines = pdf.splitTextToSize(notes, 170);
+                lines.slice(0, 5).forEach(line => {
+                    if (yPosition > 280) return;
+                    pdf.text(line, 20, yPosition);
+                    yPosition += 3;
+                });
+            }
+
+            const fileName = `${recipeName.replace(/[^a-z0-9]/gi, '_')}_Scientific_Soap_Recipe.pdf`;
+            pdf.save(fileName);
+        }
+
+        // Data Management Functions
+        function saveSoapRecipe() {
+            const recipeName = document.getElementById('recipe-name').value || 'scientific_soap_recipe';
+            
+            const data = {
+                recipe: currentSoapRecipe,
+                recipeDetails: {
+                    name: document.getElementById('recipe-name').value,
+                    id: document.getElementById('recipe-id').value,
+                    soapType: document.getElementById('soap-type').value,
+                    superfat: document.getElementById('superfat').value,
+                    lyeConcentration: document.getElementById('lye-concentration').value,
+                    notes: document.getElementById('recipe-notes').value
+                },
+                scientificAnalysis: currentSoapRecipe.calculatedProfile,
+                additiveInteractions: document.getElementById('interactions-content') ? document.getElementById('interactions-content').innerHTML : '',
+                timestamp: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `${recipeName.replace(/[^a-z0-9]/gi, '_')}_scientific_soap_recipe.json`;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+        }
+
+        function loadSoapRecipe() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        // Restore recipe data
+                        currentSoapRecipe = data.recipe || {
+                            oils: [],
+                            additives: [],
+                            scientificAdditives: [],
+                            lyeType: 'naoh',
+                            lyeCalculation: null
+                        };
+                        
+                        // Restore form fields
+                        if (data.recipeDetails) {
+                            document.getElementById('recipe-name').value = data.recipeDetails.name || '';
+                            document.getElementById('recipe-id').value = data.recipeDetails.id || '';
+                            document.getElementById('soap-type').value = data.recipeDetails.soapType || 'Cold Process';
+                            document.getElementById('superfat').value = data.recipeDetails.superfat || '0';
+                            document.getElementById('lye-concentration').value = data.recipeDetails.lyeConcentration || '33';
+                            document.getElementById('recipe-notes').value = data.recipeDetails.notes || '';
+                        }
+                        
+                        // Restore lye type
+                        selectLyeType(currentSoapRecipe.lyeType);
+                        
+                        // Update displays
+                        updateOilsTable();
+                        updateAdditivesTable();
+                        updateScientificAdditivesTable();
+                        updateFattyAcidProfile();
+                        updateTotalOilWeight();
+                        performScientificAnalysis();
+                        analyzeAdditiveInteractions();
+                        
+                        if (currentSoapRecipe.lyeCalculation) {
+                            document.getElementById('total-lye').value = `${currentSoapRecipe.lyeCalculation.totalLye.toFixed(1)}g`;
+                            document.getElementById('total-water').value = `${currentSoapRecipe.lyeCalculation.waterNeeded.toFixed(1)}g`;
+                            
+                            const resultDiv = document.getElementById('lye-result');
+                            resultDiv.innerHTML = `
+                                <strong>Lye Calculation Loaded!</strong><br>
+                                ${currentSoapRecipe.lyeCalculation.breakdown}<br>
+                                Water: ${currentSoapRecipe.lyeCalculation.waterNeeded.toFixed(1)}g
+                            `;
+                            resultDiv.className = 'result-display';
+                            resultDiv.style.display = 'block';
+                        }
+                        
+                        alert('Scientific soap recipe loaded successfully!');
+                        
+                    } catch (error) {
+                        console.error('Error loading recipe:', error);
+                        alert('Error loading recipe file. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        function clearAllSoapData() {
+            if (confirm('Are you sure you want to clear all data and start a new scientific soap recipe?')) {
+                currentSoapRecipe = {
+                    oils: [],
+                    additives: [],
+                    lyeType: 'naoh',
+                    lyeCalculation: null
+                };
+                
+                // Clear all form fields
+                document.getElementById('recipe-name').value = '';
+                document.getElementById('recipe-id').value = '';
+                document.getElementById('soap-type').value = 'Cold Process';
+                document.getElementById('superfat').value = '0';
+                document.getElementById('lye-concentration').value = '33';
+                document.getElementById('recipe-notes').value = '';
+                
+                // Clear inputs
+                document.getElementById('oil-select').value = '';
+                document.getElementById('oil-weight').value = '';
+                document.getElementById('additives-name').value = '';
+                document.getElementById('additives-amount').value = '';
+                document.getElementById('total-oils').value = '';
+                document.getElementById('total-lye').value = '';
+                document.getElementById('total-water').value = '';
+                
+                // Reset lye type
+                selectLyeType('naoh');
+                
+                // Clear tables and results
+                updateOilsTable();
+                updateAdditivesTable();
+                document.getElementById('fatty-acid-profile').style.display = 'none';
+                document.getElementById('ins-calculator').style.display = 'none';
+                document.getElementById('soap-analysis').style.display = 'none';
+                document.getElementById('formulation-recommendations').style.display = 'none';
+                document.getElementById('lye-result').style.display = 'none';
+                document.getElementById('soap-recipe-display').innerHTML = '';
+                
+                alert('Started new scientific soap recipe!');
+            }
+        }
+
+        // Utility Functions
+        function selectTableRow(row, type, index) {
+            // Clear previous selections in the same table
+            const table = row.closest('table');
+            table.querySelectorAll('tr').forEach(tr => tr.classList.remove('selected'));
+            
+            // Select clicked row
+            row.classList.add('selected');
+            row.dataset.index = index;
+        }
+
+        function validateSoapRecipe() {
+            if (currentSoapRecipe.oils.length === 0) {
+                alert('Please add oils to your soap recipe');
+                return false;
+            }
+            
+            if (!currentSoapRecipe.lyeCalculation) {
+                alert('Please calculate lye and water amounts');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeSoapApp);
+    </script>
+</body>
+</html>
