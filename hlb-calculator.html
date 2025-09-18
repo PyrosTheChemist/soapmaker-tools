@@ -177,70 +177,13 @@
             background: linear-gradient(135deg, #f44336, #ff6b6b);
         }
 
-        .recipe-section {
+        .full-width {
             grid-column: 1 / -1;
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
         }
 
-        .recipe-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr 2fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .recipe-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .recipe-output {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .recipe-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-
-        .recipe-table th {
-            background: #2196F3;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .recipe-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .recipe-table tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
-            }
-            
-            .recipe-form {
-                grid-template-columns: 1fr;
-            }
-            
-            .recipe-buttons {
-                justify-content: center;
             }
         }
     </style>
@@ -248,218 +191,451 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="signature">Philip Riachy, PhD</div>
-            <h1>Professional HLB Calculator</h1>
-            <p class="subtitle">Hydrophilic-Lipophilic Balance Formulation Tool</p>
+            <div class="signature">By Philip Riachy, PhD</div>
+            <h1>HLB Calculator</h1>
+            <p class="subtitle">Professional Cosmetic Formulation Tool</p>
         </div>
 
         <div class="main-content">
-            <!-- Oil Phase Section -->
+            <!-- Oil Selection Section -->
             <div class="section">
-                <h3>🛢️ Oil Phase</h3>
-                
+                <h3>📊 Oil Phase</h3>
                 <div class="form-group">
-                    <label>Select Oil</label>
+                    <label for="oil-select">Select Oil/Ingredient:</label>
                     <select id="oil-select" class="form-control">
                         <option value="">Choose an oil...</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label>Percentage (%)</label>
-                    <input type="number" id="oil-percentage" class="form-control" step="0.1" min="0" max="100">
+                    <label for="oil-percentage">Percentage (%):</label>
+                    <input type="number" id="oil-percentage" class="form-control" min="0" max="100" step="0.1" placeholder="Enter percentage">
                 </div>
+                <button onclick="addOil()" class="btn">Add Oil</button>
+                <button onclick="clearOils()" class="btn btn-danger">Clear All</button>
                 
-                <div>
-                    <button class="btn" onclick="addOilToFormulation()">Add Oil</button>
-                    <button class="btn btn-danger" onclick="removeSelectedOil()">Remove</button>
-                </div>
-
                 <table class="data-table" id="oils-table">
                     <thead>
                         <tr>
                             <th>Oil</th>
-                            <th>RHLB</th>
                             <th>%</th>
+                            <th>rHLB</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody id="oils-tbody"></tbody>
                 </table>
 
-                <button class="btn btn-success" onclick="calculateRequiredHLB()">Calculate Required HLB</button>
+                <button onclick="calculateRequiredHLB()" class="btn btn-success">Calculate Required HLB</button>
                 <div id="rhlb-result" class="result-display"></div>
             </div>
 
-            <!-- Surfactant Phase Section -->
+            <!-- Surfactant Selection Section -->
             <div class="section">
                 <h3>🧪 Surfactant System</h3>
-                
                 <div class="form-group">
-                    <label>Surfactant System (% of Oil Phase)</label>
-                    <input type="number" id="surfactant-total" class="form-control" step="0.1" min="0" value="25">
-                </div>
-                
-                <div class="form-group">
-                    <label>Primary Surfactant</label>
+                    <label for="surfactant-1">Primary Surfactant:</label>
                     <select id="surfactant-1" class="form-control">
-                        <option value="">Select surfactant...</option>
+                        <option value="">Choose surfactant...</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label>Secondary Surfactant</label>
+                    <label for="surfactant-2">Secondary Surfactant:</label>
                     <select id="surfactant-2" class="form-control">
-                        <option value="">Select surfactant...</option>
+                        <option value="">Choose surfactant...</option>
                     </select>
                 </div>
-
-                <button class="btn btn-success" onclick="calculateSurfactantRatios()">Calculate Ratios</button>
+                <button onclick="calculateSurfactantRatios()" class="btn btn-success">Calculate Surfactant Ratios</button>
                 <div id="surfactant-result" class="result-display"></div>
+
+                <div class="form-group">
+                    <label for="surfactant-total">Total Surfactant (% of oil phase):</label>
+                    <input type="number" id="surfactant-total" class="form-control" value="25" min="0" max="100" step="1">
+                </div>
+                <button onclick="calculateWaterPhase()" class="btn btn-success">Calculate Water Phase</button>
+                <div id="water-result" class="result-display"></div>
             </div>
 
             <!-- Other Ingredients Section -->
             <div class="section">
-                <h3>🧂 Other Ingredients</h3>
-                
+                <h3>➕ Other Ingredients</h3>
                 <div class="form-group">
-                    <label>Ingredient Name</label>
-                    <input type="text" id="other-name" class="form-control" placeholder="e.g., Glycerin, Preservative">
+                    <label for="other-name">Ingredient Name:</label>
+                    <input type="text" id="other-name" class="form-control" placeholder="e.g., Preservative, Fragrance">
                 </div>
-                
                 <div class="form-group">
-                    <label>Percentage (%)</label>
-                    <input type="number" id="other-percentage" class="form-control" step="0.1" min="0" max="100">
+                    <label for="other-percentage">Percentage (%):</label>
+                    <input type="number" id="other-percentage" class="form-control" min="0" max="100" step="0.1" placeholder="Enter percentage">
                 </div>
+                <button onclick="addOtherIngredient()" class="btn">Add Ingredient</button>
+                <button onclick="clearOthers()" class="btn btn-danger">Clear All</button>
                 
-                <div>
-                    <button class="btn" onclick="addOtherIngredient()">Add Ingredient</button>
-                    <button class="btn btn-danger" onclick="removeSelectedOther()">Remove</button>
-                </div>
-
                 <table class="data-table" id="others-table">
                     <thead>
                         <tr>
                             <th>Ingredient</th>
                             <th>%</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody id="others-tbody"></tbody>
                 </table>
-
-                <button class="btn btn-success" onclick="calculateWaterPercentage()">Calculate Water %</button>
-                <div id="water-result" class="result-display"></div>
             </div>
-        </div>
 
-        <!-- Recipe Generation Section -->
-        <div class="recipe-section">
-            <h3>📋 Formula Generator</h3>
-            
-            <div class="recipe-form">
-                <div>
-                    <div class="form-group">
-                        <label>Formula Name</label>
-                        <input type="text" id="formula-name" class="form-control" placeholder="My Amazing Formula">
-                    </div>
-                    <div class="form-group">
-                        <label>Batch Size (g)</label>
-                        <input type="number" id="batch-size" class="form-control" value="100" min="1">
-                    </div>
+            <!-- Full Formula Summary -->
+            <div class="section full-width">
+                <h3>📋 Complete Formula</h3>
+                
+                <div class="form-group">
+                    <label for="formula-name">Formula Name:</label>
+                    <input type="text" id="formula-name" class="form-control" placeholder="Enter formula name">
                 </div>
                 
-                <div>
-                    <div class="form-group">
-                        <label>Formula ID</label>
-                        <input type="text" id="formula-id" class="form-control" placeholder="F001">
-                    </div>
-                    <div class="form-group">
-                        <label>Version</label>
-                        <input type="text" id="formula-version" class="form-control" placeholder="v1.0">
-                    </div>
+                <div class="form-group">
+                    <label for="formula-id">Formula ID:</label>
+                    <input type="text" id="formula-id" class="form-control" placeholder="e.g., F001, CR-2024-01">
                 </div>
+
+                <div class="form-group">
+                    <label for="formula-version">Version:</label>
+                    <input type="text" id="formula-version" class="form-control" placeholder="e.g., v1.0, Draft, Final">
+                </div>
+
+                <div class="form-group">
+                    <label for="batch-size">Batch Size (g):</label>
+                    <input type="number" id="batch-size" class="form-control" value="100" min="1" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="formula-notes">Notes:</label>
+                    <textarea id="formula-notes" class="form-control" rows="3" placeholder="Add any notes about this formulation..."></textarea>
+                </div>
+
+                <button onclick="generateRecipe()" class="btn btn-success">Generate Recipe</button>
+                <button onclick="exportToPDF()" class="btn">Export to PDF</button>
+                <button onclick="saveFormulation()" class="btn">Save Formulation</button>
+                <button onclick="loadFormulation()" class="btn">Load Formulation</button>
+                <button onclick="clearAllData()" class="btn btn-danger">Clear All & Start New</button>
                 
-                <div>
-                    <div class="form-group">
-                        <label>Notes & Instructions</label>
-                        <textarea id="formula-notes" class="form-control" rows="4" placeholder="Processing instructions, observations, stability notes..."></textarea>
-                    </div>
-                </div>
+                <div id="recipe-display"></div>
             </div>
-
-            <div class="recipe-buttons">
-                <button class="btn btn-success" onclick="generateCompleteRecipe()">Generate Recipe</button>
-                <button class="btn" onclick="exportToPDF()">Export PDF</button>
-                <button class="btn" onclick="saveFormulation()">Save JSON</button>
-                <button class="btn" onclick="loadFormulation()">Load JSON</button>
-                <button class="btn btn-danger" onclick="clearAllData()">New Formula</button>
-            </div>
-
-            <div id="recipe-display"></div>
         </div>
     </div>
 
     <script>
-        // Professional Database - Industry Standard Values
+        // Complete Oil Database with rHLB values from the PDF
         const OILS_DATABASE = {
-            "Olive Oil": 7.00, "Coconut Oil": 8.00, "Jojoba Oil": 6.00, "Sweet Almond Oil": 7.00,
-            "Avocado Oil": 7.00, "Sunflower Oil": 7.00, "Argan Oil": 11.00, "Castor Oil": 14.00,
-            "Sesame Oil": 7.00, "Rice Bran Oil": 7.00, "Grapeseed Oil": 7.00, "Safflower Oil": 8.00,
-            "Andiroba Oil": 16.70, "Apricot Kernel Oil": 7.00, "Astaxanthin Oleoresin": 10.81,
-            "Babassu Oil": 8.00, "Black Cumin Seed Oil": 16.00, "Borage Seed Oil": 7.00,
-            "Brazil Nut Oil": 8.00, "Camelina Oil": 7.00, "Canola Oil": 6.00,
-            "Cardamom Seed Oil": 11.00, "Carrot Oil": 6.00, "Chia Seed Oil": 12.90,
-            "Evening Primrose Oil": 7.00, "Hazelnut Oil": 11.70, "Hemp Seed Oil": 7.00,
-            "Karanja Seed Oil": 8.00, "Kukui Nut Oil": 7.00, "Macadamia Oil": 7.00,
-            "Mango Seed Oil": 7.00, "Meadowfoam Seed Oil": 6.00, "Neem Oil": 9.00,
-            "Palm Oil": 10.00, "Peanut Oil": 6.00, "Pistachio Seed Oil": 7.00,
-            "Red Raspberry Seed Oil": 7.00, "Rose Hip Oil": 7.00, "Sacha Inchi Oil": 8.50,
-            "Soybean Oil": 6.00, "Tamanu Oil": 8.00, "Wheat Germ Oil": 7.00,
-            "Shea Butter": 8.00, "Cocoa Butter": 6.00, "Mango Butter": 8.00,
-            "Kokum Butter": 8.00, "Beeswax": 12.00, "Candelilla Wax": 14.50,
-            "Carnauba Wax": 15.00, "Ceresin Wax": 8.00, "Paraffin Wax": 10.00,
-            "Caprylic/Capric Triglyceride": 5.00, "C12-15 Alkyl Benzoate": 13.00,
-            "Ethylhexyl Palmitate": 8.00, "Isopropyl Myristate": 11.50,
-            "Isopropyl Palmitate": 11.50, "Cetyl Ethylhexanoate": 1.00,
-            "Butyl Stearate": 11.00, "Cetyl Palmitate": 10.00,
-            "Cetyl Alcohol": 15.50, "Stearyl Alcohol": 15.50, "Cetearyl Alcohol": 15.50,
-            "Behenyl Alcohol": 16.00, "Oleyl Alcohol": 13.50,
-            "Dimethicone": 5.00, "Cyclomethicone": 7.50, "Cyclopentasiloxane": 7.50,
-            "Lavender Oil": 12.00, "Lemon Peel Oil": 12.00, "Peppermint Oil": 12.30,
-            "Rosemary Oil": 15.00, "Thyme Oil": 9.30, "Eucalyptus Oil": 9.80,
-            "Geranium Oil": 12.00, "Citronella Oil": 12.60,
-            "Squalane": 7.00, "Tocopherol (Vitamin E)": 6.00, "Retinyl Palmitate": 6.00,
-            "Mineral Oil": 10.00, "Petrolatum": 7.50, "Lanolin": 10.00
+            "Andiroba Oil": 16.70,
+            "Apricot Kernel Oil": 7.00,
+            "Argan Oil": 11.00,
+            "Astaxanthin Oleoresin": 10.81,
+            "Avocado Oil": 7.00,
+            "Babassu Oil": 8.00,
+            "Beeswax": 12.00,
+            "Behenyl Alcohol": 16.00,
+            "Black Cumin Seed Oil": 16.00,
+            "Borage Seed Oil": 7.00,
+            "Brazil Nut Oil": 8.00,
+            "Butyl Methoxydibenzoylmethane": 13.40,
+            "Butyl Stearate": 11.00,
+            "C12-15 Alkyl Benzoate": 13.00,
+            "Camelina Oil": 7.00,
+            "Candelilla Wax": 14.50,
+            "Canola Oil": 6.00,
+            "Caprylic/Capric Triglyceride": 5.00,
+            "Cardamom Seed Oil": 11.00,
+            "Carnauba Wax": 15.00,
+            "Carrot Oil": 6.00,
+            "Castor Oil": 14.00,
+            "Ceresin Wax": 8.00,
+            "Cetearyl Alcohol": 15.50,
+            "Cetearyl Ethylhexanoate": 8.22,
+            "Cetyl Alcohol": 15.50,
+            "Cetyl Esters": 10.00,
+            "Cetyl Ethylhexanoate": 1.00,
+            "Cetyl Palmitate": 10.00,
+            "Chia Seed Oil": 12.90,
+            "Citronella Herb Oil": 12.60,
+            "Coco-Caprylate/Caprate": 5.00,
+            "Cocoa Butter": 6.00,
+            "Coconut Oil": 8.00,
+            "Corn Oil": 10.00,
+            "Cottonseed Oil": 5.50,
+            "Cyclohexane": 15.00,
+            "Cyclomethicone": 7.50,
+            "Cyclopentasiloxane": 7.50,
+            "Decyl Acetate": 11.00,
+            "Decyl Alcohol": 15.00,
+            "Diisooctyl Phthalate": 13.00,
+            "Diisopropyl Adipate": 9.00,
+            "Diisopropyl Benzene": 15.00,
+            "Dimethicone": 5.00,
+            "Dimethyl Silicone": 9.00,
+            "Emu Oil": 8.00,
+            "Ethyl Benzoate": 13.00,
+            "Ethylhexyl Isononanoate": 9.00,
+            "Ethylhexyl Methoxycinnamate": 6.00,
+            "Ethylhexyl Methoxycrylene": 8.00,
+            "Ethylhexyl Palmitate": 8.00,
+            "Ethylhexyl Salicylate": 6.00,
+            "Eucalyptus Leaf Oil": 9.80,
+            "Eugenol Oil": 6.00,
+            "Evening Primrose Oil": 7.00,
+            "Geranium Oil": 12.00,
+            "Glyceryl Tricaprylate/Caprate": 11.00,
+            "Grape Seed Oil": 7.00,
+            "Hazelnut Oil": 11.70,
+            "Hemp Seed Oil": 7.00,
+            "Hexadecyl Alcohol": 11.50,
+            "Hybrid Safflower Oil": 9.00,
+            "Hydrogenated Vegetable Oil": 3.00,
+            "Isodecyl Alcohol": 14.00,
+            "Isohexadecyl Alcohol": 11.50,
+            "Isononyl Isononanoate": 2.00,
+            "Isopropyl Lanolate": 14.00,
+            "Isopropyl Myristate": 11.50,
+            "Isopropyl Palmitate": 11.50,
+            "Isostearic Acid": 15.50,
+            "Isostearyl Isostearate": 11.00,
+            "Jojoba Seed Oil": 6.00,
+            "Karanja Seed Oil": 8.00,
+            "Kokum Seed Butter": 8.00,
+            "Kukui Nut Oil": 7.00,
+            "Lanolin": 10.00,
+            "Laurel Oil": 8.00,
+            "Lauric Acid": 16.00,
+            "Lauryl Alcohol": 14.00,
+            "Lauryl PEG-9 Polydimethylsiloxyethyl Dimethicone": 3.00,
+            "Lavender Oil": 12.00,
+            "Lemon Peel Oil": 12.00,
+            "Lignoceryl Erucate": 6.81,
+            "Linoleic Acid": 16.00,
+            "Linseed Oil": 3.23,
+            "Liquid Paraffin": 11.80,
+            "Macadamia Nut Oil": 7.00,
+            "Mango Seed Butter": 8.00,
+            "Mango Seed Oil": 7.00,
+            "Meadowfoam Seed Oil": 6.00,
+            "Methyl Phenyl Silicone": 7.00,
+            "Methyl Silicone": 11.00,
+            "Mineral Oil": 10.00,
+            "Myristyl Myristate": 7.52,
+            "Neem Oil": 9.00,
+            "Octyldodecanol": 10.90,
+            "Oleic Acid": 17.00,
+            "Oleyl Alcohol": 13.50,
+            "Olive Oil": 7.00,
+            "Palm Oil": 10.00,
+            "Palmitic Acid": 11.50,
+            "Paraffin Wax": 10.00,
+            "Passion Fruit Seed Oil": 15.00,
+            "Peanut Oil": 6.00,
+            "PEG-3 Dimethicone": 4.50,
+            "PEG-9 Dimethicone": 10.00,
+            "PEG-9 Methyl Ether Dimethicone": 4.50,
+            "PEG-9 Polydimethylsiloxyethyl Dimethicone": 4.00,
+            "PEG-10 Dimethicone": 4.50,
+            "PEG-11 Methyl Ether Dimethicone": 14.50,
+            "PEG-32 Methyl Ether Dimethicone": 9.00,
+            "PEG/PPG-20/22 Butyl Ether Dimethicone": 7.00,
+            "Pentaerythrityl Tetraisostearate": 7.67,
+            "Peppermint Oil": 12.30,
+            "Petrolatum": 7.50,
+            "Pistachio Seed Oil": 7.00,
+            "Polyethylene Glycol": 20.00,
+            "Polyethylene Wax": 15.00,
+            "PPG-2 Myristyl Ether Propionate": 8.03,
+            "PPG-3 Benzyl Ether Myristate": 13.49,
+            "PPG-15 Stearyl Ether": 7.00,
+            "Red Raspberry Seed Oil": 7.00,
+            "Retinyl Palmitate": 6.00,
+            "Rice Bran Oil": 7.00,
+            "Ricinoleic Acid": 16.00,
+            "Rose Hips Oil": 7.00,
+            "Rosemary Leaf Extract": 7.00,
+            "Rosemary Oil": 15.00,
+            "Sacha Inchi Seed Oil": 8.50,
+            "Safflower Oil": 8.00,
+            "Sesame Oil": 7.00,
+            "Shea Butter": 8.00,
+            "Soybean Oil": 6.00,
+            "Squalane": 7.00,
+            "Star Anise Oil": 16.50,
+            "Stearic Acid": 15.00,
+            "Stearyl Alcohol": 15.50,
+            "Sunflower Seed Oil": 7.00,
+            "Sweet Almond Oil": 7.00,
+            "Tamanu Seed Oil": 8.00,
+            "Thyme Oil": 9.30,
+            "Tocopherol": 6.00,
+            "Tricresyl Phosphate": 17.00,
+            "Tridecyl Alcohol": 14.00,
+            "Tridecyl Neopentanoate": 9.88,
+            "Wheat Germ Oil": 7.00
         };
 
+        // Complete Surfactant Database with HLB values from the PDF
         const SURFACTANTS_DATABASE = {
-            "Polysorbate 20 (Tween 20)": 16.67, "Polysorbate 22": 15.00, "Polysorbate 23": 16.00,
-            "Polysorbate 24": 17.00, "Polysorbate 60 (Tween 60)": 14.90,
-            "Polysorbate 80 (Tween 80)": 15.00, "Polysorbate 85 (Tween 85)": 11.00,
-            "Sorbitan Monolaurate (Span 20)": 9.00, "Sorbitan Palmitate (Span 40)": 6.70,
-            "Sorbitan Monostearate (Span 60)": 5.00, "Sorbitan Monooleate (Span 80)": 4.00,
-            "Sorbitan Trioleate (Span 85)": 2.00, "Sorbitan Tristearate (Span 65)": 2.00,
-            "Sorbitan Oleate": 4.30, "Sorbitan Isostearate": 4.70, "Sorbitan Olivate": 4.50,
-            "Ceteareth-6": 10.50, "Ceteareth-12": 13.50, "Ceteareth-15": 14.50,
-            "Ceteareth-20": 15.20, "Ceteareth-25": 16.50, "Ceteareth-30": 16.50,
-            "Ceteareth-100": 18.50, "Laureth-1": 3.50, "Laureth-2": 6.00, "Laureth-3": 8.00,
-            "Laureth-4": 9.70, "Laureth-5": 10.50, "Laureth-7": 12.00, "Laureth-9": 13.00,
-            "Laureth-23": 16.90, "Steareth-2": 6.00, "Steareth-20": 15.30, "Steareth-21": 16.00,
-            "Steareth-100": 18.80, "Oleth-2": 4.90, "Oleth-5": 9.50, "Oleth-10": 12.40,
-            "Oleth-20": 15.30, "Oleth-30": 16.80, "Ceteth-2": 5.30, "Ceteth-10": 12.90,
-            "Ceteth-20": 15.70, "Beheneth-5": 7.00, "Beheneth-10": 10.00, "Beheneth-20": 16.50,
-            "Beheneth-25": 15.50, "Beheneth-30": 18.00, "Glyceryl Stearate": 3.80,
-            "Glyceryl Oleate": 3.50, "Glyceryl Laurate": 5.40, "Glyceryl Stearate SE": 6.00,
-            "Glyceryl Caprylate": 6.00, "Glyceryl Stearate + PEG-100 Stearate": 11.50,
-            "PEG-7 Glyceryl Cocoate": 10.00, "PEG-8 Oleate": 11.60, "PEG-8 Laurate": 13.00,
-            "PEG-20 Glyceryl Stearate": 15.00, "PEG-40 Hydrogenated Castor Oil": 15.00,
-            "PEG-100 Stearate": 18.80, "Polyglyceryl-3 Oleate": 5.50, "Polyglyceryl-4 Oleate": 4.00,
-            "Polyglyceryl-10 Oleate": 9.00, "Polyglyceryl-10 Laurate": 12.00, "Coco Glucoside": 13.00,
-            "Decyl Glucoside": 13.50, "Lauryl Glucoside": 11.50, "Cetearyl Glucoside": 11.00,
-            "Lecithin": 4.00, "Lysolecithin": 11.50, "Sodium Stearoyl Lactylate": 8.30,
-            "Calcium Stearoyl Lactylate": 5.10, "Sucrose Stearate": 13.00, "Cetrimonium Chloride": 15.00,
-            "Emulsifying Wax NF": 14.90, "Olivem 1000": 9.00, "Olivem 300": 11.00,
-            "PEG-9 Dimethicone": 10.00, "PEG-12 Dimethicone": 12.00, "Polyoxyl Castor Oil": 13.00,
-            "Octoxynol-40": 19.00
+            "Beheneth-5": 7.00,
+            "Beheneth-10": 10.00,
+            "Beheneth-20": 16.50,
+            "Beheneth-25": 15.50,
+            "Beheneth-30": 18.00,
+            "Butylene Glycol": 8.90,
+            "C9-11 Pareth-3": 12.40,
+            "Calcium Stearoyl Lactylate": 5.10,
+            "Ceteareth-6": 10.50,
+            "Ceteareth-6 + Stearyl Alcohol": 11.00,
+            "Ceteareth-12": 13.50,
+            "Ceteareth-15": 14.50,
+            "Ceteareth-20": 15.20,
+            "Ceteareth-25": 16.50,
+            "Ceteareth-30": 16.50,
+            "Ceteareth-100": 18.50,
+            "Cetearyl Alcohol + Ceteareth-20": 6.00,
+            "Cetearyl Alcohol + PEG-40 Castor Oil + Sodium Cetearyl Sulfate": 10.50,
+            "Cetearyl Alcohol + Polysorbate 60 (Lanette Wax ES)": 12.50,
+            "Cetearyl Alcohol + Polysorbate 60 (Emulsifying Wax NF)": 14.90,
+            "Cetearyl Glucoside": 11.00,
+            "Cetearyl Glucoside + Cetearyl Alcohol": 11.00,
+            "Cetearyl Isononanoate": 4.50,
+            "Cetearyl Olivate + Sorbitan Olivate": 9.00,
+            "Cetearyl Wheat Straw Glycosides + Cetearyl Alcohol": 8.00,
+            "Ceteth-2": 5.30,
+            "Ceteth-10": 12.90,
+            "Ceteth-20": 15.70,
+            "Cetrimonium Chloride": 15.00,
+            "Cetyl PEG/PPG-10/1 Dimethicone": 5.00,
+            "Cocamide DEA": 12.56,
+            "Cocamide MEA": 13.50,
+            "Coco Glucoside": 13.00,
+            "Decyl Glucoside": 13.50,
+            "Diacetyl Tartaric Acid Esters of Mono- and Diglycerides": 9.00,
+            "Diethylene Glycol Monoethyl Ether": 4.20,
+            "Dimethyl Isosorbide": 8.40,
+            "Erythorbyl Laurate": 15.25,
+            "Ethylene Glycol": 9.85,
+            "Ethylhexyl Stearate": 8.00,
+            "Glyceryl Caprylate": 6.00,
+            "Glyceryl Laurate": 5.40,
+            "Glyceryl Oleate": 3.50,
+            "Glyceryl Oleate Citrate": 13.00,
+            "Glyceryl Stearate": 3.80,
+            "Glyceryl Stearate + PEG-100 Stearate": 11.50,
+            "Glyceryl Stearate Citrate": 12.00,
+            "Glyceryl Stearate SE": 6.00,
+            "Glyceryl Stearate SE + Sucrose Stearate": 13.00,
+            "Glycol Distearate": 5.50,
+            "Glycol Stearate": 2.90,
+            "Hexylene Glycol": 7.95,
+            "Isoamyl Laurate": 1.80,
+            "Isoceteth-20": 15.70,
+            "Isosteareth-20": 15.00,
+            "Lauramide DEA": 15.00,
+            "Laureth-1": 3.50,
+            "Laureth-2": 6.00,
+            "Laureth-3": 8.00,
+            "Laureth-4": 9.70,
+            "Laureth-5": 10.50,
+            "Laureth-7": 12.00,
+            "Laureth-9": 13.00,
+            "Laureth-23": 16.90,
+            "Lauroyl Polyoxyl-32 Glycerides": 11.00,
+            "Lauryl Glucoside": 11.50,
+            "Lecithin": 4.00,
+            "Linoleamide DEA": 10.00,
+            "Lysolecithin": 11.50,
+            "Methyl Glucose Sesquistearate": 12.00,
+            "Methyl Laurate": 3.70,
+            "Monolaurin": 7.03,
+            "Octoxynol-40": 19.00,
+            "Oleoyl Polyoxyl-6 Glycerides": 9.00,
+            "Oleth-2": 4.90,
+            "Oleth-5": 9.50,
+            "Oleth-10": 12.40,
+            "Oleth-20": 15.30,
+            "Oleth-30": 16.80,
+            "Olive Oil PEG-7 Esters": 11.00,
+            "PEG-4 Dilaurate": 6.00,
+            "PEG-7 Glyceryl Cocoate": 10.00,
+            "PEG-7 Olivate": 11.00,
+            "PEG-8 Beeswax": 9.00,
+            "PEG-8 Dioleate": 8.00,
+            "PEG-8 Laurate": 13.00,
+            "PEG-8 Oleate": 11.60,
+            "PEG-12 Dimethicone": 12.00,
+            "PEG-20 Almond Glycerides": 10.00,
+            "PEG-20 Glyceryl Stearate": 15.00,
+            "PEG-20 Methyl Glucose Sesquistearate": 15.00,
+            "PEG-25 Hydrogenated Castor Oil": 10.80,
+            "PEG-30 Dipolyhydroxystearate": 5.50,
+            "PEG-32 Hydrogenated Palm Glycerides": 11.00,
+            "PEG-40 Hydrogenated Castor Oil": 15.00,
+            "PEG-40 Sorbitan Peroleate": 9.00,
+            "PEG-60 Almond Glycerides": 15.00,
+            "PEG-80 Sorbitan Laurate": 19.10,
+            "PEG-100 Stearate": 18.80,
+            "Pentylene Glycol": 8.42,
+            "Polyethylene Glycol Octyl Ether": 13.40,
+            "Polyglyceryl-3 Beeswax": 4.50,
+            "Polyglyceryl-3 Methylglucose Distearate": 12.00,
+            "Polyglyceryl-3 Oleate": 5.50,
+            "Polyglyceryl-4 Laurate": 10.00,
+            "Polyglyceryl-4 Oleate": 4.00,
+            "Polyglyceryl-6 Polyhydroxystearate + Polyglyceryl-6 Polyricinoleate": 4.50,
+            "Polyglyceryl-6 Stearate + Polyglyceryl-6 Behenate": 13.00,
+            "Polyglyceryl-10 Caprylate": 16.50,
+            "Polyglyceryl-10 Caprylate/Caprate": 14.50,
+            "Polyglyceryl-10 Laurate": 12.00,
+            "Polyglyceryl-10 Oleate": 9.00,
+            "Polyoxyl 20 Cetostearyl Ether": 15.70,
+            "Polyoxyl Castor Oil": 13.00,
+            "Polysorbate 20": 16.67,
+            "Polysorbate 22": 15.00,
+            "Polysorbate 23": 16.00,
+            "Polysorbate 24": 17.00,
+            "Polysorbate 60": 14.90,
+            "Polysorbate 80": 15.00,
+            "Polysorbate 85": 11.00,
+            "Potassium Cetyl Phosphate": 9.60,
+            "PPG-26 Buteth-26 + PEG-40 Hydrogenated Castor Oil": 15.50,
+            "Propylene Glycol": 9.38,
+            "Propylene Glycol Isostearate": 2.50,
+            "Propylene Glycol Mono and Dicaprylate": 6.00,
+            "Propylene Glycol Monocaprylate": 5.00,
+            "Propylene Glycol Monostearate": 3.80,
+            "Sesamol Laurate": 4.83,
+            "Sodium Caseinate": 14.00,
+            "Sodium Dioctyl Sulfosuccinate": 10.00,
+            "Sodium Dodecylbenzenesulfonate": 10.60,
+            "Sodium Stearoyl Lactylate": 8.30,
+            "Sorbeth-6 Beeswax": 7.50,
+            "Sorbeth-6 Laurate": 15.50,
+            "Sorbeth-6 Tetraoleate": 8.50,
+            "Sorbeth-20 Beeswax": 9.50,
+            "Sorbeth-30 Tetraoleate": 11.50,
+            "Sorbeth-40 Tetraoleate": 12.50,
+            "Sorbeth-60 Tetraoleate": 14.00,
+            "Sorbitan Isostearate": 4.70,
+            "Sorbitan Laurate": 8.60,
+            "Sorbitan Monolaurate": 9.00,
+            "Sorbitan Monooleate": 4.00,
+            "Sorbitan Monostearate": 5.00,
+            "Sorbitan Oleate": 4.30,
+            "Sorbitan Olivate": 4.50,
+            "Sorbitan Palmitate": 6.70,
+            "Sorbitan Sesquioleate": 3.70,
+            "Sorbitan Stearate + Sucrose Cocoate": 6.00,
+            "Sorbitan Trioleate": 2.00,
+            "Sorbitan Tristearate": 2.00,
+            "Stearamide MEA": 11.00,
+            "Steareth-2": 6.00,
+            "Steareth-20": 15.30,
+            "Steareth-21": 16.00,
+            "Steareth-100": 18.80,
+            "Sucrose Monolaurate": 16.09,
+            "Sucrose Stearate": 13.00,
+            "Trideceth-9 + PEG-40 Hydrogenated Castor Oil": 13.40,
+            "Tridecyl Stearate": 7.50
         };
 
         // Application State
@@ -480,37 +656,41 @@
             console.log('HLB Calculator ready!');
         }
 
+        // Populate dropdowns with database
         function populateDropdowns() {
             const oilSelect = document.getElementById('oil-select');
             const surf1Select = document.getElementById('surfactant-1');
             const surf2Select = document.getElementById('surfactant-2');
 
-            // Populate oil dropdown
-            Object.keys(OILS_DATABASE).sort().forEach(oil => {
+            // Sort and populate oils
+            const sortedOils = Object.keys(OILS_DATABASE).sort();
+            sortedOils.forEach(oil => {
                 const option = document.createElement('option');
                 option.value = oil;
-                option.textContent = oil;
+                option.textContent = `${oil} (rHLB: ${OILS_DATABASE[oil]})`;
                 oilSelect.appendChild(option);
             });
 
-            // Populate surfactant dropdowns
-            Object.keys(SURFACTANTS_DATABASE).sort().forEach(surfactant => {
+            // Sort and populate surfactants
+            const sortedSurfactants = Object.keys(SURFACTANTS_DATABASE).sort();
+            sortedSurfactants.forEach(surf => {
                 const option1 = document.createElement('option');
-                option1.value = surfactant;
-                option1.textContent = surfactant;
+                option1.value = surf;
+                option1.textContent = `${surf} (HLB: ${SURFACTANTS_DATABASE[surf]})`;
                 surf1Select.appendChild(option1);
 
                 const option2 = document.createElement('option');
-                option2.value = surfactant;
-                option2.textContent = surfactant;
+                option2.value = surf;
+                option2.textContent = `${surf} (HLB: ${SURFACTANTS_DATABASE[surf]})`;
                 surf2Select.appendChild(option2);
             });
         }
 
+        // Setup event listeners
         function setupEventListeners() {
-            // Add Enter key support for inputs
+            // Allow Enter key to trigger actions
             document.getElementById('oil-percentage').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addOilToFormulation();
+                if (e.key === 'Enter') addOil();
             });
 
             document.getElementById('other-percentage').addEventListener('keypress', function(e) {
@@ -518,70 +698,73 @@
             });
         }
 
-        // Oil Phase Functions
-        function addOilToFormulation() {
+        // Oil Functions
+        function addOil() {
             const oilSelect = document.getElementById('oil-select');
-            const percentageInput = document.getElementById('oil-percentage');
+            const oilPercentage = parseFloat(document.getElementById('oil-percentage').value);
 
-            const oilName = oilSelect.value;
-            const percentage = parseFloat(percentageInput.value);
-
-            if (!oilName) {
+            if (!oilSelect.value) {
                 alert('Please select an oil');
                 return;
             }
 
-            if (!percentage || percentage <= 0) {
-                alert('Please enter a valid percentage');
-                percentageInput.focus();
+            if (!oilPercentage || oilPercentage <= 0 || oilPercentage > 100) {
+                alert('Please enter a valid percentage (0-100)');
                 return;
             }
 
-            const oil = {
-                name: oilName,
-                rhlb: OILS_DATABASE[oilName],
-                percentage: percentage
-            };
+            const totalPercentage = currentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0) + oilPercentage;
+            if (totalPercentage > 100) {
+                alert('Total oil percentage cannot exceed 100%');
+                return;
+            }
 
-            currentFormulation.oils.push(oil);
+            currentFormulation.oils.push({
+                name: oilSelect.value,
+                percentage: oilPercentage,
+                rhlb: OILS_DATABASE[oilSelect.value]
+            });
+
             updateOilsTable();
-            
-            // Clear inputs
             oilSelect.value = '';
-            percentageInput.value = '';
-            oilSelect.focus();
+            document.getElementById('oil-percentage').value = '';
+            
+            // Clear required HLB when oils change
+            currentFormulation.requiredHLB = null;
+            document.getElementById('rhlb-result').style.display = 'none';
         }
 
         function updateOilsTable() {
-            const tbody = document.querySelector('#oils-table tbody');
+            const tbody = document.getElementById('oils-tbody');
             tbody.innerHTML = '';
 
             currentFormulation.oils.forEach((oil, index) => {
-                const row = document.createElement('tr');
-                row.onclick = () => selectTableRow(row, 'oil', index);
+                const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${oil.name}</td>
-                    <td>${oil.rhlb.toFixed(1)}</td>
                     <td>${oil.percentage.toFixed(1)}%</td>
+                    <td>${oil.rhlb}</td>
+                    <td><button onclick="removeOil(${index})" class="btn btn-danger">Remove</button></td>
                 `;
-                tbody.appendChild(row);
             });
         }
 
-        function removeSelectedOil() {
-            const selectedRow = document.querySelector('#oils-table tr.selected');
-            if (!selectedRow) {
-                alert('Please select an oil to remove');
-                return;
-            }
-
-            const index = parseInt(selectedRow.dataset.index);
+        function removeOil(index) {
             currentFormulation.oils.splice(index, 1);
             updateOilsTable();
             
-            // Clear HLB calculation
+            // Clear required HLB when oils change
             currentFormulation.requiredHLB = null;
             document.getElementById('rhlb-result').style.display = 'none';
+        }
+
+        function clearOils() {
+            if (confirm('Are you sure you want to clear all oils?')) {
+                currentFormulation.oils = [];
+                updateOilsTable();
+                currentFormulation.requiredHLB = null;
+                document.getElementById('rhlb-result').style.display = 'none';
+            }
         }
 
         function calculateRequiredHLB() {
@@ -631,232 +814,170 @@
                 return;
             }
 
-            const ratio1 = (targetHLB - surf2HLB) / (surf1HLB - surf2HLB);
-            const ratio2 = 1 - ratio1;
+            // Calculate ratios
+            const surf1Ratio = (surf2HLB - targetHLB) / (surf2HLB - surf1HLB);
+            const surf2Ratio = 1 - surf1Ratio;
 
-            if (ratio1 < 0 || ratio1 > 1) {
-                const resultDiv = document.getElementById('surfactant-result');
-                resultDiv.innerHTML = 'Cannot achieve target HLB with these surfactants';
-                resultDiv.className = 'result-display error';
-                resultDiv.style.display = 'block';
+            if (surf1Ratio < 0 || surf1Ratio > 1) {
+                alert('The required HLB is outside the range of the selected surfactants. Please choose different surfactants.');
                 return;
             }
 
             currentFormulation.surfactantSystem = {
-                surfactant1: { name: surf1Name, hlb: surf1HLB, ratio: ratio1 },
-                surfactant2: { name: surf2Name, hlb: surf2HLB, ratio: ratio2 }
+                surfactant1: { name: surf1Name, hlb: surf1HLB, ratio: surf1Ratio },
+                surfactant2: { name: surf2Name, hlb: surf2HLB, ratio: surf2Ratio }
             };
 
             const resultDiv = document.getElementById('surfactant-result');
             resultDiv.innerHTML = `
                 <strong>Surfactant Ratios:</strong><br>
-                ${surf1Name}: ${(ratio1 * 100).toFixed(1)}%<br>
-                ${surf2Name}: ${(ratio2 * 100).toFixed(1)}%
+                ${surf1Name}: ${(surf1Ratio * 100).toFixed(1)}%<br>
+                ${surf2Name}: ${(surf2Ratio * 100).toFixed(1)}%
             `;
+            resultDiv.className = 'result-display';
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateWaterPhase() {
+            if (!currentFormulation.surfactantSystem) {
+                alert('Please calculate surfactant ratios first');
+                return;
+            }
+
+            const oilTotal = currentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
+            const surfactantPercent = parseFloat(document.getElementById('surfactant-total').value);
+            const surfactantTotal = (oilTotal * surfactantPercent) / 100;
+            const othersTotal = currentFormulation.others.reduce((sum, item) => sum + item.percentage, 0);
+            const waterPhase = 100 - oilTotal - surfactantTotal - othersTotal;
+
+            if (waterPhase < 0) {
+                const resultDiv = document.getElementById('water-result');
+                resultDiv.innerHTML = 'Error: Total exceeds 100%. Please adjust your formulation.';
+                resultDiv.className = 'result-display error';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            const resultDiv = document.getElementById('water-result');
+            resultDiv.innerHTML = `Water Phase: ${waterPhase.toFixed(1)}%`;
             resultDiv.className = 'result-display';
             resultDiv.style.display = 'block';
         }
 
         // Other Ingredients Functions
         function addOtherIngredient() {
-            const nameInput = document.getElementById('other-name');
-            const percentageInput = document.getElementById('other-percentage');
-
-            const name = nameInput.value.trim();
-            const percentage = parseFloat(percentageInput.value);
+            const name = document.getElementById('other-name').value.trim();
+            const percentage = parseFloat(document.getElementById('other-percentage').value);
 
             if (!name) {
                 alert('Please enter an ingredient name');
-                nameInput.focus();
                 return;
             }
 
-            if (!percentage || percentage <= 0) {
-                alert('Please enter a valid percentage');
-                percentageInput.focus();
+            if (!percentage || percentage <= 0 || percentage > 100) {
+                alert('Please enter a valid percentage (0-100)');
                 return;
             }
 
-            const ingredient = {
+            currentFormulation.others.push({
                 name: name,
                 percentage: percentage
-            };
+            });
 
-            currentFormulation.others.push(ingredient);
             updateOthersTable();
-            
-            // Clear inputs
-            nameInput.value = '';
-            percentageInput.value = '';
-            nameInput.focus();
+            document.getElementById('other-name').value = '';
+            document.getElementById('other-percentage').value = '';
         }
 
         function updateOthersTable() {
-            const tbody = document.querySelector('#others-table tbody');
+            const tbody = document.getElementById('others-tbody');
             tbody.innerHTML = '';
 
-            currentFormulation.others.forEach((ingredient, index) => {
-                const row = document.createElement('tr');
-                row.onclick = () => selectTableRow(row, 'other', index);
+            currentFormulation.others.forEach((item, index) => {
+                const row = tbody.insertRow();
                 row.innerHTML = `
-                    <td>${ingredient.name}</td>
-                    <td>${ingredient.percentage.toFixed(1)}%</td>
+                    <td>${item.name}</td>
+                    <td>${item.percentage.toFixed(1)}%</td>
+                    <td><button onclick="removeOther(${index})" class="btn btn-danger">Remove</button></td>
                 `;
-                tbody.appendChild(row);
             });
         }
 
-        function removeSelectedOther() {
-            const selectedRow = document.querySelector('#others-table tr.selected');
-            if (!selectedRow) {
-                alert('Please select an ingredient to remove');
-                return;
-            }
-
-            const index = parseInt(selectedRow.dataset.index);
+        function removeOther(index) {
             currentFormulation.others.splice(index, 1);
             updateOthersTable();
         }
 
-        function calculateWaterPercentage() {
-            const oilTotal = currentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
-            const surfactantRatio = parseFloat(document.getElementById('surfactant-total').value) || 0;
-            const surfactantTotal = oilTotal * (surfactantRatio / 100); // Calculate actual surfactant % from oil phase
-            const otherTotal = currentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
-            
-            const waterPercentage = 100 - oilTotal - surfactantTotal - otherTotal;
-
-            const resultDiv = document.getElementById('water-result');
-            
-            if (waterPercentage < 0) {
-                resultDiv.innerHTML = `Total exceeds 100% (${(100 - waterPercentage).toFixed(1)}%)`;
-                resultDiv.className = 'result-display error';
-            } else {
-                resultDiv.innerHTML = `
-                    <strong>Breakdown:</strong><br>
-                    Surfactants: ${surfactantTotal.toFixed(1)}% (${surfactantRatio}% of oils)<br>
-                    Water: ${waterPercentage.toFixed(1)}%
-                `;
-                resultDiv.className = 'result-display';
+        function clearOthers() {
+            if (confirm('Are you sure you want to clear all other ingredients?')) {
+                currentFormulation.others = [];
+                updateOthersTable();
             }
-            
-            resultDiv.style.display = 'block';
         }
 
         // Recipe Generation
-        function generateCompleteRecipe() {
-            if (!validateFormulation()) return;
+        function generateRecipe() {
+            if (currentFormulation.oils.length === 0 || !currentFormulation.surfactantSystem) {
+                alert('Please complete your formulation (oils and surfactants) first');
+                return;
+            }
 
-            const formulaName = document.getElementById('formula-name').value || 'Untitled Formula';
             const batchSize = parseFloat(document.getElementById('batch-size').value) || 100;
-            const notes = document.getElementById('formula-notes').value.trim();
-
             const oilTotal = currentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
-            const surfactantRatio = parseFloat(document.getElementById('surfactant-total').value) || 0;
-            const surfactantTotal = oilTotal * (surfactantRatio / 100); // Calculate actual surfactant % from oil phase
-            const otherTotal = currentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
-            const waterPercentage = 100 - oilTotal - surfactantTotal - otherTotal;
+            const surfactantPercent = parseFloat(document.getElementById('surfactant-total').value);
+            const surfactantTotal = (oilTotal * surfactantPercent) / 100;
+            const othersTotal = currentFormulation.others.reduce((sum, item) => sum + item.percentage, 0);
+            const waterPhase = 100 - oilTotal - surfactantTotal - othersTotal;
 
-            let recipeHTML = `
-                <div class="recipe-output">
-                    <h3>${formulaName}</h3>
-                    <p><strong>Batch Size:</strong> ${batchSize}g | <strong>Required HLB:</strong> ${currentFormulation.requiredHLB.toFixed(2)} | <strong>Surfactant System:</strong> ${surfactantRatio}% of oils | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                    
-                    <table class="recipe-table">
-                        <thead>
-                            <tr>
-                                <th>Phase</th>
-                                <th>Ingredient</th>
-                                <th>Percentage</th>
-                                <th>Weight (g)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
+            if (waterPhase < 0) {
+                alert('Error: Total exceeds 100%. Please adjust your formulation.');
+                return;
+            }
 
+            let recipe = '<div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">';
+            recipe += '<h3 style="color: #2196F3; margin-bottom: 15px;">Formula Recipe</h3>';
+            
             // Oil Phase
+            recipe += '<h4 style="color: #495057; margin: 15px 0 10px 0;">Oil Phase (' + oilTotal.toFixed(1) + '%)</h4>';
+            recipe += '<ul style="list-style: none; padding: 0;">';
             currentFormulation.oils.forEach(oil => {
-                const weight = (oil.percentage * batchSize / 100).toFixed(1);
-                recipeHTML += `
-                    <tr>
-                        <td>Oil</td>
-                        <td>${oil.name}</td>
-                        <td>${oil.percentage.toFixed(1)}%</td>
-                        <td>${weight}g</td>
-                    </tr>
-                `;
+                const weight = (oil.percentage * batchSize / 100).toFixed(2);
+                recipe += `<li style="padding: 5px 0;">${oil.name}: ${oil.percentage.toFixed(1)}% (${weight}g)</li>`;
             });
+            recipe += '</ul>';
 
             // Surfactant Phase
-            const surf1Percentage = surfactantTotal * currentFormulation.surfactantSystem.surfactant1.ratio;
-            const surf2Percentage = surfactantTotal * currentFormulation.surfactantSystem.surfactant2.ratio;
+            recipe += '<h4 style="color: #495057; margin: 15px 0 10px 0;">Surfactant Phase (' + surfactantTotal.toFixed(1) + '%)</h4>';
+            recipe += '<ul style="list-style: none; padding: 0;">';
+            const surf1Weight = (surfactantTotal * currentFormulation.surfactantSystem.surfactant1.ratio * batchSize / 100).toFixed(2);
+            const surf2Weight = (surfactantTotal * currentFormulation.surfactantSystem.surfactant2.ratio * batchSize / 100).toFixed(2);
+            recipe += `<li style="padding: 5px 0;">${currentFormulation.surfactantSystem.surfactant1.name}: ${(currentFormulation.surfactantSystem.surfactant1.ratio * 100).toFixed(1)}% of surfactants (${surf1Weight}g)</li>`;
+            recipe += `<li style="padding: 5px 0;">${currentFormulation.surfactantSystem.surfactant2.name}: ${(currentFormulation.surfactantSystem.surfactant2.ratio * 100).toFixed(1)}% of surfactants (${surf2Weight}g)</li>`;
+            recipe += '</ul>';
 
-            recipeHTML += `
-                <tr>
-                    <td>Surfactant</td>
-                    <td>${currentFormulation.surfactantSystem.surfactant1.name}</td>
-                    <td>${surf1Percentage.toFixed(1)}%</td>
-                    <td>${(surf1Percentage * batchSize / 100).toFixed(1)}g</td>
-                </tr>
-                <tr>
-                    <td>Surfactant</td>
-                    <td>${currentFormulation.surfactantSystem.surfactant2.name}</td>
-                    <td>${surf2Percentage.toFixed(1)}%</td>
-                    <td>${(surf2Percentage * batchSize / 100).toFixed(1)}g</td>
-                </tr>
-            `;
+            // Water Phase
+            recipe += '<h4 style="color: #495057; margin: 15px 0 10px 0;">Water Phase (' + waterPhase.toFixed(1) + '%)</h4>';
+            const waterWeight = (waterPhase * batchSize / 100).toFixed(2);
+            recipe += `<p style="padding: 5px 0;">Water: ${waterPhase.toFixed(1)}% (${waterWeight}g)</p>`;
 
             // Other Ingredients
-            currentFormulation.others.forEach(ingredient => {
-                const weight = (ingredient.percentage * batchSize / 100).toFixed(1);
-                recipeHTML += `
-                    <tr>
-                        <td>Water</td>
-                        <td>${ingredient.name}</td>
-                        <td>${ingredient.percentage.toFixed(1)}%</td>
-                        <td>${weight}g</td>
-                    </tr>
-                `;
-            });
-
-            // Water
-            if (waterPercentage > 0) {
-                const waterWeight = (waterPercentage * batchSize / 100).toFixed(1);
-                recipeHTML += `
-                    <tr>
-                        <td>Water</td>
-                        <td>Distilled Water</td>
-                        <td>${waterPercentage.toFixed(1)}%</td>
-                        <td>${waterWeight}g</td>
-                    </tr>
-                `;
+            if (currentFormulation.others.length > 0) {
+                recipe += '<h4 style="color: #495057; margin: 15px 0 10px 0;">Other Ingredients (' + othersTotal.toFixed(1) + '%)</h4>';
+                recipe += '<ul style="list-style: none; padding: 0;">';
+                currentFormulation.others.forEach(item => {
+                    const weight = (item.percentage * batchSize / 100).toFixed(2);
+                    recipe += `<li style="padding: 5px 0;">${item.name}: ${item.percentage.toFixed(1)}% (${weight}g)</li>`;
+                });
+                recipe += '</ul>';
             }
 
-            recipeHTML += `
-                        </tbody>
-                    </table>
-                    
-                    <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px;">
-                        <strong>Formula Summary:</strong><br>
-                        Oil Phase: ${oilTotal.toFixed(1)}% | Surfactant Phase: ${surfactantTotal.toFixed(1)}% (${surfactantRatio}% of oils) | Water Phase: ${(waterPercentage + otherTotal).toFixed(1)}%
-                    </div>
-            `;
+            recipe += '</div>';
 
-            if (notes) {
-                recipeHTML += `
-                    <h4 style="color: #2196F3; margin-top: 20px;">Notes:</h4>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; white-space: pre-wrap;">${notes}</div>
-                `;
-            }
-
-            recipeHTML += '</div>';
-
-            document.getElementById('recipe-display').innerHTML = recipeHTML;
+            document.getElementById('recipe-display').innerHTML = recipe;
         }
 
+        // Export to PDF
         function exportToPDF() {
-            if (!validateFormulation()) return;
-
             if (!window.jspdf) {
                 alert('PDF library not loaded. Please refresh the page and try again.');
                 return;
@@ -906,85 +1027,87 @@
             // Surfactant Phase
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            const surfactantRatio = parseFloat(document.getElementById('surfactant-total').value) || 0;
-            const surfactantTotal = oilTotal * (surfactantRatio / 100); // Calculate actual surfactant % from oil phase
-            pdf.text(`Surfactant Phase (${surfactantTotal.toFixed(1)}% - ${surfactantRatio}% of oils)`, 20, yPosition);
+            const surfactantPercent = parseFloat(document.getElementById('surfactant-total').value);
+            const surfactantTotal = (oilTotal * surfactantPercent) / 100;
+            pdf.text(`Surfactant Phase (${surfactantTotal.toFixed(1)}%)`, 20, yPosition);
             yPosition += 10;
 
             pdf.setFontSize(9);
             pdf.setFont(undefined, 'normal');
-            const surf1Percentage = surfactantTotal * currentFormulation.surfactantSystem.surfactant1.ratio;
-            const surf2Percentage = surfactantTotal * currentFormulation.surfactantSystem.surfactant2.ratio;
-
+            const surf1Weight = (surfactantTotal * currentFormulation.surfactantSystem.surfactant1.ratio * batchSize / 100).toFixed(1);
+            const surf2Weight = (surfactantTotal * currentFormulation.surfactantSystem.surfactant2.ratio * batchSize / 100).toFixed(1);
             pdf.text(currentFormulation.surfactantSystem.surfactant1.name, 20, yPosition);
-            pdf.text(`${surf1Percentage.toFixed(1)}%`, 100, yPosition);
-            pdf.text(`${(surf1Percentage * batchSize / 100).toFixed(1)}g`, 130, yPosition);
+            pdf.text(`${(currentFormulation.surfactantSystem.surfactant1.ratio * 100).toFixed(1)}%`, 100, yPosition);
+            pdf.text(`${surf1Weight}g`, 130, yPosition);
             yPosition += 5;
-
             pdf.text(currentFormulation.surfactantSystem.surfactant2.name, 20, yPosition);
-            pdf.text(`${surf2Percentage.toFixed(1)}%`, 100, yPosition);
-            pdf.text(`${(surf2Percentage * batchSize / 100).toFixed(1)}g`, 130, yPosition);
+            pdf.text(`${(currentFormulation.surfactantSystem.surfactant2.ratio * 100).toFixed(1)}%`, 100, yPosition);
+            pdf.text(`${surf2Weight}g`, 130, yPosition);
             yPosition += 10;
 
             // Water Phase
+            const othersTotal = currentFormulation.others.reduce((sum, item) => sum + item.percentage, 0);
+            const waterPhase = 100 - oilTotal - surfactantTotal - othersTotal;
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            const otherTotal = currentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
-            const waterPercentage = 100 - oilTotal - surfactantTotal - otherTotal;
-            pdf.text(`Water Phase (${(waterPercentage + otherTotal).toFixed(1)}%)`, 20, yPosition);
+            pdf.text(`Water Phase (${waterPhase.toFixed(1)}%)`, 20, yPosition);
             yPosition += 10;
 
             pdf.setFontSize(9);
             pdf.setFont(undefined, 'normal');
-            currentFormulation.others.forEach(ingredient => {
-                const weight = (ingredient.percentage * batchSize / 100).toFixed(1);
-                pdf.text(ingredient.name, 20, yPosition);
-                pdf.text(`${ingredient.percentage.toFixed(1)}%`, 100, yPosition);
-                pdf.text(`${weight}g`, 130, yPosition);
-                yPosition += 5;
-            });
+            const waterWeight = (waterPhase * batchSize / 100).toFixed(1);
+            pdf.text('Water', 20, yPosition);
+            pdf.text(`${waterPhase.toFixed(1)}%`, 100, yPosition);
+            pdf.text(`${waterWeight}g`, 130, yPosition);
+            yPosition += 10;
 
-            if (waterPercentage > 0) {
-                const waterWeight = (waterPercentage * batchSize / 100).toFixed(1);
-                pdf.text('Distilled Water', 20, yPosition);
-                pdf.text(`${waterPercentage.toFixed(1)}%`, 100, yPosition);
-                pdf.text(`${waterWeight}g`, 130, yPosition);
-                yPosition += 10;
-            }
-
-            // Notes
-            if (notes) {
-                yPosition += 5;
+            // Other Ingredients
+            if (currentFormulation.others.length > 0) {
                 pdf.setFontSize(12);
                 pdf.setFont(undefined, 'bold');
-                pdf.text('Notes:', 20, yPosition);
-                yPosition += 8;
+                pdf.text(`Other Ingredients (${othersTotal.toFixed(1)}%)`, 20, yPosition);
+                yPosition += 10;
 
                 pdf.setFontSize(9);
                 pdf.setFont(undefined, 'normal');
-                const lines = pdf.splitTextToSize(notes, 170);
-                lines.forEach(line => {
-                    pdf.text(line, 20, yPosition);
+                currentFormulation.others.forEach(item => {
+                    const weight = (item.percentage * batchSize / 100).toFixed(1);
+                    pdf.text(item.name, 20, yPosition);
+                    pdf.text(`${item.percentage.toFixed(1)}%`, 100, yPosition);
+                    pdf.text(`${weight}g`, 130, yPosition);
                     yPosition += 5;
                 });
             }
 
-            const fileName = `${formulaName.replace(/[^a-z0-9]/gi, '_')}_HLB_Formula.pdf`;
-            pdf.save(fileName);
+            // Notes
+            if (notes) {
+                yPosition += 10;
+                pdf.setFontSize(12);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Notes:', 20, yPosition);
+                yPosition += 10;
+                
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'normal');
+                const splitNotes = pdf.splitTextToSize(notes, 170);
+                pdf.text(splitNotes, 20, yPosition);
+            }
+
+            pdf.save(`${formulaName.replace(/[^a-z0-9]/gi, '_')}.pdf`);
         }
 
-        // Data Management
+        // Save/Load Functions
         function saveFormulation() {
-            const formulaName = document.getElementById('formula-name').value || 'untitled_formula';
+            const formulaName = document.getElementById('formula-name').value || 'Untitled';
             
             const data = {
                 formulation: currentFormulation,
                 formulaDetails: {
-                    name: document.getElementById('formula-name').value,
+                    name: formulaName,
                     id: document.getElementById('formula-id').value,
                     version: document.getElementById('formula-version').value,
                     batchSize: document.getElementById('batch-size').value,
-                    surfactantRatio: document.getElementById('surfactant-total').value, // % of oil phase
+                    surfactantRatio: document.getElementById('surfactant-total').value,
                     notes: document.getElementById('formula-notes').value
                 },
                 timestamp: new Date().toISOString()
@@ -1015,7 +1138,6 @@
                     try {
                         const data = JSON.parse(e.target.result);
                         
-                        // Restore formulation data
                         currentFormulation = data.formulation || {
                             oils: [],
                             others: [],
@@ -1023,17 +1145,15 @@
                             surfactantSystem: null
                         };
                         
-                        // Restore form fields
                         if (data.formulaDetails) {
                             document.getElementById('formula-name').value = data.formulaDetails.name || '';
                             document.getElementById('formula-id').value = data.formulaDetails.id || '';
                             document.getElementById('formula-version').value = data.formulaDetails.version || '';
                             document.getElementById('batch-size').value = data.formulaDetails.batchSize || '100';
-                            document.getElementById('surfactant-total').value = data.formulaDetails.surfactantRatio || data.formulaDetails.surfactantTotal || '25';
+                            document.getElementById('surfactant-total').value = data.formulaDetails.surfactantRatio || '25';
                             document.getElementById('formula-notes').value = data.formulaDetails.notes || '';
                         }
                         
-                        // Update displays
                         updateOilsTable();
                         updateOthersTable();
                         
@@ -1078,7 +1198,6 @@
                     surfactantSystem: null
                 };
                 
-                // Clear all form fields
                 document.getElementById('formula-name').value = '';
                 document.getElementById('formula-id').value = '';
                 document.getElementById('formula-version').value = '';
@@ -1086,7 +1205,6 @@
                 document.getElementById('surfactant-total').value = '25';
                 document.getElementById('formula-notes').value = '';
                 
-                // Clear dropdowns
                 document.getElementById('oil-select').value = '';
                 document.getElementById('oil-percentage').value = '';
                 document.getElementById('surfactant-1').value = '';
@@ -1094,7 +1212,6 @@
                 document.getElementById('other-name').value = '';
                 document.getElementById('other-percentage').value = '';
                 
-                // Clear tables and results
                 updateOilsTable();
                 updateOthersTable();
                 document.getElementById('rhlb-result').style.display = 'none';
@@ -1106,48 +1223,8 @@
             }
         }
 
-        // Utility Functions
-        function selectTableRow(row, type, index) {
-            // Clear previous selections
-            const table = row.closest('table');
-            table.querySelectorAll('tr').forEach(tr => tr.classList.remove('selected'));
-            
-            // Select clicked row
-            row.classList.add('selected');
-            row.dataset.index = index;
-        }
-
-        function validateFormulation() {
-            if (currentFormulation.oils.length === 0) {
-                alert('Please add oils to your formulation');
-                return false;
-            }
-            
-            if (!currentFormulation.requiredHLB) {
-                alert('Please calculate the Required HLB');
-                return false;
-            }
-            
-            if (!currentFormulation.surfactantSystem) {
-                alert('Please calculate surfactant ratios');
-                return false;
-            }
-            
-            const oilTotal = currentFormulation.oils.reduce((sum, oil) => sum + oil.percentage, 0);
-            const surfactantRatio = parseFloat(document.getElementById('surfactant-total').value) || 0;
-            const surfactantTotal = oilTotal * (surfactantRatio / 100); // Calculate actual surfactant % from oil phase
-            const otherTotal = currentFormulation.others.reduce((sum, ingredient) => sum + ingredient.percentage, 0);
-            
-            if (oilTotal + surfactantTotal + otherTotal > 100) {
-                alert('Total percentages exceed 100%. Please adjust your formulation.');
-                return false;
-            }
-            
-            return true;
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // Initialize on page load
+        window.onload = initializeApp;
     </script>
 </body>
 </html>
