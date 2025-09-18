@@ -336,7 +336,7 @@
 
                 <div class="form-group">
                     <label>Current pH Value</label>
-                    <input type="number" id="current-ph" class="form-control" step="0.01" min="0" max="14" placeholder="e.g., 6.5">
+                    <input type="number" id="current-ph" class="form-control" step="any" min="0" max="14" placeholder="e.g., 6.5">
                 </div>
 
                 <div class="ph-scale">
@@ -364,7 +364,7 @@
                 
                 <div class="form-group">
                     <label>Target pH</label>
-                    <input type="number" id="target-ph" class="form-control" step="0.01" min="0" max="14" placeholder="e.g., 5.5">
+                    <input type="number" id="target-ph" class="form-control" step="any" min="0" max="14" placeholder="e.g., 5.5">
                 </div>
                 
                 <div class="form-group">
@@ -379,7 +379,7 @@
 
                 <div class="form-group">
                     <label>Batch Volume (L)</label>
-                    <input type="number" id="batch-volume" class="form-control" step="0.1" min="0" value="1.0">
+                    <input type="number" id="batch-volume" class="form-control" step="any" min="0" value="1.0">
                 </div>
 
                 <button class="btn btn-success" onclick="calculateAdjustment()">Calculate pH Adjustment</button>
@@ -409,7 +409,7 @@
                 
                 <div class="form-group">
                     <label>Concentration (%)</label>
-                    <input type="number" id="adjuster-concentration" class="form-control" step="0.01" min="0" placeholder="Solution concentration">
+                    <input type="number" id="adjuster-concentration" class="form-control" step="any" min="0" placeholder="Solution concentration">
                 </div>
 
                 <div id="adjuster-info" class="ph-analysis" style="display: none;">
@@ -648,14 +648,16 @@
         }
 
         function updatePHMarker() {
-            const ph = parseFloat(document.getElementById('current-ph').value);
+            const phInput = document.getElementById('current-ph');
+            const ph = parseFloat(phInput.value);
             const marker = document.getElementById('ph-marker');
             
             if (!isNaN(ph) && ph >= 0 && ph <= 14) {
                 const position = (ph / 14) * 100;
                 marker.style.left = `calc(${position}% - 2px)`;
                 marker.style.display = 'block';
-                updateDisplayField('display-current-ph', ph.toString());
+                // Fix: Use the actual input value directly, not the parsed float
+                updateDisplayField('display-current-ph', phInput.value);
             } else {
                 marker.style.display = 'none';
             }
@@ -680,29 +682,54 @@
 
             let classification = '';
             let skinCompatibility = '';
+            let stabilityAssessment = '';
+            let regulatoryCompliance = '';
             let resultClass = '';
 
+            // pH Range Analysis
             if (currentPH < 3.0) {
                 classification = 'Strongly Acidic - Risk of irritation';
                 skinCompatibility = 'Not suitable for skin contact';
+                stabilityAssessment = 'Potential material degradation';
+                regulatoryCompliance = 'Outside normal cosmetic range';
                 resultClass = 'error';
             } else if (currentPH < 5.5) {
                 classification = 'Mildly Acidic - Good for antimicrobial activity';
                 skinCompatibility = 'Compatible with skin acid mantle';
+                stabilityAssessment = 'Good for active stability';
+                regulatoryCompliance = 'Suitable for most cosmetic applications';
                 resultClass = '';
             } else if (currentPH < 7.0) {
                 classification = 'Slightly Acidic - Physiologically compatible';
                 skinCompatibility = 'Excellent skin compatibility';
+                stabilityAssessment = 'Optimal for emulsion stability';
+                regulatoryCompliance = 'Ideal for daily use products';
                 resultClass = '';
             } else if (currentPH < 8.0) {
                 classification = 'Neutral to Slightly Alkaline';
                 skinCompatibility = 'Generally compatible';
+                stabilityAssessment = 'May affect some active ingredients';
+                regulatoryCompliance = 'Acceptable for specific product types';
                 resultClass = '';
             } else {
                 classification = 'Alkaline - May disrupt skin barrier';
                 skinCompatibility = 'Use with caution';
+                stabilityAssessment = 'Risk of hydrolysis for some ingredients';
+                regulatoryCompliance = 'Limited to specific applications (soaps, etc.)';
                 resultClass = 'warning';
             }
+
+            // Product-specific recommendations
+            const productRecommendations = {
+                'cleanser': { ideal: '5.5-6.5', range: 'Gentle cleansing' },
+                'toner': { ideal: '3.5-5.5', range: 'Optimal for toning' },
+                'serum': { ideal: '3.0-6.0', range: 'Active-dependent' },
+                'moisturizer': { ideal: '5.0-7.0', range: 'Skin barrier support' },
+                'sunscreen': { ideal: '6.0-8.0', range: 'Filter stability' },
+                'hair': { ideal: '4.5-6.5', range: 'Cuticle care' }
+            };
+
+            const productRec = productRecommendations[productType] || { ideal: 'N/A', range: 'N/A' };
 
             const resultDiv = document.getElementById('ph-analysis-result');
             resultDiv.innerHTML = `<strong>pH ${currentPH.toFixed(2)}</strong><br>${classification}`;
@@ -711,6 +738,8 @@
 
             document.getElementById('ph-classification').innerHTML = `<strong>Classification:</strong> ${classification}`;
             document.getElementById('skin-compatibility').innerHTML = `<strong>Skin Compatibility:</strong> ${skinCompatibility}`;
+            document.getElementById('stability-assessment').innerHTML = `<strong>Stability:</strong> ${stabilityAssessment}`;
+            document.getElementById('regulatory-compliance').innerHTML = `<strong>Regulatory:</strong> ${regulatoryCompliance}<br><strong>Recommended pH for ${productType}:</strong> ${productRec.ideal} (${productRec.range})`;
             document.getElementById('ph-detailed-analysis').style.display = 'block';
 
             updateDisplayField('display-product-type', productType.charAt(0).toUpperCase() + productType.slice(1));
@@ -791,19 +820,22 @@
             const strengthFactor = adjusterData.strength_factor || 0.1;
             
             // Calculate based on pH difference, batch volume, concentration, and adjuster strength
-            // This is a simplified calculation - in reality, Henderson-Hasselbalch equation would be more accurate
+            // pH is logarithmic: pH = -log[H+], so [H+] ratio = 10^(-ΔpH)
             const volumeInML = batchVolume * 1000; // Convert L to mL
             const concentrationFactor = concentration / 100; // Convert % to decimal
             
-            // Base calculation: amount needed is proportional to pH difference and inversely proportional to strength and concentration
-            estimatedAmount = Math.abs(pHDifference) * volumeInML * (0.1 / (strengthFactor * concentrationFactor));
+            // CORRECTED: Use 10^(-ΔpH) for proper logarithmic calculation
+            const pHChangeFactor = Math.pow(10, -pHDifference);
+            
+            // Base calculation: amount proportional to 10^|ΔpH| and inversely proportional to strength and concentration
+            estimatedAmount = pHChangeFactor * volumeInML * (0.001 / (strengthFactor * concentrationFactor));
             
             // Apply category-specific adjustments
             if (adjusterData.category === 'acidic' && pHDifference < 0) {
-                // Increasing acidity
+                // Increasing acidity (lowering pH)
                 estimatedAmount *= 1.0;
             } else if (adjusterData.category === 'basic' && pHDifference > 0) {
-                // Increasing basicity
+                // Increasing basicity (raising pH)
                 estimatedAmount *= 1.0;
             } else if ((adjusterData.category === 'acidic' && pHDifference > 0) || 
                        (adjusterData.category === 'basic' && pHDifference < 0)) {
