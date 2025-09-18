@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Cost Calculator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Professional Cost Calculator - Enhanced Edition</title>
     <style>
         * {
             margin: 0;
@@ -13,75 +12,74 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             padding: 20px;
+            min-height: 100vh;
         }
 
-        .container {
+        .calculator-container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #1B5E20, #2E7D32);
             color: white;
-            padding: 25px 30px;
+            padding: 30px;
             text-align: center;
         }
 
-        .signature {
-            font-size: 0.9rem;
-            opacity: 0.9;
+        .header h1 {
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
         }
 
-        .subtitle {
-            opacity: 0.95;
-            font-size: 0.95rem;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+        .content {
             padding: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
         }
 
         .section {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
 
         .section h3 {
             color: #1B5E20;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e0e0e0;
-            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
             color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
             font-size: 0.9rem;
         }
 
@@ -91,7 +89,7 @@
             border: 2px solid #e0e0e0;
             border-radius: 6px;
             font-size: 0.95rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus {
@@ -196,68 +194,90 @@
             font-size: 0.85rem;
             color: #666;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .result-display {
-            background: linear-gradient(135deg, #4CAF50, #8BC34A);
-            color: white;
+            background: #e8f5e8;
             padding: 15px;
             border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            margin: 15px 0;
+            margin-top: 15px;
             display: none;
-            font-size: 0.9rem;
-        }
-
-        .result-display.error {
-            background: linear-gradient(135deg, #f44336, #ff6b6b);
-        }
-
-        .quick-add {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .quick-add-header {
             font-weight: 600;
             color: #1B5E20;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
         }
 
-        @media (max-width: 1200px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.85rem;
         }
 
-        @media (max-width: 768px) {
-            .input-group {
-                grid-template-columns: 1fr;
-            }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: #2196F3;
+            margin-left: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="calculator-container">
         <div class="header">
-            <div class="signature">Philip Riachy, PhD</div>
-            <h1>Professional Cost Calculator</h1>
-            <p class="subtitle">Comprehensive Cosmetic Formulation Cost Analysis & Profitability Tool</p>
+            <h1>🧮 Professional Cost Calculator - Enhanced Edition</h1>
+            <p>Industry-Standard COGS (Cost of Goods Sold) Calculation with Advanced Features | Based on Cosmetic Manufacturing Research</p>
         </div>
 
-        <div class="main-content">
-            <!-- Raw Materials Section -->
-            <div class="section">
-                <h3>🧪 Raw Materials</h3>
-                
-                <div class="quick-add">
-                    <div class="quick-add-header">Quick Add Material</div>
+        <div class="content">
+            <div class="grid">
+                <!-- Raw Materials Section -->
+                <div class="section">
+                    <h3>🧪 Raw Materials & Ingredients</h3>
+                    
+                    <div class="info-box">
+                        <strong>COGS (Cost of Goods Sold):</strong> Total direct costs to produce your product<br>
+                        <strong>Industry Standard:</strong> Raw materials typically represent 25-50% of selling price (average 35%)
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="apply-waste-factor">
+                        <label for="apply-waste-factor">Apply waste factor (5-10% typical)</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Waste Factor % (if enabled)</label>
+                        <input type="number" id="waste-factor" class="form-control" value="7" min="0" max="50" step="0.1">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="apply-yield-factor">
+                        <label for="apply-yield-factor">Apply yield factor</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Expected Yield % (if enabled)</label>
+                        <input type="number" id="yield-percentage" class="form-control" value="95" min="1" max="100" step="0.1">
+                    </div>
+
                     <div class="input-group">
-                        <input type="text" id="material-name" class="form-control" placeholder="Material Name (e.g., Hyaluronic Acid)">
+                        <input type="text" id="material-name" class="form-control" placeholder="Material Name">
                         <input type="number" id="material-quantity" class="form-control" step="0.001" min="0" placeholder="Quantity">
                         <select id="material-unit" class="form-control">
                             <option value="g">g</option>
@@ -270,32 +290,48 @@
                     </div>
                     <button class="btn btn-success" onclick="addMaterial()">+ Add Material</button>
                     <button class="btn btn-danger" onclick="removeSelectedMaterial()">- Remove Selected</button>
+
+                    <table class="data-table" id="materials-table">
+                        <thead>
+                            <tr>
+                                <th>Material Name</th>
+                                <th>Quantity</th>
+                                <th>Unit Cost</th>
+                                <th>Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <button class="btn btn-primary" onclick="calculateMaterialCosts()">Calculate Material Costs</button>
+                    <div id="materials-result" class="result-display"></div>
                 </div>
 
-                <table class="data-table" id="materials-table">
-                    <thead>
-                        <tr>
-                            <th>Material Name</th>
-                            <th>Quantity</th>
-                            <th>Unit Cost</th>
-                            <th>Total Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <!-- Packaging Section -->
+                <div class="section">
+                    <h3>📦 Packaging</h3>
+                    
+                    <div class="info-box">
+                        <strong>Industry Standard:</strong> Packaging represents 10-20% of final product cost
+                    </div>
 
-                <button class="btn btn-primary" onclick="calculateMaterialCosts()">Calculate Material Costs</button>
-                <div id="materials-result" class="result-display"></div>
-            </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="moq-enabled">
+                        <label for="moq-enabled">Enable MOQ (Minimum Order Quantity) calculation</label>
+                    </div>
 
-            <!-- Packaging Section -->
-            <div class="section">
-                <h3>📦 Packaging</h3>
-                
-                <div class="quick-add">
-                    <div class="quick-add-header">Quick Add Packaging</div>
+                    <div class="form-group">
+                        <label>MOQ Quantity (if enabled)</label>
+                        <input type="number" id="moq-quantity" class="form-control" value="5000" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>MOQ Setup Cost $ (if enabled)</label>
+                        <input type="number" id="moq-setup-cost" class="form-control" value="500" min="0" step="0.01">
+                    </div>
+
                     <div class="input-group">
-                        <input type="text" id="packaging-name" class="form-control" placeholder="Packaging Item (e.g., 30ml Glass Bottle)">
+                        <input type="text" id="packaging-name" class="form-control" placeholder="Packaging Item">
                         <input type="number" id="packaging-quantity" class="form-control" step="0.001" min="0" placeholder="Quantity">
                         <select id="packaging-unit" class="form-control">
                             <option value="units">units</option>
@@ -308,83 +344,163 @@
                     </div>
                     <button class="btn btn-success" onclick="addPackaging()">+ Add Packaging</button>
                     <button class="btn btn-danger" onclick="removeSelectedPackaging()">- Remove Selected</button>
+
+                    <table class="data-table" id="packaging-table">
+                        <thead>
+                            <tr>
+                                <th>Packaging Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Cost</th>
+                                <th>Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <button class="btn btn-primary" onclick="calculatePackagingCosts()">Calculate Packaging Costs</button>
+                    <div id="packaging-result" class="result-display"></div>
                 </div>
 
-                <table class="data-table" id="packaging-table">
-                    <thead>
-                        <tr>
-                            <th>Packaging Item</th>
-                            <th>Quantity</th>
-                            <th>Unit Cost</th>
-                            <th>Total Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <!-- Manufacturing Costs -->
+                <div class="section">
+                    <h3>🏭 Manufacturing & Labor</h3>
+                    
+                    <div class="info-box">
+                        <strong>Industry Standard:</strong> Labor burden rate is 25-35% above base wages
+                    </div>
 
-                <button class="btn btn-primary" onclick="calculatePackagingCosts()">Calculate Packaging Costs</button>
-                <div id="packaging-result" class="result-display"></div>
-            </div>
+                    <div class="form-group">
+                        <label>Batch Size (units)</label>
+                        <input type="number" id="batch-size" class="form-control" value="1000" min="1">
+                    </div>
 
-            <!-- Manufacturing Costs -->
-            <div class="section">
-                <h3>🏭 Manufacturing</h3>
-                
-                <div class="form-group">
-                    <label>Batch Size (units)</label>
-                    <input type="number" id="batch-size" class="form-control" value="1000" min="1">
+                    <div class="form-group">
+                        <label>Base Labor Cost per Batch ($)</label>
+                        <input type="number" id="labor-cost" class="form-control" step="0.01" min="0" value="50">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="apply-labor-burden" checked>
+                        <label for="apply-labor-burden">Apply labor burden rate</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Labor Burden Rate % (benefits, taxes, etc.)</label>
+                        <input type="number" id="labor-burden-rate" class="form-control" value="30" min="0" max="100" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Equipment/Utilities per Batch ($)</label>
+                        <input type="number" id="equipment-cost" class="form-control" step="0.01" min="0" value="25">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Setup Time Cost ($)</label>
+                        <input type="number" id="setup-cost" class="form-control" step="0.01" min="0" value="30">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="calculateManufacturingCosts()">Calculate Manufacturing</button>
+                    <div id="manufacturing-result" class="result-display"></div>
                 </div>
 
-                <div class="form-group">
-                    <label>Labor Cost per Batch ($)</label>
-                    <input type="number" id="labor-cost" class="form-control" step="0.01" min="0" value="50">
+                <!-- Quality Control & Compliance -->
+                <div class="section">
+                    <h3>✅ Quality Control & Compliance</h3>
+                    
+                    <div class="info-box">
+                        <strong>Industry Standard:</strong> QC costs represent 5-15% of total manufacturing costs
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quality Testing per Batch ($)</label>
+                        <input type="number" id="qc-cost" class="form-control" step="0.01" min="0" value="75">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Regulatory Compliance per Batch ($)</label>
+                        <input type="number" id="compliance-cost" class="form-control" step="0.01" min="0" value="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Documentation & Record Keeping ($)</label>
+                        <input type="number" id="documentation-cost" class="form-control" step="0.01" min="0" value="25">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="calculateQualityCosts()">Calculate Quality Costs</button>
+                    <div id="quality-result" class="result-display"></div>
                 </div>
 
-                <div class="form-group">
-                    <label>Equipment/Utilities per Batch ($)</label>
-                    <input type="number" id="equipment-cost" class="form-control" step="0.01" min="0" value="25">
+                <!-- Overhead Allocation -->
+                <div class="section">
+                    <h3>📊 Overhead & Indirect Costs</h3>
+                    
+                    <div class="info-box">
+                        <strong>Industry Standard:</strong> Overhead typically 15-25% of direct costs
+                    </div>
+
+                    <div class="form-group">
+                        <label>Overhead Allocation Method</label>
+                        <select id="overhead-method" class="form-control">
+                            <option value="percentage">Percentage of Direct Costs</option>
+                            <option value="per-unit">Fixed Amount per Unit</option>
+                            <option value="per-batch">Fixed Amount per Batch</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Overhead Value</label>
+                        <input type="number" id="overhead-value" class="form-control" step="0.01" min="0" value="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Storage/Warehousing per Unit ($)</label>
+                        <input type="number" id="storage-cost" class="form-control" step="0.001" min="0" value="0.15">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="calculateOverheadCosts()">Calculate Overhead</button>
+                    <div id="overhead-result" class="result-display"></div>
                 </div>
 
-                <div class="form-group">
-                    <label>Quality Control/Testing ($)</label>
-                    <input type="number" id="qc-cost" class="form-control" step="0.01" min="0" value="75">
+                <!-- Profit Analysis -->
+                <div class="section">
+                    <h3>💰 Profit Analysis</h3>
+                    
+                    <div class="info-box">
+                        <strong>Target Margins:</strong> Mass market 50-60%, Premium 70-80%, Luxury 80-90%
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Retail Price ($)</label>
+                        <input type="number" id="retail-price" class="form-control" step="0.01" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Retailer Margin (%)</label>
+                        <input type="number" id="retailer-margin" class="form-control" step="1" min="0" max="100" value="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Distributor Margin (%)</label>
+                        <input type="number" id="distributor-margin" class="form-control" step="1" min="0" max="100" value="25">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="calculateProfitability()">Calculate Profitability</button>
+                    <div id="profit-result" class="result-display"></div>
                 </div>
-
-                <button class="btn btn-primary" onclick="calculateManufacturingCosts()">Calculate Manufacturing</button>
-                <div id="manufacturing-result" class="result-display"></div>
-            </div>
-
-            <!-- Profit Analysis -->
-            <div class="section">
-                <h3>💰 Profit Analysis</h3>
-                
-                <div class="form-group">
-                    <label>Target Retail Price ($)</label>
-                    <input type="number" id="retail-price" class="form-control" step="0.01" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label>Retailer Margin (%)</label>
-                    <input type="number" id="retailer-margin" class="form-control" step="1" min="0" max="100" value="50">
-                </div>
-
-                <div class="form-group">
-                    <label>Distributor Margin (%)</label>
-                    <input type="number" id="distributor-margin" class="form-control" step="1" min="0" max="100" value="25">
-                </div>
-
-                <button class="btn btn-primary" onclick="calculateProfitability()">Calculate Profitability</button>
-                <div id="profit-result" class="result-display"></div>
             </div>
 
             <!-- Total Cost Summary -->
             <div class="section" style="grid-column: 1 / -1;">
                 <h3>📊 Total Cost Summary</h3>
                 
+                <div class="info-box">
+                    <strong>COGS (Cost of Goods Sold):</strong> The direct costs attributable to production, including raw materials, packaging, labor, manufacturing overhead, quality control, and all other costs directly involved in creating the product.
+                </div>
+
                 <div class="cost-summary" id="cost-summary">
                     <div class="summary-item">
                         <div class="summary-value" id="total-cogs">$0.00</div>
-                        <div class="summary-label">Total COGS</div>
+                        <div class="summary-label">Total COGS per Unit</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-value" id="gross-margin">0%</div>
@@ -398,7 +514,7 @@
 
                 <div style="text-align: center; margin-top: 20px;">
                     <button class="btn btn-success" onclick="calculateAllCosts()">📊 Calculate All Costs</button>
-                    <button class="btn btn-primary" onclick="generateReport()">📄 Generate PDF Report</button>
+                    <button class="btn btn-primary" onclick="generateReport()">📄 Generate Report</button>
                     <button class="btn" onclick="resetCalculator()">🔄 Reset Calculator</button>
                 </div>
             </div>
@@ -415,6 +531,8 @@
             materialsCost: 0,
             packagingCost: 0,
             manufacturingCost: 0,
+            qualityCost: 0,
+            overheadCost: 0,
             totalCOGS: 0,
             profitAnalysis: null
         };
@@ -424,28 +542,47 @@
             const name = document.getElementById('material-name').value.trim();
             const quantity = parseFloat(document.getElementById('material-quantity').value);
             const unit = document.getElementById('material-unit').value;
-            const unitCost = parseFloat(document.getElementById('material-cost').value);
+            const cost = parseFloat(document.getElementById('material-cost').value);
 
-            if (!name || !quantity || !unitCost) {
+            if (!name || !quantity || !cost) {
                 alert('Please fill in all material fields');
                 return;
             }
 
-            const material = {
-                name: name,
-                quantity: quantity,
-                unit: unit,
-                unitCost: unitCost,
-                totalCost: quantity * unitCost
-            };
-
-            materials.push(material);
-            updateMaterialsTable();
+            let adjustedCost = cost;
             
-            // Clear inputs
-            document.getElementById('material-name').value = '';
-            document.getElementById('material-quantity').value = '';
-            document.getElementById('material-cost').value = '';
+            // Apply waste factor if enabled
+            if (document.getElementById('apply-waste-factor').checked) {
+                const wasteFactor = parseFloat(document.getElementById('waste-factor').value) / 100;
+                adjustedCost = cost * (1 + wasteFactor);
+            }
+
+            // Apply yield factor if enabled
+            if (document.getElementById('apply-yield-factor').checked) {
+                const yieldPercentage = parseFloat(document.getElementById('yield-percentage').value) / 100;
+                adjustedCost = adjustedCost / yieldPercentage;
+            }
+
+            const totalCost = quantity * adjustedCost;
+
+            materials.push({
+                name,
+                quantity,
+                unit,
+                unitCost: adjustedCost,
+                totalCost
+            });
+
+            updateMaterialsTable();
+            clearMaterialInputs();
+        }
+
+        function removeSelectedMaterial() {
+            if (selectedMaterialIndex >= 0) {
+                materials.splice(selectedMaterialIndex, 1);
+                selectedMaterialIndex = -1;
+                updateMaterialsTable();
+            }
         }
 
         function updateMaterialsTable() {
@@ -453,35 +590,28 @@
             tbody.innerHTML = '';
 
             materials.forEach((material, index) => {
-                const row = document.createElement('tr');
+                const row = tbody.insertRow();
                 row.onclick = () => selectMaterialRow(index);
+                if (index === selectedMaterialIndex) row.classList.add('selected');
+
                 row.innerHTML = `
                     <td>${material.name}</td>
                     <td>${material.quantity} ${material.unit}</td>
-                    <td>$${material.unitCost.toFixed(3)}</td>
+                    <td>$${material.unitCost.toFixed(4)}</td>
                     <td>$${material.totalCost.toFixed(2)}</td>
                 `;
-                tbody.appendChild(row);
             });
         }
 
         function selectMaterialRow(index) {
             selectedMaterialIndex = index;
-            const rows = document.querySelectorAll('#materials-table tbody tr');
-            rows.forEach((row, i) => {
-                row.classList.toggle('selected', i === index);
-            });
+            updateMaterialsTable();
         }
 
-        function removeSelectedMaterial() {
-            if (selectedMaterialIndex === -1) {
-                alert('Please select a material to remove');
-                return;
-            }
-
-            materials.splice(selectedMaterialIndex, 1);
-            selectedMaterialIndex = -1;
-            updateMaterialsTable();
+        function clearMaterialInputs() {
+            document.getElementById('material-name').value = '';
+            document.getElementById('material-quantity').value = '';
+            document.getElementById('material-cost').value = '';
         }
 
         // Packaging Functions
@@ -489,67 +619,72 @@
             const name = document.getElementById('packaging-name').value.trim();
             const quantity = parseFloat(document.getElementById('packaging-quantity').value);
             const unit = document.getElementById('packaging-unit').value;
-            const unitCost = parseFloat(document.getElementById('packaging-cost').value);
+            let cost = parseFloat(document.getElementById('packaging-cost').value);
 
-            if (!name || !quantity || !unitCost) {
+            if (!name || !quantity || !cost) {
                 alert('Please fill in all packaging fields');
                 return;
             }
 
-            const pack = {
-                name: name,
-                quantity: quantity,
-                unit: unit,
-                unitCost: unitCost,
-                totalCost: quantity * unitCost
-            };
+            // Apply MOQ calculation if enabled
+            if (document.getElementById('moq-enabled').checked) {
+                const moqQuantity = parseFloat(document.getElementById('moq-quantity').value);
+                const setupCost = parseFloat(document.getElementById('moq-setup-cost').value);
+                cost = (setupCost + (cost * moqQuantity)) / moqQuantity;
+            }
 
-            packaging.push(pack);
+            const totalCost = quantity * cost;
+
+            packaging.push({
+                name,
+                quantity,
+                unit,
+                unitCost: cost,
+                totalCost
+            });
+
             updatePackagingTable();
-            
-            // Clear inputs
-            document.getElementById('packaging-name').value = '';
-            document.getElementById('packaging-quantity').value = '';
-            document.getElementById('packaging-cost').value = '';
+            clearPackagingInputs();
+        }
+
+        function removeSelectedPackaging() {
+            if (selectedPackagingIndex >= 0) {
+                packaging.splice(selectedPackagingIndex, 1);
+                selectedPackagingIndex = -1;
+                updatePackagingTable();
+            }
         }
 
         function updatePackagingTable() {
             const tbody = document.querySelector('#packaging-table tbody');
             tbody.innerHTML = '';
 
-            packaging.forEach((pack, index) => {
-                const row = document.createElement('tr');
+            packaging.forEach((item, index) => {
+                const row = tbody.insertRow();
                 row.onclick = () => selectPackagingRow(index);
+                if (index === selectedPackagingIndex) row.classList.add('selected');
+
                 row.innerHTML = `
-                    <td>${pack.name}</td>
-                    <td>${pack.quantity} ${pack.unit}</td>
-                    <td>$${pack.unitCost.toFixed(3)}</td>
-                    <td>$${pack.totalCost.toFixed(2)}</td>
+                    <td>${item.name}</td>
+                    <td>${item.quantity} ${item.unit}</td>
+                    <td>$${item.unitCost.toFixed(4)}</td>
+                    <td>$${item.totalCost.toFixed(2)}</td>
                 `;
-                tbody.appendChild(row);
             });
         }
 
         function selectPackagingRow(index) {
             selectedPackagingIndex = index;
-            const rows = document.querySelectorAll('#packaging-table tbody tr');
-            rows.forEach((row, i) => {
-                row.classList.toggle('selected', i === index);
-            });
-        }
-
-        function removeSelectedPackaging() {
-            if (selectedPackagingIndex === -1) {
-                alert('Please select a packaging item to remove');
-                return;
-            }
-
-            packaging.splice(selectedPackagingIndex, 1);
-            selectedPackagingIndex = -1;
             updatePackagingTable();
         }
 
-        // Cost Calculation Functions
+        function clearPackagingInputs() {
+            document.getElementById('packaging-name').value = '';
+            document.getElementById('packaging-quantity').value = '';
+            document.getElementById('packaging-cost').value = '';
+        }
+
+        // Calculation Functions
         function calculateMaterialCosts() {
             if (materials.length === 0) {
                 alert('Please add materials first');
@@ -582,17 +717,70 @@
 
         function calculateManufacturingCosts() {
             const batchSize = parseFloat(document.getElementById('batch-size').value);
-            const laborCost = parseFloat(document.getElementById('labor-cost').value);
+            let laborCost = parseFloat(document.getElementById('labor-cost').value);
             const equipmentCost = parseFloat(document.getElementById('equipment-cost').value);
-            const qcCost = parseFloat(document.getElementById('qc-cost').value);
+            const setupCost = parseFloat(document.getElementById('setup-cost').value);
 
-            const totalBatchCost = laborCost + equipmentCost + qcCost;
+            // Apply labor burden if enabled
+            if (document.getElementById('apply-labor-burden').checked) {
+                const burdenRate = parseFloat(document.getElementById('labor-burden-rate').value) / 100;
+                laborCost = laborCost * (1 + burdenRate);
+            }
+
+            const totalBatchCost = laborCost + equipmentCost + setupCost;
             const perUnitCost = totalBatchCost / batchSize;
 
             costAnalysis.manufacturingCost = perUnitCost;
             
             const resultDiv = document.getElementById('manufacturing-result');
-            resultDiv.textContent = `Manufacturing Cost per Unit: $${perUnitCost.toFixed(3)} (Total Batch: $${totalBatchCost.toFixed(2)})`;
+            resultDiv.innerHTML = `Manufacturing Cost per Unit: $${perUnitCost.toFixed(3)}<br>Total Batch Cost: $${totalBatchCost.toFixed(2)}`;
+            resultDiv.style.display = 'block';
+            
+            updateCostSummary();
+        }
+
+        function calculateQualityCosts() {
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
+            const qcCost = parseFloat(document.getElementById('qc-cost').value);
+            const complianceCost = parseFloat(document.getElementById('compliance-cost').value);
+            const documentationCost = parseFloat(document.getElementById('documentation-cost').value);
+
+            const totalQualityCost = qcCost + complianceCost + documentationCost;
+            const perUnitCost = totalQualityCost / batchSize;
+
+            costAnalysis.qualityCost = perUnitCost;
+            
+            const resultDiv = document.getElementById('quality-result');
+            resultDiv.innerHTML = `Quality Cost per Unit: $${perUnitCost.toFixed(3)}<br>Total Quality Cost per Batch: $${totalQualityCost.toFixed(2)}`;
+            resultDiv.style.display = 'block';
+            
+            updateCostSummary();
+        }
+
+        function calculateOverheadCosts() {
+            const method = document.getElementById('overhead-method').value;
+            const value = parseFloat(document.getElementById('overhead-value').value);
+            const storageCost = parseFloat(document.getElementById('storage-cost').value);
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
+
+            let overheadPerUnit = 0;
+
+            if (method === 'percentage') {
+                const directCosts = costAnalysis.materialsCost + costAnalysis.packagingCost + 
+                                  (costAnalysis.manufacturingCost * batchSize) + 
+                                  (costAnalysis.qualityCost * batchSize);
+                overheadPerUnit = (directCosts * (value / 100)) / batchSize;
+            } else if (method === 'per-unit') {
+                overheadPerUnit = value;
+            } else if (method === 'per-batch') {
+                overheadPerUnit = value / batchSize;
+            }
+
+            overheadPerUnit += storageCost;
+            costAnalysis.overheadCost = overheadPerUnit;
+            
+            const resultDiv = document.getElementById('overhead-result');
+            resultDiv.textContent = `Overhead Cost per Unit: $${overheadPerUnit.toFixed(3)}`;
             resultDiv.style.display = 'block';
             
             updateCostSummary();
@@ -602,6 +790,7 @@
             const retailPrice = parseFloat(document.getElementById('retail-price').value);
             const retailerMargin = parseFloat(document.getElementById('retailer-margin').value) / 100;
             const distributorMargin = parseFloat(document.getElementById('distributor-margin').value) / 100;
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
 
             if (!retailPrice) {
                 alert('Please enter a retail price');
@@ -610,7 +799,14 @@
 
             const wholesalePrice = retailPrice * (1 - retailerMargin);
             const manufacturerPrice = wholesalePrice * (1 - distributorMargin);
-            const totalCOGS = costAnalysis.materialsCost + costAnalysis.packagingCost + costAnalysis.manufacturingCost;
+            
+            const materialCostPerUnit = costAnalysis.materialsCost / batchSize;
+            const packagingCostPerUnit = costAnalysis.packagingCost / batchSize;
+            
+            const totalCOGS = materialCostPerUnit + packagingCostPerUnit + 
+                            costAnalysis.manufacturingCost + costAnalysis.qualityCost + 
+                            costAnalysis.overheadCost;
+            
             const netProfit = manufacturerPrice - totalCOGS;
             const grossMargin = totalCOGS > 0 ? ((manufacturerPrice - totalCOGS) / manufacturerPrice * 100) : 0;
 
@@ -618,111 +814,131 @@
                 retailPrice,
                 wholesalePrice,
                 manufacturerPrice,
+                totalCOGS,
                 netProfit,
                 grossMargin
             };
             
             const resultDiv = document.getElementById('profit-result');
-            resultDiv.textContent = `Wholesale: $${wholesalePrice.toFixed(2)} | Your Price: $${manufacturerPrice.toFixed(2)} | Profit: $${netProfit.toFixed(2)}`;
+            resultDiv.innerHTML = `
+                <strong>Profitability Analysis:</strong><br>
+                Retail Price: $${retailPrice.toFixed(2)}<br>
+                Wholesale Price: $${wholesalePrice.toFixed(2)}<br>
+                Manufacturer Price: $${manufacturerPrice.toFixed(2)}<br>
+                Total COGS: $${totalCOGS.toFixed(2)}<br>
+                Net Profit: $${netProfit.toFixed(2)}<br>
+                Gross Margin: ${grossMargin.toFixed(1)}%
+            `;
             resultDiv.style.display = 'block';
             
             updateCostSummary();
         }
 
-        function calculateAllCosts() {
-            calculateMaterialCosts();
-            calculatePackagingCosts();
-            calculateManufacturingCosts();
-            calculateProfitability();
-        }
-
         function updateCostSummary() {
-            costAnalysis.totalCOGS = costAnalysis.materialsCost + costAnalysis.packagingCost + costAnalysis.manufacturingCost;
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
             
+            const materialCostPerUnit = materials.length > 0 ? costAnalysis.materialsCost / batchSize : 0;
+            const packagingCostPerUnit = packaging.length > 0 ? costAnalysis.packagingCost / batchSize : 0;
+            
+            costAnalysis.totalCOGS = materialCostPerUnit + packagingCostPerUnit + 
+                                    costAnalysis.manufacturingCost + costAnalysis.qualityCost + 
+                                    costAnalysis.overheadCost;
+
             document.getElementById('total-cogs').textContent = `$${costAnalysis.totalCOGS.toFixed(2)}`;
-            
+
             if (costAnalysis.profitAnalysis) {
                 document.getElementById('gross-margin').textContent = `${costAnalysis.profitAnalysis.grossMargin.toFixed(1)}%`;
                 document.getElementById('net-profit').textContent = `$${costAnalysis.profitAnalysis.netProfit.toFixed(2)}`;
             }
         }
 
-        function generateReport() {
-            if (typeof window.jspdf === 'undefined') {
-                alert('PDF library not loaded. Please refresh the page.');
-                return;
-            }
+        function calculateAllCosts() {
+            let summary = '✅ Cost Calculation Complete!\n\n';
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
-
-            let y = 20;
-
-            // Header
-            pdf.setFontSize(16);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('Cost Analysis Report', 20, y);
-            y += 15;
-
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'normal');
-            pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, y);
-            y += 15;
-
-            // Materials
             if (materials.length > 0) {
-                pdf.setFontSize(12);
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Raw Materials', 20, y);
-                y += 8;
-
-                pdf.setFontSize(9);
-                pdf.setFont(undefined, 'normal');
-                materials.forEach(m => {
-                    pdf.text(`${m.name}: ${m.quantity}${m.unit} @ $${m.unitCost.toFixed(3)} = $${m.totalCost.toFixed(2)}`, 25, y);
-                    y += 6;
-                });
-                pdf.setFont(undefined, 'bold');
-                pdf.text(`Total: $${costAnalysis.materialsCost.toFixed(2)}`, 25, y);
-                y += 12;
+                calculateMaterialCosts();
+                summary += `Materials: $${costAnalysis.materialsCost.toFixed(2)}\n`;
+            } else {
+                summary += 'Materials: Not added\n';
             }
 
-            // Packaging
             if (packaging.length > 0) {
-                pdf.setFontSize(12);
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Packaging', 20, y);
-                y += 8;
-
-                pdf.setFontSize(9);
-                pdf.setFont(undefined, 'normal');
-                packaging.forEach(p => {
-                    pdf.text(`${p.name}: ${p.quantity}${p.unit} @ $${p.unitCost.toFixed(3)} = $${p.totalCost.toFixed(2)}`, 25, y);
-                    y += 6;
-                });
-                pdf.setFont(undefined, 'bold');
-                pdf.text(`Total: $${costAnalysis.packagingCost.toFixed(2)}`, 25, y);
-                y += 12;
+                calculatePackagingCosts();
+                summary += `Packaging: $${costAnalysis.packagingCost.toFixed(2)}\n`;
+            } else {
+                summary += 'Packaging: Not added\n';
             }
 
-            // Summary
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('Cost Summary', 20, y);
-            y += 8;
+            calculateManufacturingCosts();
+            summary += `Manufacturing: $${costAnalysis.manufacturingCost.toFixed(3)}/unit\n`;
 
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'normal');
-            pdf.text(`Total COGS: $${costAnalysis.totalCOGS.toFixed(2)}`, 25, y);
-            y += 6;
+            calculateQualityCosts();
+            summary += `Quality Control: $${costAnalysis.qualityCost.toFixed(3)}/unit\n`;
+
+            calculateOverheadCosts();
+            summary += `Overhead: $${costAnalysis.overheadCost.toFixed(3)}/unit\n`;
+
+            const retailPrice = parseFloat(document.getElementById('retail-price').value);
+            if (retailPrice) {
+                calculateProfitability();
+                summary += `\nNet Profit: $${costAnalysis.profitAnalysis.netProfit.toFixed(2)}\n`;
+                summary += `Gross Margin: ${costAnalysis.profitAnalysis.grossMargin.toFixed(1)}%\n`;
+            } else {
+                summary += '\nProfit Analysis: Enter retail price to calculate\n';
+            }
+
+            summary += `\nTotal COGS per Unit: $${costAnalysis.totalCOGS.toFixed(2)}`;
+
+            alert(summary);
+            updateCostSummary();
+        }
+
+        function generateReport() {
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
+            
+            let report = '=== COMPREHENSIVE COST ANALYSIS REPORT ===\n\n';
+            report += `Batch Size: ${batchSize} units\n\n`;
+
+            report += '--- RAW MATERIALS ---\n';
+            materials.forEach(m => {
+                report += `${m.name}: ${m.quantity} ${m.unit} @ $${m.unitCost.toFixed(4)} = $${m.totalCost.toFixed(2)}\n`;
+            });
+            report += `Total Materials: $${costAnalysis.materialsCost.toFixed(2)}\n`;
+            report += `Per Unit: $${(costAnalysis.materialsCost / batchSize).toFixed(4)}\n\n`;
+
+            report += '--- PACKAGING ---\n';
+            packaging.forEach(p => {
+                report += `${p.name}: ${p.quantity} ${p.unit} @ $${p.unitCost.toFixed(4)} = $${p.totalCost.toFixed(2)}\n`;
+            });
+            report += `Total Packaging: $${costAnalysis.packagingCost.toFixed(2)}\n`;
+            report += `Per Unit: $${(costAnalysis.packagingCost / batchSize).toFixed(4)}\n\n`;
+
+            report += '--- MANUFACTURING & OVERHEAD ---\n';
+            report += `Manufacturing per Unit: $${costAnalysis.manufacturingCost.toFixed(3)}\n`;
+            report += `Quality Control per Unit: $${costAnalysis.qualityCost.toFixed(3)}\n`;
+            report += `Overhead per Unit: $${costAnalysis.overheadCost.toFixed(3)}\n\n`;
+
+            report += '--- TOTAL COSTS ---\n';
+            report += `Total COGS per Unit: $${costAnalysis.totalCOGS.toFixed(2)}\n`;
+            report += `Total COGS per Batch: $${(costAnalysis.totalCOGS * batchSize).toFixed(2)}\n\n`;
 
             if (costAnalysis.profitAnalysis) {
-                pdf.text(`Gross Margin: ${costAnalysis.profitAnalysis.grossMargin.toFixed(1)}%`, 25, y);
-                y += 6;
-                pdf.text(`Net Profit: $${costAnalysis.profitAnalysis.netProfit.toFixed(2)}`, 25, y);
+                report += '--- PROFITABILITY ANALYSIS ---\n';
+                report += `Retail Price: $${costAnalysis.profitAnalysis.retailPrice.toFixed(2)}\n`;
+                report += `Wholesale Price: $${costAnalysis.profitAnalysis.wholesalePrice.toFixed(2)}\n`;
+                report += `Manufacturer Price: $${costAnalysis.profitAnalysis.manufacturerPrice.toFixed(2)}\n`;
+                report += `Net Profit per Unit: $${costAnalysis.profitAnalysis.netProfit.toFixed(2)}\n`;
+                report += `Gross Margin: ${costAnalysis.profitAnalysis.grossMargin.toFixed(1)}%\n`;
             }
 
-            pdf.save('cost-analysis-report.pdf');
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cost_analysis_report.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
 
         function resetCalculator() {
@@ -735,6 +951,8 @@
                     materialsCost: 0,
                     packagingCost: 0,
                     manufacturingCost: 0,
+                    qualityCost: 0,
+                    overheadCost: 0,
                     totalCOGS: 0,
                     profitAnalysis: null
                 };
@@ -743,10 +961,9 @@
                 updatePackagingTable();
                 updateCostSummary();
 
-                document.getElementById('materials-result').style.display = 'none';
-                document.getElementById('packaging-result').style.display = 'none';
-                document.getElementById('manufacturing-result').style.display = 'none';
-                document.getElementById('profit-result').style.display = 'none';
+                document.querySelectorAll('.result-display').forEach(div => {
+                    div.style.display = 'none';
+                });
             }
         }
     </script>
