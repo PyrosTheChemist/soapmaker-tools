@@ -447,7 +447,7 @@
                         <tr>
                             <th>pH Adjuster</th>
                             <th>Type</th>
-                            <th>Amount</th>
+                            <th>Amount & Volume</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -928,12 +928,14 @@
 
             const adjusterData = PH_ADJUSTERS_DATABASE[adjusterName];
             const estimatedAmount = currentPHFormula.calculatedAdjuster?.amount || 0;
+            const solutionVolume = currentPHFormula.calculatedAdjuster?.solutionVolume || 0;
             
             const adjuster = {
                 name: adjusterName,
                 category: adjusterData.category,
                 concentration: concentration,
                 estimatedAmount: estimatedAmount,
+                solutionVolume: solutionVolume,
                 data: adjusterData
             };
 
@@ -961,10 +963,16 @@
                 const row = document.createElement('tr');
                 row.dataset.index = index;
                 row.onclick = () => selectTableRow(row);
+                
+                // Show volume only if calculated, otherwise just show concentration
+                const amountDisplay = adjuster.solutionVolume > 0 
+                    ? `${adjuster.estimatedAmount.toFixed(3)}g (${adjuster.solutionVolume.toFixed(2)}mL of ${adjuster.concentration}% solution)`
+                    : `Not calculated (${adjuster.concentration}% solution)`;
+                
                 row.innerHTML = `
                     <td>${adjuster.name}</td>
                     <td><span class="category-badge ${adjuster.category}">${adjuster.category.charAt(0).toUpperCase() + adjuster.category.slice(1)}</span></td>
-                    <td>${adjuster.estimatedAmount.toFixed(3)}g (${adjuster.concentration}% solution)</td>
+                    <td>${amountDisplay}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1011,7 +1019,10 @@
             if (currentPHFormula.adjusters.length > 0) {
                 formulaHTML += `<h4>pH Adjusters:</h4><ul>`;
                 currentPHFormula.adjusters.forEach(adjuster => {
-                    formulaHTML += `<li>${adjuster.name}: ${adjuster.estimatedAmount.toFixed(3)}g (${adjuster.concentration}% solution)</li>`;
+                    const amountDisplay = adjuster.solutionVolume > 0 
+                        ? `${adjuster.estimatedAmount.toFixed(3)}g (${adjuster.solutionVolume.toFixed(2)}mL of ${adjuster.concentration}% solution)`
+                        : `Amount not calculated (${adjuster.concentration}% solution)`;
+                    formulaHTML += `<li>${adjuster.name}: ${amountDisplay}</li>`;
                 });
                 formulaHTML += `</ul>`;
             }
