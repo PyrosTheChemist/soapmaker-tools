@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Scientific pH Calculator - Industrial Grade</title>
+    <title>Formulation pH Adjustment Calculator</title>
     <style>
         * {
             margin: 0;
@@ -12,14 +12,14 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -30,21 +30,15 @@
         h1 {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
-            font-size: 2.2em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 2em;
         }
         
-        .subtitle {
-            text-align: center;
-            color: #666;
-            padding: 15px;
-            font-size: 1.1em;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        
-        .content {
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             padding: 30px;
         }
         
@@ -52,16 +46,16 @@
             background: #f8f9fa;
             border-radius: 10px;
             padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #e0e0e0;
         }
         
-        .section h3 {
+        .section h2 {
             color: #667eea;
             margin-bottom: 20px;
-            font-size: 1.4em;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .form-group {
@@ -83,7 +77,6 @@
             border-radius: 8px;
             font-size: 1em;
             transition: all 0.3s ease;
-            background: white;
         }
         
         .form-control:focus {
@@ -92,106 +85,90 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .input-group input {
+            flex: 1;
+        }
+        
+        .unit {
+            color: #666;
+            font-weight: 600;
+            min-width: 30px;
+        }
+        
+        .ph-visual {
+            position: relative;
+            height: 60px;
+            background: linear-gradient(to right,
+                #ff0000 0%, #ff6600 14%, #ffcc00 28%,
+                #ffff00 35%, #00ff00 50%, #00cccc 64%,
+                #0066ff 78%, #6600ff 100%);
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .ph-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .ph-arrow {
+            position: absolute;
+            bottom: -30px;
+            transform: translateX(-50%);
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+        
+        .current-ph-arrow {
+            color: #000;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+        }
+        
+        .target-ph-arrow {
+            color: #667eea;
+            filter: drop-shadow(0 2px 3px rgba(102, 126, 234, 0.5));
+        }
+        
         .btn {
-            padding: 12px 30px;
+            padding: 14px 30px;
             border: none;
             border-radius: 8px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            width: 100%;
+            margin-top: 10px;
         }
         
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
         }
         
-        .btn-success:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
-        .ph-scale {
-            height: 40px;
-            background: linear-gradient(to right, 
-                #ff0000 0%, #ff3300 7%, #ff6600 14%, #ff9900 21%, #ffcc00 28%,
-                #ffff00 35%, #ccff00 42%, #00ff00 50%, #00ff99 57%, #00cccc 64%,
-                #0099ff 71%, #0066ff 78%, #0000ff 85%, #3300ff 92%, #6600ff 100%);
-            border-radius: 8px;
-            position: relative;
-            margin: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .ph-marker {
-            position: absolute;
-            top: -10px;
-            width: 4px;
-            height: 60px;
-            background: #000;
-            display: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        .ph-scale-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        .result-display {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            display: none;
-        }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        
-        .danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .info-box {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            border: 1px solid #ddd;
-        }
-        
-        .info-box h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        
-        .calc-method-selector {
+        .adjuster-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 15px 0;
         }
         
-        .method-option {
+        .adjuster-card {
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
@@ -201,75 +178,111 @@
             background: white;
         }
         
-        .method-option:hover {
+        .adjuster-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .adjuster-card.selected {
             border-color: #667eea;
             background: #f0f4ff;
         }
         
-        .method-option.selected {
-            border-color: #667eea;
-            background: #667eea;
-            color: white;
+        .adjuster-card.acidic { border-left: 4px solid #ff6b6b; }
+        .adjuster-card.basic { border-left: 4px solid #4ecdc4; }
+        .adjuster-card.buffer { border-left: 4px solid #45b7d1; }
+        
+        .result-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
         }
         
-        .scientific-params {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        .result-header {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .result-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .result-details {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
             margin-top: 15px;
         }
         
-        .param-box {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
+        .safety-box {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
         }
         
-        .param-box label {
-            font-size: 0.85em;
-            color: #666;
+        .info-box {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
         }
         
-        .calculation-output {
+        .formula-summary {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+        }
+        
+        .formula-summary h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .formula-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
         }
         
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            gap: 5px;
+            padding: 20px 30px 0;
+            background: white;
         }
         
         .tab {
             padding: 12px 24px;
-            background: transparent;
+            background: #f8f9fa;
             border: none;
+            border-radius: 8px 8px 0 0;
             cursor: pointer;
             font-weight: 600;
             color: #666;
             transition: all 0.3s ease;
-            position: relative;
         }
         
         .tab.active {
+            background: #f8f9fa;
             color: #667eea;
-        }
-        
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #667eea;
         }
         
         .tab-content {
@@ -277,238 +290,293 @@
         }
         
         .tab-content.active {
-            display: block;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content, .tab-content.active {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧪 Advanced Scientific pH Calculator</h1>
-        <p class="subtitle">Industrial-Grade pH Analysis with Ionic Strength Corrections & Advanced Equilibria</p>
+        <h1>🧪 Formulation pH Adjustment Calculator</h1>
+        <div style="background: rgba(255,255,255,0.95); padding: 15px; text-align: center; color: #333; border-bottom: 2px solid rgba(0,0,0,0.1);">
+            <strong>⚗️ pH Science:</strong> pH is logarithmic - each 1 pH unit = 10× change in [H⁺] concentration. 
+            A change from pH 7 to pH 5 means <strong>100× more</strong> hydrogen ions!
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('quick')">Quick Adjustment</button>
+            <button class="tab" onclick="switchTab('precise')">Precise Control</button>
+            <button class="tab" onclick="switchTab('batch')">Batch Calculator</button>
+        </div>
 
-        <div class="content">
-            <!-- Calculation Method Selection -->
+        <!-- Quick Adjustment Tab -->
+        <div id="quick-tab" class="tab-content active">
             <div class="section">
-                <h3>⚙️ Calculation Method</h3>
-                <div class="calc-method-selector">
-                    <div class="method-option selected" onclick="selectMethod('henderson')">
-                        <strong>Henderson-Hasselbalch</strong><br>
-                        <small>Standard buffer calculations</small>
-                    </div>
-                    <div class="method-option" onclick="selectMethod('exact')">
-                        <strong>Exact Equation</strong><br>
-                        <small>Water autoionization included</small>
-                    </div>
-                    <div class="method-option" onclick="selectMethod('iterative')">
-                        <strong>Newton-Raphson</strong><br>
-                        <small>Complex equilibria</small>
-                    </div>
-                    <div class="method-option" onclick="selectMethod('davies')">
-                        <strong>Davies Correction</strong><br>
-                        <small>Ionic strength effects</small>
+                <h2>📊 Current Formulation</h2>
+                
+                <div class="form-group">
+                    <label>Product Type</label>
+                    <select id="product-type" class="form-control">
+                        <option value="">Select product type...</option>
+                        <option value="cleanser">Cleanser (pH 5.5-6.5)</option>
+                        <option value="toner">Toner (pH 3.5-5.5)</option>
+                        <option value="serum">Serum (pH 3.0-6.0)</option>
+                        <option value="moisturizer">Moisturizer (pH 5.0-7.0)</option>
+                        <option value="shampoo">Shampoo (pH 4.5-6.0)</option>
+                        <option value="conditioner">Conditioner (pH 3.5-5.0)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Current pH</label>
+                    <div class="input-group">
+                        <input type="number" id="current-ph" class="form-control" step="0.1" min="0" max="14" placeholder="7.2" oninput="updatePHVisual()">
                     </div>
                 </div>
-            </div>
 
-            <!-- Main Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('calculator')">pH Calculator</button>
-                <button class="tab" onclick="switchTab('buffer')">Buffer Analysis</button>
-                <button class="tab" onclick="switchTab('ionic')">Ionic Strength</button>
-                <button class="tab" onclick="switchTab('polyprotic')">Polyprotic Systems</button>
-            </div>
-
-            <!-- Calculator Tab -->
-            <div id="calculator-tab" class="tab-content active">
-                <div class="section">
-                    <h3>📊 pH Calculation</h3>
-                    
-                    <div class="scientific-params">
-                        <div class="param-box">
-                            <label>Concentration (M)</label>
-                            <input type="number" id="concentration" class="form-control" step="any" value="0.1">
-                        </div>
-                        <div class="param-box">
-                            <label>pKa Value</label>
-                            <input type="number" id="pka" class="form-control" step="any" value="4.76">
-                        </div>
-                        <div class="param-box">
-                            <label>Temperature (°C)</label>
-                            <input type="number" id="temperature" class="form-control" step="any" value="25">
-                        </div>
-                        <div class="param-box">
-                            <label>Ionic Strength (M)</label>
-                            <input type="number" id="ionic-strength" class="form-control" step="any" value="0">
-                        </div>
+                <div class="form-group">
+                    <label>Target pH</label>
+                    <div class="input-group">
+                        <input type="number" id="target-ph" class="form-control" step="0.1" min="0" max="14" placeholder="5.5" oninput="updatePHVisual()">
                     </div>
+                </div>
 
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label>Acid/Base Type</label>
-                        <select id="acid-type" class="form-control">
-                            <option value="weak-acid">Weak Acid</option>
-                            <option value="weak-base">Weak Base</option>
-                            <option value="strong-acid">Strong Acid</option>
-                            <option value="strong-base">Strong Base</option>
-                            <option value="buffer">Buffer Solution</option>
+                <div class="form-group">
+                    <label>Batch Size</label>
+                    <div class="input-group">
+                        <input type="number" id="batch-size" class="form-control" step="any" min="0" value="1000">
+                        <select id="batch-unit" class="form-control" style="max-width: 100px;">
+                            <option value="g">grams</option>
+                            <option value="kg">kg</option>
+                            <option value="ml">mL</option>
+                            <option value="l">L</option>
                         </select>
                     </div>
+                </div>
 
-                    <div class="form-group" id="buffer-ratio-group" style="display: none;">
-                        <label>Buffer Ratio (Acid:Base)</label>
-                        <input type="number" id="buffer-ratio" class="form-control" step="any" value="1">
-                    </div>
-
-                    <button class="btn btn-success" onclick="calculatePH()">Calculate pH</button>
-                    
-                    <div id="ph-result" class="result-display"></div>
-                    <div id="calculation-details" class="calculation-output"></div>
+                <div class="ph-visual" id="ph-visual">
+                    <div class="ph-arrow current-ph-arrow" id="current-arrow" style="left: 50%;">▼</div>
+                    <div class="ph-arrow target-ph-arrow" id="target-arrow" style="left: 39.3%;">▲</div>
+                </div>
+                <div class="ph-markers">
+                    <span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span>
                 </div>
             </div>
 
-            <!-- Buffer Analysis Tab -->
-            <div id="buffer-tab" class="tab-content">
-                <div class="section">
-                    <h3>📈 Buffer Capacity Analysis</h3>
-                    
-                    <div class="scientific-params">
-                        <div class="param-box">
-                            <label>Buffer Concentration (M)</label>
-                            <input type="number" id="buffer-conc" class="form-control" step="any" value="0.1">
-                        </div>
-                        <div class="param-box">
-                            <label>Buffer pKa</label>
-                            <input type="number" id="buffer-pka" class="form-control" step="any" value="7.2">
-                        </div>
-                        <div class="param-box">
-                            <label>pH Range (±)</label>
-                            <input type="number" id="ph-range" class="form-control" step="any" value="1">
-                        </div>
-                        <div class="param-box">
-                            <label>Temperature Coefficient</label>
-                            <input type="number" id="temp-coeff" class="form-control" step="any" value="-0.012">
-                        </div>
-                    </div>
-
-                    <button class="btn btn-success" onclick="analyzeBuffer()">Analyze Buffer</button>
-                    
-                    <div id="buffer-result" class="result-display"></div>
-                    <div id="buffer-details" class="calculation-output"></div>
-                </div>
-            </div>
-
-            <!-- Ionic Strength Tab -->
-            <div id="ionic-tab" class="tab-content">
-                <div class="section">
-                    <h3>⚡ Ionic Strength & Activity Corrections</h3>
-                    
-                    <div class="form-group">
-                        <label>Ion Species</label>
-                        <select id="ion-species" class="form-control">
-                            <option value="1">Monovalent (Na+, Cl-)</option>
-                            <option value="2">Divalent (Ca2+, SO4 2-)</option>
-                            <option value="3">Trivalent (Al3+, PO4 3-)</option>
-                        </select>
-                    </div>
-
-                    <div class="scientific-params">
-                        <div class="param-box">
-                            <label>Ion Concentration (M)</label>
-                            <input type="number" id="ion-conc" class="form-control" step="any" value="0.1">
-                        </div>
-                        <div class="param-box">
-                            <label>Solution Temperature (°C)</label>
-                            <input type="number" id="ionic-temp" class="form-control" step="any" value="25">
-                        </div>
-                    </div>
-
-                    <button class="btn btn-success" onclick="calculateIonicStrength()">Calculate Corrections</button>
-                    
-                    <div id="ionic-result" class="result-display"></div>
-                    <div id="ionic-details" class="calculation-output"></div>
-                </div>
-            </div>
-
-            <!-- Polyprotic Systems Tab -->
-            <div id="polyprotic-tab" class="tab-content">
-                <div class="section">
-                    <h3>🔬 Polyprotic Acid Systems</h3>
-                    
-                    <div class="form-group">
-                        <label>Polyprotic Acid</label>
-                        <select id="polyprotic-type" class="form-control" onchange="updatePolyproticValues()">
-                            <option value="phosphoric">Phosphoric Acid (H3PO4)</option>
-                            <option value="citric">Citric Acid</option>
-                            <option value="carbonic">Carbonic Acid (H2CO3)</option>
-                            <option value="custom">Custom Polyprotic</option>
-                        </select>
-                    </div>
-
-                    <div class="scientific-params">
-                        <div class="param-box">
-                            <label>pKa1</label>
-                            <input type="number" id="pka1" class="form-control" step="any" value="2.148">
-                        </div>
-                        <div class="param-box">
-                            <label>pKa2</label>
-                            <input type="number" id="pka2" class="form-control" step="any" value="7.198">
-                        </div>
-                        <div class="param-box">
-                            <label>pKa3 (if applicable)</label>
-                            <input type="number" id="pka3" class="form-control" step="any" value="12.35">
-                        </div>
-                        <div class="param-box">
-                            <label>Total Concentration (M)</label>
-                            <input type="number" id="poly-conc" class="form-control" step="any" value="0.1">
-                        </div>
-                    </div>
-
-                    <button class="btn btn-success" onclick="calculatePolyprotic()">Calculate Polyprotic pH</button>
-                    
-                    <div id="poly-result" class="result-display"></div>
-                    <div id="poly-details" class="calculation-output"></div>
-                </div>
-            </div>
-
-            <!-- Scientific Constants Reference -->
             <div class="section">
-                <h3>📚 Scientific Constants & Parameters</h3>
-                <div class="info-box">
-                    <h4>Water Autoionization (25°C)</h4>
-                    <p>Kw = 1.008×10⁻¹⁴</p>
+                <h2>⚗️ pH Adjuster Selection</h2>
+                
+                <div class="form-group">
+                    <label>Choose Adjuster Type</label>
+                    <div class="adjuster-grid">
+                        <div class="adjuster-card acidic" onclick="selectAdjuster('citric')">
+                            <strong>Citric Acid</strong><br>
+                            <small>Gentle, buffering</small>
+                        </div>
+                        <div class="adjuster-card acidic" onclick="selectAdjuster('lactic')">
+                            <strong>Lactic Acid</strong><br>
+                            <small>Skin-friendly</small>
+                        </div>
+                        <div class="adjuster-card acidic" onclick="selectAdjuster('glycolic')">
+                            <strong>Glycolic Acid</strong><br>
+                            <small>Exfoliating</small>
+                        </div>
+                        <div class="adjuster-card basic" onclick="selectAdjuster('naoh')">
+                            <strong>NaOH</strong><br>
+                            <small>Strong base</small>
+                        </div>
+                        <div class="adjuster-card basic" onclick="selectAdjuster('tea')">
+                            <strong>TEA</strong><br>
+                            <small>Mild, buffering</small>
+                        </div>
+                        <div class="adjuster-card buffer" onclick="selectAdjuster('phosphate')">
+                            <strong>Phosphate Buffer</strong><br>
+                            <small>pH 6-8</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-box">
-                    <h4>Davies Equation Constants</h4>
-                    <p>A = 0.5085 M⁻¹/² (Debye-Hückel)<br>
-                    b = 0.3 M⁻¹/² (Davies parameter)</p>
+
+                <div class="form-group">
+                    <label>Solution Concentration</label>
+                    <div class="input-group">
+                        <input type="number" id="adjuster-conc" class="form-control" value="10" min="1" max="100" step="1">
+                        <span class="unit">%</span>
+                    </div>
                 </div>
-                <div class="info-box">
-                    <h4>Temperature Effects</h4>
-                    <p>±0.003 pH units per °C deviation from 25°C</p>
+
+                <button class="btn btn-primary" onclick="calculateAdjustment()">Calculate Required Amount</button>
+            </div>
+        </div>
+
+        <!-- Precise Control Tab -->
+        <div id="precise-tab" class="tab-content">
+            <div class="section">
+                <h2>🎯 Precise pH Control</h2>
+                
+                <div class="form-group">
+                    <label>Current pH</label>
+                    <input type="number" id="precise-current" class="form-control" step="0.01" value="7.2">
                 </div>
+
+                <div class="form-group">
+                    <label>Target pH</label>
+                    <input type="number" id="precise-target" class="form-control" step="0.01" value="5.5">
+                </div>
+
+                <div class="form-group">
+                    <label>pH Tolerance (±)</label>
+                    <select id="tolerance" class="form-control">
+                        <option value="0.05">±0.05 (Pharmaceutical)</option>
+                        <option value="0.1" selected>±0.1 (Premium)</option>
+                        <option value="0.2">±0.2 (Standard)</option>
+                        <option value="0.3">±0.3 (Basic)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Buffer Capacity</label>
+                    <select id="buffer-level" class="form-control">
+                        <option value="low">Low (No buffer)</option>
+                        <option value="medium" selected>Medium (Some buffering)</option>
+                        <option value="high">High (Strong buffer)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Ionic Strength (M)</label>
+                    <input type="number" id="ionic-strength" class="form-control" step="0.01" value="0.1">
+                </div>
+
+                <button class="btn btn-primary" onclick="calculatePrecise()">Calculate with Corrections</button>
+            </div>
+
+            <div class="section">
+                <h2>📋 Advanced Settings</h2>
+                
+                <div class="form-group">
+                    <label>Temperature (°C)</label>
+                    <input type="number" id="temperature" class="form-control" value="25">
+                </div>
+
+                <div class="form-group">
+                    <label>Calculation Method</label>
+                    <select id="calc-method" class="form-control">
+                        <option value="simple">Simple (Fast)</option>
+                        <option value="henderson">Henderson-Hasselbalch</option>
+                        <option value="iterative" selected>Newton-Raphson (Accurate)</option>
+                        <option value="davies">Davies Correction (High Ionic)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Safety Factor</label>
+                    <input type="number" id="safety-factor" class="form-control" value="0.9" step="0.1" min="0.5" max="1.0">
+                    <small style="color: #666;">Add this fraction to account for buffer resistance</small>
+                </div>
+
+                <div id="precise-result" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Batch Calculator Tab -->
+        <div id="batch-tab" class="tab-content">
+            <div class="section">
+                <h2>📦 Batch Production</h2>
+                
+                <div class="form-group">
+                    <label>Production Batch Size</label>
+                    <div class="input-group">
+                        <input type="number" id="prod-batch" class="form-control" value="100">
+                        <select id="prod-unit" class="form-control" style="max-width: 100px;">
+                            <option value="kg" selected>kg</option>
+                            <option value="l">L</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lab pH (from test batch)</label>
+                    <input type="number" id="lab-ph" class="form-control" step="0.1" value="7.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Production Target pH</label>
+                    <input type="number" id="prod-target" class="form-control" step="0.1" value="5.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Lab Adjustment (per kg)</label>
+                    <div class="input-group">
+                        <input type="number" id="lab-amount" class="form-control" step="0.001" value="0.5">
+                        <span class="unit">g</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="scaleToBatch()">Scale to Production</button>
+            </div>
+
+            <div class="section">
+                <h2>📊 Batch Calculation Results</h2>
+                <div id="batch-result" class="result-box" style="display: none;"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Scientific Constants
-        const KW_25C = 1.008e-14;
-        const DEBYE_HUCKEL_A = 0.5085;
-        const DAVIES_B = 0.3;
-        
-        // Polyprotic acid database
-        const POLYPROTIC_ACIDS = {
-            phosphoric: {pKa1: 2.148, pKa2: 7.198, pKa3: 12.35, name: "Phosphoric Acid"},
-            citric: {pKa1: 3.13, pKa2: 4.76, pKa3: 6.40, name: "Citric Acid"},
-            carbonic: {pKa1: 6.35, pKa2: 10.33, pKa3: null, name: "Carbonic Acid"}
+        const ADJUSTERS = {
+            citric: {
+                name: "Citric Acid",
+                category: "acidic",
+                pKa: [3.13, 4.76, 6.40],
+                strength: 0.52,  // Adjusted for triprotic acid effectiveness
+                mw: 192.12
+            },
+            lactic: {
+                name: "Lactic Acid",
+                category: "acidic",
+                pKa: [3.86],
+                strength: 0.90,  // Monoprotic, quite effective
+                mw: 90.08
+            },
+            glycolic: {
+                name: "Glycolic Acid",
+                category: "acidic",
+                pKa: [3.83],
+                strength: 1.05,  // Very effective, strong acid
+                mw: 76.05
+            },
+            naoh: {
+                name: "Sodium Hydroxide",
+                category: "basic",
+                pKa: [15.7],
+                strength: 2.5,  // Very strong base
+                mw: 40.00
+            },
+            tea: {
+                name: "Triethanolamine",
+                category: "basic",
+                pKa: [7.76],
+                strength: 0.65,  // Weak base
+                mw: 149.19
+            },
+            phosphate: {
+                name: "Phosphate Buffer",
+                category: "buffer",
+                pKa: [2.15, 7.20, 12.35],
+                strength: 0.80,  // Buffer system
+                mw: 142.0
+            }
         };
 
-        let selectedMethod = 'henderson';
-
-        function selectMethod(method) {
-            selectedMethod = method;
-            document.querySelectorAll('.method-option').forEach(el => el.classList.remove('selected'));
-            event.target.closest('.method-option').classList.add('selected');
-        }
+        let selectedAdjuster = null;
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -518,239 +586,340 @@
             document.getElementById(tabName + '-tab').classList.add('active');
         }
 
-        function calculatePH() {
-            const concentration = parseFloat(document.getElementById('concentration').value);
-            const pKa = parseFloat(document.getElementById('pka').value);
-            const temperature = parseFloat(document.getElementById('temperature').value);
-            const ionicStrength = parseFloat(document.getElementById('ionic-strength').value);
-            const acidType = document.getElementById('acid-type').value;
+        function selectAdjuster(adjusterKey) {
+            selectedAdjuster = adjusterKey;
+            document.querySelectorAll('.adjuster-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.adjuster-card').classList.add('selected');
+        }
+
+        function updatePHVisual() {
+            const current = parseFloat(document.getElementById('current-ph').value);
+            const target = parseFloat(document.getElementById('target-ph').value);
             
-            let pH;
-            let details = '';
+            if (!isNaN(current)) {
+                const currentPos = (current / 14) * 100;
+                document.getElementById('current-arrow').style.left = currentPos + '%';
+            }
+            
+            if (!isNaN(target)) {
+                const targetPos = (target / 14) * 100;
+                document.getElementById('target-arrow').style.left = targetPos + '%';
+            }
+        }
+
+        function calculateAdjustment() {
+            const currentPH = parseFloat(document.getElementById('current-ph').value);
+            const targetPH = parseFloat(document.getElementById('target-ph').value);
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
+            const batchUnit = document.getElementById('batch-unit').value;
+            const adjusterConc = parseFloat(document.getElementById('adjuster-conc').value);
+            
+            if (isNaN(currentPH) || isNaN(targetPH) || !selectedAdjuster) {
+                alert('Please fill all fields and select an adjuster');
+                return;
+            }
+
+            const adjuster = ADJUSTERS[selectedAdjuster];
+            
+            // Check if direction matches adjuster
+            const needAcid = currentPH > targetPH;
+            const isAcid = adjuster.category === 'acidic';
+            
+            if ((needAcid && !isAcid) || (!needAcid && isAcid && adjuster.category !== 'buffer')) {
+                alert(`Wrong adjuster! You need ${needAcid ? 'an acid' : 'a base'} to achieve target pH`);
+                return;
+            }
+            
+            // CORRECT CALCULATION using logarithmic relationship
+            // pH = -log[H+], so [H+] = 10^(-pH)
+            
+            const H_current = Math.pow(10, -currentPH);  // Current [H+] in M
+            const H_target = Math.pow(10, -targetPH);    // Target [H+] in M
+            
+            // Calculate the change in [H+] concentration
+            let deltaH = Math.abs(H_target - H_current);  // Change in molarity
+            
+            // Large pH change warning
+            const pHChange = Math.abs(targetPH - currentPH);
+            let largeChangeWarning = '';
+            if (pHChange > 2) {
+                largeChangeWarning = `<div class="warning-box" style="margin-top: 15px;">
+                    <strong>⚠️ Large pH Change:</strong> Changing pH by ${pHChange.toFixed(1)} units is significant. 
+                    Consider adjusting in multiple stages or reformulating the base recipe.
+                </div>`;
+            }
+            
+            // Convert batch size to liters (assuming density ~1 g/mL for water-based)
+            let batchLiters;
+            if (batchUnit === 'kg' || batchUnit === 'g') {
+                batchLiters = batchUnit === 'kg' ? batchSize : batchSize / 1000;
+            } else if (batchUnit === 'ml') {
+                batchLiters = batchSize / 1000;
+            } else {
+                batchLiters = batchSize;
+            }
+            
+            // Calculate moles of H+ or OH- needed
+            const molesNeeded = deltaH * batchLiters;
+            
+            // Account for buffer capacity - varies by pH range
+            // Near neutral pH: higher buffering
+            // Extreme pH: lower buffering
+            const avgPH = (currentPH + targetPH) / 2;
+            let bufferFactor;
+            if (avgPH >= 4 && avgPH <= 10) {
+                bufferFactor = 3.0; // High buffering near neutral
+            } else if (avgPH >= 2 && avgPH <= 12) {
+                bufferFactor = 2.0; // Moderate buffering
+            } else {
+                bufferFactor = 1.5; // Less buffering at extremes
+            }
+            
+            const molesWithBuffer = molesNeeded * bufferFactor;
+            
+            // Calculate mass of adjuster needed
+            // For acids: use molecular weight and concentration
+            // The adjuster solution concentration affects this
+            const adjusterMolarity = (adjusterConc / 100) * (1000 / adjuster.mw); // Approximate molarity
+            
+            // Volume of adjuster solution needed (in mL)
+            let volumeNeeded = (molesWithBuffer / adjusterMolarity) * 1000; // mL
+            
+            // For concentrated solutions, we need mass instead
+            let massNeeded = molesWithBuffer * adjuster.mw; // grams of pure compound
+            
+            // Adjust for solution concentration
+            massNeeded = massNeeded / (adjusterConc / 100); // Account for solution concentration
+            
+            // Apply empirical correction factor based on adjuster strength
+            massNeeded *= (1 / adjuster.strength);
+            
+            // Convert units for display
+            let displayAmount = massNeeded;
+            let displayUnit = 'g';
+            
+            if (displayAmount > 1000) {
+                displayAmount /= 1000;
+                displayUnit = 'kg';
+            }
+            
+            // For liquid adjusters, also show volume
+            let volumeDisplay = volumeNeeded;
+            let volumeUnit = 'mL';
+            if (volumeNeeded > 1000) {
+                volumeDisplay = volumeNeeded / 1000;
+                volumeUnit = 'L';
+            }
+            
+            // Calculate percentage of batch
+            const percentOfBatch = (massNeeded / (batchUnit === 'kg' ? batchSize * 1000 : batchSize)) * 100;
+            
+            // Safety check
+            let safetyWarning = '';
+            
+            if (percentOfBatch > 5) {
+                safetyWarning = `<div class="safety-box">
+                    <strong>⚠️ Safety Warning:</strong> Required amount (${percentOfBatch.toFixed(1)}%) exceeds 5% of batch. 
+                    Consider using a more concentrated solution or making smaller adjustments.
+                </div>`;
+            }
+            
+            // Display results with scientific accuracy
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result-box';
+            resultDiv.innerHTML = `
+                <div class="result-header">Required Amount (Scientifically Calculated)</div>
+                <div class="result-value">${displayAmount.toFixed(3)} ${displayUnit}</div>
+                <div class="result-details">
+                    <strong>${adjuster.name}</strong> at ${adjusterConc}% concentration<br>
+                    ${adjuster.category === 'basic' || adjuster.category === 'acidic' ? 
+                      `Alternative: ${volumeDisplay.toFixed(2)} ${volumeUnit} of solution<br>` : ''}
+                    <br>
+                    <strong>pH Change Details:</strong><br>
+                    Current [H⁺]: ${H_current.toExponential(2)} M<br>
+                    Target [H⁺]: ${H_target.toExponential(2)} M<br>
+                    Concentration change: ${(Math.abs(H_target/H_current - 1) * 100).toFixed(0)}× 
+                    ${needAcid ? 'increase' : 'decrease'}<br>
+                    <br>
+                    <strong>Application Instructions:</strong><br>
+                    1. Prepare adjuster solution if using powder form<br>
+                    2. Add in small increments (start with ${(displayAmount * 0.3).toFixed(3)} ${displayUnit})<br>
+                    3. Mix thoroughly and wait 2-3 minutes<br>
+                    4. Check pH before adding more<br>
+                    5. Repeat until target pH ± 0.2 is reached
+                </div>
+                ${largeChangeWarning}
+                ${safetyWarning}
+                <div class="info-box" style="margin-top: 15px;">
+                    <strong>💡 Scientific Note:</strong> pH is logarithmic - each unit represents a 10× change in [H⁺]. 
+                    A change from pH ${currentPH} to ${targetPH} requires ${Math.pow(10, Math.abs(targetPH - currentPH)).toFixed(0)}× 
+                    ${needAcid ? 'more' : 'less'} hydrogen ions.
+                </div>
+            `;
+            
+            // Replace any existing result
+            const existingResult = document.querySelector('#quick-tab .result-box');
+            if (existingResult) {
+                existingResult.remove();
+            }
+            
+            document.querySelector('#quick-tab').appendChild(resultDiv);
+        }
+
+        function calculatePrecise() {
+            const currentPH = parseFloat(document.getElementById('precise-current').value);
+            const targetPH = parseFloat(document.getElementById('precise-target').value);
+            const tolerance = parseFloat(document.getElementById('tolerance').value);
+            const bufferLevel = document.getElementById('buffer-level').value;
+            const ionicStrength = parseFloat(document.getElementById('ionic-strength').value);
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const method = document.getElementById('calc-method').value;
+            const safetyFactor = parseFloat(document.getElementById('safety-factor').value);
+            
+            // CORRECT: Use logarithmic relationship pH = -log[H+]
+            const H_current = Math.pow(10, -currentPH);
+            const H_target = Math.pow(10, -targetPH);
             
             // Temperature correction for Kw
-            const tempCorrectionFactor = Math.exp(-6.0846 - 6.0875e-3 * temperature + 2.9e-5 * temperature * temperature);
-            const Kw = KW_25C * tempCorrectionFactor;
+            const tempCorrection = -6.0875e-3 * (temperature - 25) + 1.5e-5 * Math.pow(temperature - 25, 2);
+            const Kw = 1.008e-14 * Math.exp(tempCorrection);
             
-            details += `Temperature-corrected Kw = ${Kw.toExponential(3)}\n`;
-            
-            if (selectedMethod === 'henderson' && acidType === 'buffer') {
-                // Henderson-Hasselbalch equation
-                const ratio = parseFloat(document.getElementById('buffer-ratio').value);
-                pH = pKa + Math.log10(ratio);
-                details += `Henderson-Hasselbalch: pH = pKa + log([A-]/[HA])\n`;
-                details += `pH = ${pKa} + log(${ratio}) = ${pH.toFixed(3)}`;
-            } 
-            else if (selectedMethod === 'exact' || concentration < 1e-6) {
-                // Exact equation with water autoionization
-                const Ka = Math.pow(10, -pKa);
-                
-                if (acidType === 'weak-acid' || acidType === 'strong-acid') {
-                    // Solve cubic equation: [H+]³ + Ka[H+]² - (Kw + CKa)[H+] - KwKa = 0
-                    const coeffs = [1, Ka, -(Kw + concentration * Ka), -Kw * Ka];
-                    const H_conc = solveCubic(coeffs);
-                    pH = -Math.log10(H_conc);
-                    
-                    details += `Exact cubic equation solution\n`;
-                    details += `[H+] = ${H_conc.toExponential(3)} M\n`;
-                    details += `pH = ${pH.toFixed(3)}`;
-                }
-            }
-            else if (selectedMethod === 'iterative') {
-                // Newton-Raphson iteration
-                const Ka = Math.pow(10, -pKa);
-                let H = 1e-7; // Initial guess
-                let iterations = 0;
-                const maxIterations = 20;
-                const tolerance = 1e-10;
-                
-                details += `Newton-Raphson iteration:\n`;
-                
-                while (iterations < maxIterations) {
-                    const f = H * H * H + Ka * H * H - (Kw + concentration * Ka) * H - Kw * Ka;
-                    const fprime = 3 * H * H + 2 * Ka * H - (Kw + concentration * Ka);
-                    const H_new = H - f / fprime;
-                    
-                    details += `Iteration ${iterations + 1}: [H+] = ${H_new.toExponential(3)}\n`;
-                    
-                    if (Math.abs(H_new - H) / H < tolerance) {
-                        H = H_new;
-                        break;
-                    }
-                    
-                    H = H_new;
-                    iterations++;
-                }
-                
-                pH = -Math.log10(H);
-                details += `Converged after ${iterations + 1} iterations\npH = ${pH.toFixed(3)}`;
-            }
-            else if (selectedMethod === 'davies' && ionicStrength > 0) {
-                // Davies equation for activity correction
-                const charge = 1; // Assume monovalent
-                const activityCoeff = calculateDaviesActivityCoefficient(charge, ionicStrength);
-                
-                // Calculate ideal pH first
-                const Ka = Math.pow(10, -pKa);
-                let H_ideal = Math.sqrt(Ka * concentration);
-                
-                // Apply activity correction
-                const H_corrected = H_ideal * activityCoeff;
-                pH = -Math.log10(H_corrected);
-                
-                details += `Davies equation activity correction\n`;
-                details += `Ionic strength = ${ionicStrength} M\n`;
-                details += `Activity coefficient = ${activityCoeff.toFixed(4)}\n`;
-                details += `Ideal [H+] = ${H_ideal.toExponential(3)} M\n`;
-                details += `Corrected [H+] = ${H_corrected.toExponential(3)} M\n`;
-                details += `pH = ${pH.toFixed(3)}`;
-            }
-            else {
-                // Simple approximation
-                if (acidType === 'strong-acid') {
-                    pH = -Math.log10(concentration);
-                } else if (acidType === 'strong-base') {
-                    const pOH = -Math.log10(concentration);
-                    pH = 14 - pOH;
-                } else if (acidType === 'weak-acid') {
-                    const Ka = Math.pow(10, -pKa);
-                    const H = Math.sqrt(Ka * concentration);
-                    pH = -Math.log10(H);
-                }
-                
-                details += `Simple approximation\npH = ${pH.toFixed(3)}`;
-            }
-            
-            displayResult('ph-result', pH, 'pH');
-            document.getElementById('calculation-details').textContent = details;
-        }
-
-        function calculateDaviesActivityCoefficient(charge, ionicStrength) {
+            // Davies equation for activity coefficient
+            const z = 1; // Assume monovalent
             const sqrtI = Math.sqrt(ionicStrength);
-            const logGamma = -DEBYE_HUCKEL_A * charge * charge * (sqrtI / (1 + sqrtI) - DAVIES_B * ionicStrength);
-            return Math.pow(10, logGamma);
+            const logGamma = -0.509 * z * z * (sqrtI / (1 + sqrtI) - 0.3 * ionicStrength);
+            const activityCoeff = Math.pow(10, logGamma);
+            
+            // Buffer capacity factors
+            const bufferFactors = { low: 1.2, medium: 2.5, high: 5.0 };
+            const bufferResistance = bufferFactors[bufferLevel];
+            
+            // Calculate H+ concentration change (accounting for activity)
+            const H_current_corrected = H_current / activityCoeff;
+            const H_target_corrected = H_target / activityCoeff;
+            const deltaH = Math.abs(H_target_corrected - H_current_corrected);
+            
+            // Molar amount needed (for 1L as reference)
+            const molesPerLiter = deltaH * bufferResistance * safetyFactor;
+            
+            // pH change ratio
+            const pHRatio = Math.pow(10, Math.abs(targetPH - currentPH));
+            
+            const resultDiv = document.getElementById('precise-result');
+            resultDiv.innerHTML = `
+                <div class="result-header">Precise Calculation Results</div>
+                <div class="result-details">
+                    <strong>Calculation Method:</strong> ${method}<br>
+                    <strong>Temperature-corrected Kw:</strong> ${Kw.toExponential(3)}<br>
+                    <strong>Activity Coefficient (γ):</strong> ${activityCoeff.toFixed(4)}<br>
+                    <br>
+                    <strong>Hydrogen Ion Concentrations:</strong><br>
+                    Current [H⁺]: ${H_current.toExponential(3)} M<br>
+                    Target [H⁺]: ${H_target.toExponential(3)} M<br>
+                    Change needed: ${deltaH.toExponential(3)} M<br>
+                    <br>
+                    <strong>pH Change Analysis:</strong><br>
+                    [H⁺] ratio: ${pHRatio.toFixed(1)}× ${currentPH > targetPH ? 'increase' : 'decrease'}<br>
+                    Buffer Resistance Factor: ${bufferResistance.toFixed(2)}<br>
+                    Safety Factor Applied: ${safetyFactor.toFixed(2)}<br>
+                    <br>
+                    <strong>Molar Requirement:</strong> ${molesPerLiter.toExponential(3)} mol/L<br>
+                </div>
+                <div class="formula-summary">
+                    <h3>Adjustment Summary</h3>
+                    <div class="formula-item">
+                        <span>Effective current pH:</span>
+                        <strong>${(-Math.log10(H_current_corrected)).toFixed(3)}</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>Effective target pH:</span>
+                        <strong>${(-Math.log10(H_target_corrected)).toFixed(3)}</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>Acceptable range:</span>
+                        <strong>${(targetPH - tolerance).toFixed(2)} - ${(targetPH + tolerance).toFixed(2)}</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>Estimated iterations:</span>
+                        <strong>${Math.ceil(Math.abs(targetPH - currentPH) / 0.5)} adjustments</strong>
+                    </div>
+                </div>
+                <div class="info-box" style="margin-top: 15px;">
+                    <strong>📊 Understanding the Numbers:</strong><br>
+                    A ${Math.abs(targetPH - currentPH).toFixed(1)} pH unit change means the [H⁺] concentration 
+                    ${currentPH > targetPH ? 'increases' : 'decreases'} by a factor of ${pHRatio.toFixed(0)}. 
+                    This is why small pH changes can require significant amounts of adjuster.
+                </div>
+            `;
+            resultDiv.style.display = 'block';
         }
 
-        function solveCubic(coeffs) {
-            // Simplified cubic solver for positive real root
-            // Using Newton-Raphson for the cubic equation
-            let x = 1e-7;
-            for (let i = 0; i < 100; i++) {
-                const f = coeffs[0] * x * x * x + coeffs[1] * x * x + coeffs[2] * x + coeffs[3];
-                const fprime = 3 * coeffs[0] * x * x + 2 * coeffs[1] * x + coeffs[2];
-                const x_new = x - f / fprime;
-                if (Math.abs(x_new - x) < 1e-12) return x_new;
-                x = x_new;
-            }
-            return x;
+        function scaleToBatch() {
+            const prodBatch = parseFloat(document.getElementById('prod-batch').value);
+            const labPH = parseFloat(document.getElementById('lab-ph').value);
+            const prodTarget = parseFloat(document.getElementById('prod-target').value);
+            const labAmount = parseFloat(document.getElementById('lab-amount').value);
+            const prodUnit = document.getElementById('prod-unit').value;
+            
+            // CORRECT scaling using concentration ratios
+            // Lab batch is typically 1 kg reference
+            const labBatchSize = 1; // kg
+            const scaleFactor = prodBatch / labBatchSize;
+            
+            // Direct linear scaling for same pH change
+            const totalAmount = labAmount * scaleFactor;
+            
+            // Add 15% safety margin for production (more conservative than lab)
+            const safeAmount = totalAmount * 1.15;
+            
+            // Calculate concentration changes
+            const H_lab = Math.pow(10, -labPH);
+            const H_target = Math.pow(10, -prodTarget);
+            const concentrationRatio = Math.abs(H_target / H_lab);
+            
+            const resultDiv = document.getElementById('batch-result');
+            resultDiv.innerHTML = `
+                <div class="result-header">Production Batch Calculation</div>
+                <div class="result-value">${safeAmount.toFixed(2)} kg</div>
+                <div class="result-details">
+                    Total adjuster needed for ${prodBatch} ${prodUnit} batch<br>
+                    <small>(includes 15% safety margin for production)</small>
+                </div>
+                <div class="formula-summary">
+                    <h3>Production Recipe</h3>
+                    <div class="formula-item">
+                        <span>Scale Factor:</span>
+                        <strong>${scaleFactor.toFixed(0)}×</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>Lab Amount × Scale:</span>
+                        <strong>${totalAmount.toFixed(2)} kg</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>With Safety Margin:</span>
+                        <strong>${safeAmount.toFixed(2)} kg</strong>
+                    </div>
+                    <div class="formula-item">
+                        <span>[H⁺] Change:</span>
+                        <strong>${concentrationRatio.toFixed(1)}×</strong>
+                    </div>
+                </div>
+                <div class="info-box" style="margin-top: 15px;">
+                    <strong>📋 Production Protocol:</strong><br>
+                    • Dissolve in minimal water first<br>
+                    • Add ${(safeAmount * 0.3).toFixed(2)} kg initially<br>
+                    • Mix for 10-15 minutes<br>
+                    • Check pH, add remaining in 2-3 portions<br>
+                    • Final pH check after 30 minutes rest<br>
+                    • Document actual usage for future batches
+                </div>
+            `;
+            resultDiv.style.display = 'block';
         }
 
-        function analyzeBuffer() {
-            const conc = parseFloat(document.getElementById('buffer-conc').value);
-            const pKa = parseFloat(document.getElementById('buffer-pka').value);
-            const Ka = Math.pow(10, -pKa);
-            
-            // Calculate buffer capacity at pH = pKa
-            const betaMax = 0.576 * conc;
-            
-            // Calculate at current pH (assuming pH = pKa for max capacity)
-            const H = Math.pow(10, -pKa);
-            const beta = 2.303 * conc * Ka * H / Math.pow(Ka + H, 2);
-            
-            let details = `Buffer Capacity Analysis:\n\n`;
-            details += `Maximum buffer capacity (β_max) = ${betaMax.toFixed(4)} M\n`;
-            details += `Occurs at pH = pKa = ${pKa}\n\n`;
-            details += `Current buffer capacity = ${beta.toFixed(4)} M\n`;
-            details += `Effective buffering range: ${(pKa - 1).toFixed(2)} - ${(pKa + 1).toFixed(2)}\n`;
-            
-            document.getElementById('buffer-result').innerHTML = `<strong>Buffer Capacity: ${betaMax.toFixed(4)} M</strong>`;
-            document.getElementById('buffer-result').className = 'result-display success';
-            document.getElementById('buffer-result').style.display = 'block';
-            document.getElementById('buffer-details').textContent = details;
-        }
-
-        function calculateIonicStrength() {
-            const valence = parseInt(document.getElementById('ion-species').value);
-            const conc = parseFloat(document.getElementById('ion-conc').value);
-            
-            // I = (1/2) Σ ci * zi²
-            const ionicStrength = 0.5 * conc * valence * valence;
-            
-            // Calculate activity coefficient using Davies equation
-            const activityCoeff = calculateDaviesActivityCoefficient(valence, ionicStrength);
-            
-            let details = `Ionic Strength Calculation:\n\n`;
-            details += `I = (1/2) × ${conc} × ${valence}² = ${ionicStrength.toFixed(4)} M\n\n`;
-            details += `Davies Equation:\n`;
-            details += `log γ = -0.509 × ${valence}² × (√I/(1+√I) - 0.3I)\n`;
-            details += `Activity coefficient (γ) = ${activityCoeff.toFixed(4)}\n\n`;
-            details += `pH correction = ${(-Math.log10(activityCoeff)).toFixed(3)} units`;
-            
-            document.getElementById('ionic-result').innerHTML = `<strong>Ionic Strength: ${ionicStrength.toFixed(4)} M</strong><br>Activity Coefficient: ${activityCoeff.toFixed(4)}`;
-            document.getElementById('ionic-result').className = 'result-display info';
-            document.getElementById('ionic-result').style.display = 'block';
-            document.getElementById('ionic-details').textContent = details;
-        }
-
-        function updatePolyproticValues() {
-            const type = document.getElementById('polyprotic-type').value;
-            if (type !== 'custom' && POLYPROTIC_ACIDS[type]) {
-                const acid = POLYPROTIC_ACIDS[type];
-                document.getElementById('pka1').value = acid.pKa1;
-                document.getElementById('pka2').value = acid.pKa2;
-                document.getElementById('pka3').value = acid.pKa3 || '';
-            }
-        }
-
-        function calculatePolyprotic() {
-            const pKa1 = parseFloat(document.getElementById('pka1').value);
-            const pKa2 = parseFloat(document.getElementById('pka2').value);
-            const pKa3 = parseFloat(document.getElementById('pka3').value);
-            const conc = parseFloat(document.getElementById('poly-conc').value);
-            
-            const Ka1 = Math.pow(10, -pKa1);
-            const Ka2 = Math.pow(10, -pKa2);
-            
-            // Simplified diprotic calculation
-            // [H+] = sqrt(Ka1 × (Ka1 × C + Kw) / (Ka1 + C))
-            const numerator = Ka1 * (Ka1 * conc + KW_25C);
-            const denominator = Ka1 + conc;
-            const H = Math.sqrt(numerator / denominator);
-            const pH = -Math.log10(H);
-            
-            let details = `Polyprotic Acid Calculation:\n\n`;
-            details += `Ka1 = ${Ka1.toExponential(3)}\n`;
-            details += `Ka2 = ${Ka2.toExponential(3)}\n`;
-            if (!isNaN(pKa3)) details += `Ka3 = ${Math.pow(10, -pKa3).toExponential(3)}\n`;
-            details += `\nDiprotic equation solution:\n`;
-            details += `[H+] = ${H.toExponential(3)} M\n`;
-            details += `pH = ${pH.toFixed(3)}`;
-            
-            document.getElementById('poly-result').innerHTML = `<strong>pH = ${pH.toFixed(3)}</strong>`;
-            document.getElementById('poly-result').className = 'result-display success';
-            document.getElementById('poly-result').style.display = 'block';
-            document.getElementById('poly-details').textContent = details;
-        }
-
-        function displayResult(elementId, value, label) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<strong>${label} = ${value.toFixed(3)}</strong>`;
-            
-            if (value >= 0 && value <= 14) {
-                element.className = 'result-display success';
-            } else {
-                element.className = 'result-display warning';
-            }
-            element.style.display = 'block';
-        }
-
-        // Show/hide buffer ratio input
-        document.getElementById('acid-type').addEventListener('change', function() {
-            const bufferRatioGroup = document.getElementById('buffer-ratio-group');
-            bufferRatioGroup.style.display = this.value === 'buffer' ? 'block' : 'none';
-        });
-
-        console.log('Advanced Scientific pH Calculator initialized');
+        // Initialize
+        updatePHVisual();
+        console.log('Formulation pH Adjustment Calculator Ready');
     </script>
 </body>
 </html>
