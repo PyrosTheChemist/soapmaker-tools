@@ -29,19 +29,11 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 30px;
             text-align: center;
             position: relative;
-        }
-
-        .signature {
-            position: absolute;
-            top: 15px;
-            right: 30px;
-            font-size: 0.9rem;
-            opacity: 0.9;
         }
 
         .header h1 {
@@ -70,7 +62,7 @@
         }
 
         .section h3 {
-            color: #FF6B35;
+            color: #667eea;
             margin-bottom: 20px;
             font-size: 1.3rem;
             font-weight: 600;
@@ -99,12 +91,12 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #FF6B35;
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .btn {
-            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             padding: 10px 16px;
@@ -118,7 +110,7 @@
 
         .btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn-danger {
@@ -140,7 +132,7 @@
         }
 
         .data-table th {
-            background: #FF6B35;
+            background: #667eea;
             color: white;
             padding: 12px 8px;
             text-align: left;
@@ -195,7 +187,7 @@
         .property-value {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #FF6B35;
+            color: #667eea;
         }
 
         .property-label {
@@ -263,13 +255,13 @@
         }
 
         .lye-option.active {
-            border-color: #FF6B35;
-            background: #ffe8e0;
-            color: #FF6B35;
+            border-color: #667eea;
+            background: #f0f4ff;
+            color: #667eea;
         }
 
         .lye-option:hover {
-            border-color: #FF6B35;
+            border-color: #667eea;
         }
 
         .dual-lye-controls {
@@ -342,7 +334,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="signature">Philip Riachy, PhD</div>
             <h1>Advanced Scientific Soap Calculator</h1>
             <p class="subtitle">Scientific Saponification Calculator with Fatty Acid Analysis</p>
         </div>
@@ -725,6 +716,192 @@
             "Ricinoleic Acid": {
                 sap_naoh: 0.188, sap_koh: 0.265, iodine: 85,
                 fatty_acids: { lauric: 0, myristic: 0, palmitic: 0, stearic: 0, oleic: 0, linoleic: 0, linolenic: 0, ricinoleic: 100 }
+            },
+
+            // Additional Popular Soap Making Oils
+            "Rice Bran Oil": {
+                sap_naoh: 0.128, sap_koh: 0.180, iodine: 99,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 15, stearic: 2, oleic: 42, linoleic: 39, linolenic: 2, ricinoleic: 0 }
+            },
+            "Apricot Kernel Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 100,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 6, stearic: 1, oleic: 60, linoleic: 29, linolenic: 1, ricinoleic: 0 }
+            },
+            "Argan Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 95,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 13, stearic: 5, oleic: 43, linoleic: 36, linolenic: 0, ricinoleic: 0 }
+            },
+            "Babassu Oil": {
+                sap_naoh: 0.175, sap_koh: 0.247, iodine: 15,
+                fatty_acids: { lauric: 44, myristic: 16, palmitic: 9, stearic: 3, oleic: 12, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Black Cumin Seed Oil": {
+                sap_naoh: 0.139, sap_koh: 0.196, iodine: 120,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 12, stearic: 3, oleic: 24, linoleic: 58, linolenic: 0, ricinoleic: 0 }
+            },
+            "Borage Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 150,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 11, stearic: 4, oleic: 16, linoleic: 38, linolenic: 23, ricinoleic: 0 }
+            },
+            "Camelina Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 145,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 6, stearic: 3, oleic: 18, linoleic: 18, linolenic: 35, ricinoleic: 0 }
+            },
+            "Camellia Seed Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 83,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 9, stearic: 2, oleic: 78, linoleic: 8, linolenic: 0, ricinoleic: 0 }
+            },
+            "Canola Oil": {
+                sap_naoh: 0.124, sap_koh: 0.175, iodine: 110,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 4, stearic: 2, oleic: 61, linoleic: 21, linolenic: 11, ricinoleic: 0 }
+            },
+            "Chia Seed Oil": {
+                sap_naoh: 0.132, sap_koh: 0.186, iodine: 192,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 3, oleic: 7, linoleic: 19, linolenic: 64, ricinoleic: 0 }
+            },
+            "Cottonseed Oil": {
+                sap_naoh: 0.138, sap_koh: 0.194, iodine: 105,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 22, stearic: 3, oleic: 19, linoleic: 54, linolenic: 0, ricinoleic: 0 }
+            },
+            "Cranberry Seed Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 154,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 1, oleic: 22, linoleic: 39, linolenic: 31, ricinoleic: 0 }
+            },
+            "Emu Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 68,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 23, stearic: 9, oleic: 47, linoleic: 11, linolenic: 1, ricinoleic: 0 }
+            },
+            "Evening Primrose Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 147,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 6, stearic: 2, oleic: 11, linoleic: 72, linolenic: 9, ricinoleic: 0 }
+            },
+            "Grapeseed Oil": {
+                sap_naoh: 0.126, sap_koh: 0.177, iodine: 130,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 4, oleic: 16, linoleic: 70, linolenic: 0, ricinoleic: 0 }
+            },
+            "Hazelnut Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 94,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 5, stearic: 2, oleic: 78, linoleic: 10, linolenic: 0, ricinoleic: 0 }
+            },
+            "Hemp Seed Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 165,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 6, stearic: 2, oleic: 12, linoleic: 57, linolenic: 21, ricinoleic: 0 }
+            },
+            "Illipe Butter": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 35,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 18, stearic: 46, oleic: 34, linoleic: 1, linolenic: 0, ricinoleic: 0 }
+            },
+            "Karanja Oil (Pongamia)": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 84,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 11, stearic: 7, oleic: 50, linoleic: 20, linolenic: 2, ricinoleic: 0 }
+            },
+            "Kokum Butter": {
+                sap_naoh: 0.134, sap_koh: 0.189, iodine: 41,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 3, stearic: 55, oleic: 41, linoleic: 1, linolenic: 0, ricinoleic: 0 }
+            },
+            "Kpangnan Butter": {
+                sap_naoh: 0.139, sap_koh: 0.196, iodine: 30,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 48, stearic: 44, oleic: 5, linoleic: 1, linolenic: 0, ricinoleic: 0 }
+            },
+            "Kukui Nut Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 155,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 3, oleic: 25, linoleic: 42, linolenic: 23, ricinoleic: 0 }
+            },
+            "Macadamia Nut Oil": {
+                sap_naoh: 0.139, sap_koh: 0.196, iodine: 75,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 8, stearic: 4, oleic: 59, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Meadowfoam Seed Oil": {
+                sap_naoh: 0.120, sap_koh: 0.169, iodine: 92,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 1, stearic: 0, oleic: 15, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Moringa Oil": {
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 70,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 6, oleic: 73, linoleic: 1, linolenic: 0, ricinoleic: 0 }
+            },
+            "Murumuru Butter": {
+                sap_naoh: 0.228, sap_koh: 0.321, iodine: 12,
+                fatty_acids: { lauric: 47, myristic: 27, palmitic: 8, stearic: 3, oleic: 10, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Mustard Oil": {
+                sap_naoh: 0.123, sap_koh: 0.173, iodine: 98,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 3, stearic: 1, oleic: 24, linoleic: 12, linolenic: 8, ricinoleic: 0 }
+            },
+            "Neem Oil": {
+                sap_naoh: 0.139, sap_koh: 0.196, iodine: 75,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 18, stearic: 18, oleic: 49, linoleic: 15, linolenic: 0, ricinoleic: 0 }
+            },
+            "Oat Oil": {
+                sap_naoh: 0.134, sap_koh: 0.189, iodine: 112,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 17, stearic: 2, oleic: 38, linoleic: 40, linolenic: 1, ricinoleic: 0 }
+            },
+            "Peach Kernel Oil": {
+                sap_naoh: 0.136, sap_koh: 0.192, iodine: 98,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 2, oleic: 62, linoleic: 27, linolenic: 0, ricinoleic: 0 }
+            },
+            "Perilla Seed Oil": {
+                sap_naoh: 0.133, sap_koh: 0.188, iodine: 195,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 6, stearic: 2, oleic: 15, linoleic: 14, linolenic: 58, ricinoleic: 0 }
+            },
+            "Pistachio Oil": {
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 93,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 11, stearic: 1, oleic: 55, linoleic: 32, linolenic: 0, ricinoleic: 0 }
+            },
+            "Pomegranate Seed Oil": {
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 165,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 5, stearic: 2, oleic: 7, linoleic: 8, linolenic: 76, ricinoleic: 0 }
+            },
+            "Poppy Seed Oil": {
+                sap_naoh: 0.134, sap_koh: 0.189, iodine: 135,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 9, stearic: 2, oleic: 16, linoleic: 70, linolenic: 1, ricinoleic: 0 }
+            },
+            "Pumpkin Seed Oil": {
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 120,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 13, stearic: 7, oleic: 34, linoleic: 43, linolenic: 0, ricinoleic: 0 }
+            },
+            "Red Palm Oil": {
+                sap_naoh: 0.141, sap_koh: 0.199, iodine: 52,
+                fatty_acids: { lauric: 0, myristic: 1, palmitic: 43, stearic: 4, oleic: 40, linoleic: 10, linolenic: 0, ricinoleic: 0 }
+            },
+            "Rosehip Seed Oil": {
+                sap_naoh: 0.137, sap_koh: 0.193, iodine: 185,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 4, stearic: 2, oleic: 15, linoleic: 45, linolenic: 32, ricinoleic: 0 }
+            },
+            "Sal Butter": {
+                sap_naoh: 0.137, sap_koh: 0.193, iodine: 45,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 5, stearic: 43, oleic: 44, linoleic: 2, linolenic: 0, ricinoleic: 0 }
+            },
+            "Sea Buckthorn Oil": {
+                sap_naoh: 0.134, sap_koh: 0.189, iodine: 95,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 33, stearic: 2, oleic: 23, linoleic: 12, linolenic: 10, ricinoleic: 0 }
+            },
+            "Sesame Oil": {
+                sap_naoh: 0.133, sap_koh: 0.187, iodine: 110,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 9, stearic: 6, oleic: 40, linoleic: 43, linolenic: 0, ricinoleic: 0 }
+            },
+            "Soybean Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 130,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 11, stearic: 4, oleic: 23, linoleic: 54, linolenic: 8, ricinoleic: 0 }
+            },
+            "Tamanu Oil": {
+                sap_naoh: 0.138, sap_koh: 0.195, iodine: 85,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 13, stearic: 13, oleic: 38, linoleic: 30, linolenic: 1, ricinoleic: 0 }
+            },
+            "Ucuuba Butter": {
+                sap_naoh: 0.220, sap_koh: 0.310, iodine: 14,
+                fatty_acids: { lauric: 14, myristic: 77, palmitic: 6, stearic: 1, oleic: 1, linoleic: 0, linolenic: 0, ricinoleic: 0 }
+            },
+            "Walnut Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 145,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 7, stearic: 2, oleic: 18, linoleic: 56, linolenic: 13, ricinoleic: 0 }
+            },
+            "Watermelon Seed Oil": {
+                sap_naoh: 0.135, sap_koh: 0.190, iodine: 120,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 11, stearic: 9, oleic: 16, linoleic: 61, linolenic: 0, ricinoleic: 0 }
+            },
+            "Wheat Germ Oil": {
+                sap_naoh: 0.131, sap_koh: 0.184, iodine: 125,
+                fatty_acids: { lauric: 0, myristic: 0, palmitic: 17, stearic: 1, oleic: 18, linoleic: 55, linolenic: 7, ricinoleic: 0 }
             }
         };
 
@@ -914,12 +1091,10 @@
 
         // Initialize Application
         function initializeSoapApp() {
-            console.log('Initializing Advanced Soap Calculator...');
             populateOilDropdown();
             populateAdditiveDropdown();
             setupSoapEventListeners();
             updateNaOHPercentage();
-            console.log('Advanced Soap Calculator ready!');
         }
 
         function populateOilDropdown() {
