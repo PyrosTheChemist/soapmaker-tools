@@ -29,19 +29,11 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 30px;
             text-align: center;
             position: relative;
-        }
-
-        .signature {
-            position: absolute;
-            top: 15px;
-            right: 30px;
-            font-size: 0.9rem;
-            opacity: 0.9;
         }
 
         .header h1 {
@@ -70,7 +62,7 @@
         }
 
         .section h3 {
-            color: #6A1B9A;
+            color: #667eea;
             margin-bottom: 20px;
             font-size: 1.3rem;
             font-weight: 600;
@@ -99,12 +91,12 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #6A1B9A;
-            box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .btn {
-            background: linear-gradient(135deg, #6A1B9A, #8E24AA);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             padding: 10px 16px;
@@ -118,7 +110,7 @@
 
         .btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn-danger {
@@ -140,7 +132,7 @@
         }
 
         .data-table th {
-            background: #6A1B9A;
+            background: #667eea;
             color: white;
             padding: 12px 8px;
             text-align: left;
@@ -330,7 +322,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="signature">Philip Riachy, PhD</div>
             <h1>Professional Preservative Calculator</h1>
             <p class="subtitle">Scientific Microbiological Protection & Preservative System Design</p>
         </div>
@@ -861,10 +852,8 @@
 
         // Initialize Application
         function initializePreservativeApp() {
-            console.log('Initializing Professional Preservative Calculator...');
             populatePreservativeDropdown();
             setupPreservativeEventListeners();
-            console.log('Preservative Calculator ready!');
         }
 
         function populatePreservativeDropdown() {
@@ -1705,5 +1694,4 @@
         document.addEventListener('DOMContentLoaded', initializePreservativeApp);
     </script>
 </body>
-
 </html>
