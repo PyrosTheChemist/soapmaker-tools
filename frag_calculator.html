@@ -29,19 +29,11 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #8B5A96, #C06C84);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 30px;
             text-align: center;
             position: relative;
-        }
-
-        .signature {
-            position: absolute;
-            top: 15px;
-            right: 30px;
-            font-size: 0.9rem;
-            opacity: 0.9;
         }
 
         .header h1 {
@@ -70,7 +62,7 @@
         }
 
         .section h3 {
-            color: #8B5A96;
+            color: #667eea;
             margin-bottom: 20px;
             font-size: 1.3rem;
             font-weight: 600;
@@ -99,12 +91,12 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #8B5A96;
-            box-shadow: 0 0 0 3px rgba(139, 90, 150, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .btn {
-            background: linear-gradient(135deg, #8B5A96, #C06C84);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             padding: 10px 16px;
@@ -118,7 +110,7 @@
 
         .btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 90, 150, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn-danger {
@@ -140,7 +132,7 @@
         }
 
         .data-table th {
-            background: #8B5A96;
+            background: #667eea;
             color: white;
             padding: 12px 8px;
             text-align: left;
@@ -305,7 +297,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="signature">Philip Riachy, PhD</div>
             <h1>Professional Fragrance Calculator</h1>
             <p class="subtitle">Scientific Essential Oil Blending & Perfume Formulation Tool</p>
         </div>
@@ -711,12 +702,256 @@
                 therapeutic: ["comforting", "aphrodisiac"], 
                 character: "Sweet, warm, gourmand, comforting"
             },
-            "Benzoin (Styrax benzoin)": { 
+            "Benzoin (Styrax benzoin)": {
                 category: "base", volatility: "very_low", longevity: 600,
                 molecular_weight: 212, vapor_pressure: 3,
                 allergens: ["Benzyl benzoate"], max_usage: { perfume: 25, cosmetic: 4 },
-                therapeutic: ["warming", "antiseptic"], 
+                therapeutic: ["warming", "antiseptic"],
                 character: "Vanilla-like, warm, balsamic, sweet"
+            },
+
+            // Additional Top Notes
+            "Lime (Citrus aurantifolia)": {
+                category: "top", volatility: "very_high", longevity: 18,
+                molecular_weight: 136, vapor_pressure: 195,
+                allergens: ["Limonene", "Citral"], max_usage: { perfume: 12, cosmetic: 1.5 },
+                therapeutic: ["energizing", "antimicrobial"],
+                character: "Sharp, fresh, tart, tropical"
+            },
+            "Mandarin (Citrus reticulata)": {
+                category: "top", volatility: "very_high", longevity: 28,
+                molecular_weight: 136, vapor_pressure: 180,
+                allergens: ["Limonene"], max_usage: { perfume: 18, cosmetic: 2.5 },
+                therapeutic: ["calming", "mood_lifting"],
+                character: "Sweet, soft, gentle, floral"
+            },
+            "Tangerine (Citrus tangerina)": {
+                category: "top", volatility: "very_high", longevity: 25,
+                molecular_weight: 136, vapor_pressure: 185,
+                allergens: ["Limonene"], max_usage: { perfume: 16, cosmetic: 2 },
+                therapeutic: ["cheerful", "calming"],
+                character: "Sweet, fresh, candy-like, cheerful"
+            },
+            "Petitgrain (Citrus aurantium)": {
+                category: "top", volatility: "high", longevity: 50,
+                molecular_weight: 154, vapor_pressure: 160,
+                allergens: ["Linalyl acetate", "Linalool"], max_usage: { perfume: 12, cosmetic: 2 },
+                therapeutic: ["calming", "balancing"],
+                character: "Woody, floral, herbaceous, bitter-sweet"
+            },
+            "Spearmint (Mentha spicata)": {
+                category: "top", volatility: "high", longevity: 30,
+                molecular_weight: 152, vapor_pressure: 210,
+                allergens: [], max_usage: { perfume: 6, cosmetic: 1 },
+                therapeutic: ["cooling", "digestive"],
+                character: "Sweet, minty, less sharp than peppermint"
+            },
+            "Tea Tree (Melaleuca alternifolia)": {
+                category: "top", volatility: "high", longevity: 40,
+                molecular_weight: 154, vapor_pressure: 200,
+                allergens: [], max_usage: { perfume: 4, cosmetic: 1 },
+                therapeutic: ["antimicrobial", "healing"],
+                character: "Medicinal, fresh, camphoraceous"
+            },
+            "Neroli (Citrus aurantium)": {
+                category: "top", volatility: "high", longevity: 55,
+                molecular_weight: 154, vapor_pressure: 140,
+                allergens: ["Linalool", "Limonene"], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["antidepressant", "aphrodisiac"],
+                character: "Floral, honeyed, fresh, sophisticated"
+            },
+            "Ginger (Zingiber officinale)": {
+                category: "top", volatility: "high", longevity: 45,
+                molecular_weight: 164, vapor_pressure: 175,
+                allergens: [], max_usage: { perfume: 10, cosmetic: 1.5 },
+                therapeutic: ["warming", "stimulating"],
+                character: "Spicy, warm, sharp, energizing"
+            },
+            "Black Pepper (Piper nigrum)": {
+                category: "top", volatility: "high", longevity: 42,
+                molecular_weight: 204, vapor_pressure: 165,
+                allergens: [], max_usage: { perfume: 8, cosmetic: 1 },
+                therapeutic: ["stimulating", "warming"],
+                character: "Spicy, sharp, woody, warm"
+            },
+            "Cardamom (Elettaria cardamomum)": {
+                category: "top", volatility: "high", longevity: 48,
+                molecular_weight: 154, vapor_pressure: 170,
+                allergens: [], max_usage: { perfume: 10, cosmetic: 1.5 },
+                therapeutic: ["digestive", "warming"],
+                character: "Spicy, sweet, warming, exotic"
+            },
+            "Coriander (Coriandrum sativum)": {
+                category: "top", volatility: "high", longevity: 38,
+                molecular_weight: 154, vapor_pressure: 180,
+                allergens: [], max_usage: { perfume: 12, cosmetic: 2 },
+                therapeutic: ["digestive", "calming"],
+                character: "Sweet, spicy, woody, warm"
+            },
+
+            // Additional Middle Notes
+            "Chamomile Roman (Anthemis nobilis)": {
+                category: "middle", volatility: "medium", longevity: 90,
+                molecular_weight: 238, vapor_pressure: 80,
+                allergens: [], max_usage: { perfume: 10, cosmetic: 2 },
+                therapeutic: ["calming", "anti-inflammatory"],
+                character: "Sweet, apple-like, herbaceous"
+            },
+            "Chamomile German (Matricaria recutita)": {
+                category: "middle", volatility: "medium", longevity: 85,
+                molecular_weight: 204, vapor_pressure: 85,
+                allergens: [], max_usage: { perfume: 8, cosmetic: 1.5 },
+                therapeutic: ["anti-inflammatory", "soothing"],
+                character: "Sweet, herbaceous, slightly bitter"
+            },
+            "Marjoram (Origanum majorana)": {
+                category: "middle", volatility: "medium", longevity: 95,
+                molecular_weight: 154, vapor_pressure: 100,
+                allergens: [], max_usage: { perfume: 10, cosmetic: 1.5 },
+                therapeutic: ["calming", "muscle_relaxant"],
+                character: "Warm, woody, camphoraceous, spicy"
+            },
+            "Thyme (Thymus vulgaris)": {
+                category: "middle", volatility: "medium", longevity: 100,
+                molecular_weight: 150, vapor_pressure: 95,
+                allergens: [], max_usage: { perfume: 5, cosmetic: 0.5 },
+                therapeutic: ["antimicrobial", "stimulating"],
+                character: "Herbaceous, medicinal, sharp, warm"
+            },
+            "Pine (Pinus sylvestris)": {
+                category: "middle", volatility: "medium", longevity: 110,
+                molecular_weight: 136, vapor_pressure: 120,
+                allergens: [], max_usage: { perfume: 12, cosmetic: 2 },
+                therapeutic: ["decongestant", "energizing"],
+                character: "Fresh, woody, coniferous, clean"
+            },
+            "Cypress (Cupressus sempervirens)": {
+                category: "middle", volatility: "medium", longevity: 105,
+                molecular_weight: 136, vapor_pressure: 115,
+                allergens: [], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["astringent", "grounding"],
+                character: "Woody, fresh, coniferous, clean"
+            },
+            "Juniper Berry (Juniperus communis)": {
+                category: "middle", volatility: "medium", longevity: 100,
+                molecular_weight: 136, vapor_pressure: 110,
+                allergens: [], max_usage: { perfume: 12, cosmetic: 1.5 },
+                therapeutic: ["detoxifying", "purifying"],
+                character: "Fresh, woody, slightly fruity, clean"
+            },
+            "Fennel (Foeniculum vulgare)": {
+                category: "middle", volatility: "medium", longevity: 95,
+                molecular_weight: 148, vapor_pressure: 105,
+                allergens: ["Estragole"], max_usage: { perfume: 5, cosmetic: 0.5 },
+                therapeutic: ["digestive", "balancing"],
+                character: "Sweet, anise-like, warm, spicy"
+            },
+            "Palmarosa (Cymbopogon martinii)": {
+                category: "middle", volatility: "medium", longevity: 115,
+                molecular_weight: 154, vapor_pressure: 90,
+                allergens: ["Geraniol"], max_usage: { perfume: 15, cosmetic: 3 },
+                therapeutic: ["balancing", "moisturizing"],
+                character: "Rosy, sweet, grassy, floral"
+            },
+            "Lemongrass (Cymbopogon citratus)": {
+                category: "middle", volatility: "medium", longevity: 105,
+                molecular_weight: 152, vapor_pressure: 100,
+                allergens: ["Citral"], max_usage: { perfume: 8, cosmetic: 1 },
+                therapeutic: ["energizing", "antimicrobial"],
+                character: "Lemony, grassy, fresh, sharp"
+            },
+            "Citronella (Cymbopogon nardus)": {
+                category: "middle", volatility: "medium", longevity: 100,
+                molecular_weight: 154, vapor_pressure: 105,
+                allergens: ["Citronellol"], max_usage: { perfume: 10, cosmetic: 1.5 },
+                therapeutic: ["insect_repellent", "cleansing"],
+                character: "Lemony, grassy, fresh, slightly floral"
+            },
+            "Ho Wood (Cinnamomum camphora)": {
+                category: "middle", volatility: "medium", longevity: 120,
+                molecular_weight: 154, vapor_pressure: 85,
+                allergens: ["Linalool"], max_usage: { perfume: 18, cosmetic: 3 },
+                therapeutic: ["calming", "balancing"],
+                character: "Woody, floral, soft, rosewood-like"
+            },
+            "Melissa (Melissa officinalis)": {
+                category: "middle", volatility: "medium", longevity: 95,
+                molecular_weight: 152, vapor_pressure: 100,
+                allergens: ["Citral", "Geraniol"], max_usage: { perfume: 5, cosmetic: 0.5 },
+                therapeutic: ["calming", "antiviral"],
+                character: "Lemony, fresh, sweet, herbaceous"
+            },
+
+            // Additional Base Notes
+            "Myrrh (Commiphora myrrha)": {
+                category: "base", volatility: "very_low", longevity: 480,
+                molecular_weight: 216, vapor_pressure: 8,
+                allergens: [], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["healing", "meditative"],
+                character: "Resinous, warm, balsamic, earthy"
+            },
+            "Oakmoss (Evernia prunastri)": {
+                category: "base", volatility: "very_low", longevity: 520,
+                molecular_weight: 320, vapor_pressure: 5,
+                allergens: ["Atranol", "Chloroatranol"], max_usage: { perfume: 0.1, cosmetic: 0.1 },
+                therapeutic: ["grounding", "fixative"],
+                character: "Earthy, woody, damp forest, rich"
+            },
+            "Amber (Pinus succinifera)": {
+                category: "base", volatility: "very_low", longevity: 550,
+                molecular_weight: 290, vapor_pressure: 4,
+                allergens: [], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["warming", "grounding"],
+                character: "Sweet, warm, powdery, resinous"
+            },
+            "Tonka Bean (Dipteryx odorata)": {
+                category: "base", volatility: "very_low", longevity: 510,
+                molecular_weight: 176, vapor_pressure: 6,
+                allergens: ["Coumarin"], max_usage: { perfume: 2, cosmetic: 0.5 },
+                therapeutic: ["calming", "warming"],
+                character: "Sweet, vanilla-like, warm, hay-like"
+            },
+            "Labdanum (Cistus ladaniferus)": {
+                category: "base", volatility: "very_low", longevity: 490,
+                molecular_weight: 290, vapor_pressure: 7,
+                allergens: [], max_usage: { perfume: 25, cosmetic: 4 },
+                therapeutic: ["grounding", "warming"],
+                character: "Amber-like, leathery, sweet, resinous"
+            },
+            "Oud (Aquilaria malaccensis)": {
+                category: "base", volatility: "very_low", longevity: 650,
+                molecular_weight: 238, vapor_pressure: 2,
+                allergens: [], max_usage: { perfume: 15, cosmetic: 2 },
+                therapeutic: ["meditative", "aphrodisiac"],
+                character: "Woody, animalic, complex, rich"
+            },
+            "Peru Balsam (Myroxylon balsamum)": {
+                category: "base", volatility: "very_low", longevity: 500,
+                molecular_weight: 262, vapor_pressure: 6,
+                allergens: ["Benzyl benzoate", "Benzyl cinnamate"], max_usage: { perfume: 1, cosmetic: 0.4 },
+                therapeutic: ["warming", "healing"],
+                character: "Sweet, vanilla-like, balsamic, cinnamon"
+            },
+            "Copaiba Balsam (Copaifera officinalis)": {
+                category: "base", volatility: "low", longevity: 400,
+                molecular_weight: 272, vapor_pressure: 10,
+                allergens: [], max_usage: { perfume: 20, cosmetic: 3 },
+                therapeutic: ["anti-inflammatory", "healing"],
+                character: "Woody, sweet, balsamic, mild"
+            },
+            "Elemi (Canarium luzonicum)": {
+                category: "base", volatility: "low", longevity: 380,
+                molecular_weight: 204, vapor_pressure: 12,
+                allergens: [], max_usage: { perfume: 18, cosmetic: 3 },
+                therapeutic: ["balancing", "meditative"],
+                character: "Fresh, spicy, lemony, resinous"
+            },
+            "Galbanum (Ferula galbaniflua)": {
+                category: "base", volatility: "low", longevity: 420,
+                molecular_weight: 272, vapor_pressure: 9,
+                allergens: [], max_usage: { perfume: 12, cosmetic: 2 },
+                therapeutic: ["grounding", "balancing"],
+                character: "Green, fresh, earthy, intense"
             }
         };
 
@@ -729,11 +964,9 @@
 
         // Initialize Application
         function initializeFragranceApp() {
-            console.log('Initializing Professional Fragrance Calculator...');
             populateFragranceDropdown();
             setupFragranceEventListeners();
             updateSafetyGuidelines();
-            console.log('Fragrance Calculator ready!');
         }
 
         function populateFragranceDropdown() {
