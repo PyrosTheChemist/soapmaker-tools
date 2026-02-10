@@ -305,7 +305,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🧪 Formulation pH Adjustment Calculator</h1>
+        <h1>Formulation pH Adjustment Calculator</h1>
         <div style="background: rgba(255,255,255,0.95); padding: 15px; text-align: center; color: #333; border-bottom: 2px solid rgba(0,0,0,0.1);">
             <strong>⚗️ pH Science:</strong> pH is logarithmic - each 1 pH unit = 10× change in [H⁺] concentration. 
             A change from pH 7 to pH 5 means <strong>100× more</strong> hydrogen ions!
@@ -375,33 +375,46 @@
                 <h2>⚗️ pH Adjuster Selection</h2>
                 
                 <div class="form-group">
-                    <label>Choose Adjuster Type</label>
-                    <div class="adjuster-grid">
-                        <div class="adjuster-card acidic" onclick="selectAdjuster('citric')">
-                            <strong>Citric Acid</strong><br>
-                            <small>Gentle, buffering</small>
-                        </div>
-                        <div class="adjuster-card acidic" onclick="selectAdjuster('lactic')">
-                            <strong>Lactic Acid</strong><br>
-                            <small>Skin-friendly</small>
-                        </div>
-                        <div class="adjuster-card acidic" onclick="selectAdjuster('glycolic')">
-                            <strong>Glycolic Acid</strong><br>
-                            <small>Exfoliating</small>
-                        </div>
-                        <div class="adjuster-card basic" onclick="selectAdjuster('naoh')">
-                            <strong>NaOH</strong><br>
-                            <small>Strong base</small>
-                        </div>
-                        <div class="adjuster-card basic" onclick="selectAdjuster('tea')">
-                            <strong>TEA</strong><br>
-                            <small>Mild, buffering</small>
-                        </div>
-                        <div class="adjuster-card buffer" onclick="selectAdjuster('phosphate')">
-                            <strong>Phosphate Buffer</strong><br>
-                            <small>pH 6-8</small>
-                        </div>
-                    </div>
+                    <label>Choose pH Adjuster</label>
+                    <select id="adjuster-select" class="form-control" onchange="selectAdjusterFromDropdown()">
+                        <option value="">Select pH adjuster...</option>
+                        <optgroup label="Acids (Lower pH)">
+                            <option value="citric">Citric Acid - Gentle, buffering, chelating</option>
+                            <option value="lactic">Lactic Acid - Skin-friendly, moisturizing, AHA</option>
+                            <option value="glycolic">Glycolic Acid - Exfoliating, potent AHA</option>
+                            <option value="malic">Malic Acid - Gentle AHA, apple-derived</option>
+                            <option value="mandelic">Mandelic Acid - Gentle, sensitive skin</option>
+                            <option value="tartaric">Tartaric Acid - Grape-derived, antioxidant</option>
+                            <option value="gluconic">Gluconic Acid - Very gentle, chelating</option>
+                            <option value="salicylic">Salicylic Acid - BHA, oil-soluble</option>
+                            <option value="ascorbic">Ascorbic Acid (Vitamin C) - Antioxidant</option>
+                            <option value="kojic">Kojic Acid - Brightening agent</option>
+                            <option value="phytic">Phytic Acid - Gentle, chelating</option>
+                            <option value="azelaic">Azelaic Acid - Anti-inflammatory</option>
+                            <option value="hyaluronic">Hyaluronic Acid - Humectant, gentle</option>
+                            <option value="ferulic">Ferulic Acid - Antioxidant, UV enhancer</option>
+                        </optgroup>
+                        <optgroup label="Bases (Raise pH)">
+                            <option value="naoh">Sodium Hydroxide (NaOH) - Strong base</option>
+                            <option value="koh">Potassium Hydroxide (KOH) - Strong base</option>
+                            <option value="arginine">L-Arginine - Amino acid, gentle</option>
+                            <option value="lysine">L-Lysine - Amino acid, conditioning</option>
+                            <option value="tea">Triethanolamine (TEA) - Mild buffering</option>
+                            <option value="amp">Aminomethyl Propanol (AMP) - TEA alternative</option>
+                            <option value="sodium_bicarb">Sodium Bicarbonate - Gentle, buffering</option>
+                            <option value="sodium_carbonate">Sodium Carbonate - Moderately strong</option>
+                            <option value="ammonia">Ammonium Hydroxide - Strong, volatile</option>
+                        </optgroup>
+                        <optgroup label="Buffer Systems">
+                            <option value="phosphate">Phosphate Buffer - pH 6-8, excellent</option>
+                            <option value="citrate">Citrate Buffer - pH 3-6.5, gentle</option>
+                            <option value="acetate">Acetate Buffer - pH 3.6-5.6, simple</option>
+                            <option value="lactate">Lactate Buffer - pH 3-5.5, skin-friendly</option>
+                            <option value="tris">Tris Buffer - pH 7-9, biochem</option>
+                            <option value="carbonate">Carbonate Buffer - pH 9-11, alkaline</option>
+                        </optgroup>
+                    </select>
+                    <div id="adjuster-info" style="margin-top: 10px; padding: 10px; background: #f0f4ff; border-radius: 6px; display: none; font-size: 0.85rem;"></div>
                 </div>
 
                 <div class="form-group">
@@ -532,47 +545,242 @@
 
     <script>
         const ADJUSTERS = {
+            // Common Acids
             citric: {
                 name: "Citric Acid",
                 category: "acidic",
                 pKa: [3.13, 4.76, 6.40],
-                strength: 0.52,  // Adjusted for triprotic acid effectiveness
-                mw: 192.12
+                strength: 0.52,
+                mw: 192.12,
+                description: "Gentle, buffering, chelating properties"
             },
             lactic: {
                 name: "Lactic Acid",
                 category: "acidic",
                 pKa: [3.86],
-                strength: 0.90,  // Monoprotic, quite effective
-                mw: 90.08
+                strength: 0.90,
+                mw: 90.08,
+                description: "Skin-friendly, moisturizing, AHA"
             },
             glycolic: {
                 name: "Glycolic Acid",
                 category: "acidic",
                 pKa: [3.83],
-                strength: 1.05,  // Very effective, strong acid
-                mw: 76.05
+                strength: 1.05,
+                mw: 76.05,
+                description: "Exfoliating, potent AHA"
             },
+            malic: {
+                name: "Malic Acid",
+                category: "acidic",
+                pKa: [3.40, 5.11],
+                strength: 0.75,
+                mw: 134.09,
+                description: "Gentle AHA, apple-derived"
+            },
+            mandelic: {
+                name: "Mandelic Acid",
+                category: "acidic",
+                pKa: [3.41],
+                strength: 0.68,
+                mw: 152.15,
+                description: "Gentle, large molecule, sensitive skin"
+            },
+            tartaric: {
+                name: "Tartaric Acid",
+                category: "acidic",
+                pKa: [2.98, 4.34],
+                strength: 0.82,
+                mw: 150.09,
+                description: "Grape-derived, antioxidant"
+            },
+            gluconic: {
+                name: "Gluconic Acid",
+                category: "acidic",
+                pKa: [3.86],
+                strength: 0.55,
+                mw: 196.16,
+                description: "Very gentle, chelating, non-irritating"
+            },
+            salicylic: {
+                name: "Salicylic Acid",
+                category: "acidic",
+                pKa: [2.97],
+                strength: 0.95,
+                mw: 138.12,
+                description: "BHA, oil-soluble, exfoliating"
+            },
+            ascorbic: {
+                name: "Ascorbic Acid (Vitamin C)",
+                category: "acidic",
+                pKa: [4.10, 11.6],
+                strength: 0.72,
+                mw: 176.12,
+                description: "Antioxidant, brightening"
+            },
+            kojic: {
+                name: "Kojic Acid",
+                category: "acidic",
+                pKa: [7.65],
+                strength: 0.45,
+                mw: 142.11,
+                description: "Brightening, tyrosinase inhibitor"
+            },
+            phytic: {
+                name: "Phytic Acid",
+                category: "acidic",
+                pKa: [1.95, 2.61, 6.02, 7.02, 9.34, 10.85],
+                strength: 0.48,
+                mw: 660.04,
+                description: "Gentle exfoliant, chelating, antioxidant"
+            },
+            azelaic: {
+                name: "Azelaic Acid",
+                category: "acidic",
+                pKa: [4.55, 5.59],
+                strength: 0.62,
+                mw: 188.22,
+                description: "Anti-inflammatory, brightening"
+            },
+            hyaluronic: {
+                name: "Hyaluronic Acid",
+                category: "acidic",
+                pKa: [2.9],
+                strength: 0.40,
+                mw: 403.31,
+                description: "Humectant, very gentle"
+            },
+            ferulic: {
+                name: "Ferulic Acid",
+                category: "acidic",
+                pKa: [4.58],
+                strength: 0.58,
+                mw: 194.18,
+                description: "Antioxidant, UV protection enhancer"
+            },
+
+            // Bases
             naoh: {
                 name: "Sodium Hydroxide",
                 category: "basic",
                 pKa: [15.7],
-                strength: 2.5,  // Very strong base
-                mw: 40.00
+                strength: 2.5,
+                mw: 40.00,
+                description: "Strong base, precise control needed"
+            },
+            koh: {
+                name: "Potassium Hydroxide",
+                category: "basic",
+                pKa: [15.7],
+                strength: 2.4,
+                mw: 56.11,
+                description: "Strong base, similar to NaOH"
+            },
+            arginine: {
+                name: "L-Arginine",
+                category: "basic",
+                pKa: [9.04],
+                strength: 0.75,
+                mw: 174.20,
+                description: "Amino acid, gentle, skin-compatible"
+            },
+            lysine: {
+                name: "L-Lysine",
+                category: "basic",
+                pKa: [10.53],
+                strength: 0.70,
+                mw: 146.19,
+                description: "Amino acid, gentle, conditioning"
             },
             tea: {
-                name: "Triethanolamine",
+                name: "Triethanolamine (TEA)",
                 category: "basic",
                 pKa: [7.76],
-                strength: 0.65,  // Weak base
-                mw: 149.19
+                strength: 0.65,
+                mw: 149.19,
+                description: "Mild, buffering - avoid if possible"
             },
+            amp: {
+                name: "Aminomethyl Propanol (AMP)",
+                category: "basic",
+                pKa: [9.7],
+                strength: 0.88,
+                mw: 89.14,
+                description: "Alternative to TEA, less irritating"
+            },
+            sodium_bicarb: {
+                name: "Sodium Bicarbonate",
+                category: "basic",
+                pKa: [6.35, 10.33],
+                strength: 0.45,
+                mw: 84.01,
+                description: "Gentle, buffering, effervescent"
+            },
+            sodium_carbonate: {
+                name: "Sodium Carbonate",
+                category: "basic",
+                pKa: [6.35, 10.33],
+                strength: 1.2,
+                mw: 105.99,
+                description: "Moderately strong, alkaline"
+            },
+            ammonia: {
+                name: "Ammonium Hydroxide",
+                category: "basic",
+                pKa: [9.25],
+                strength: 1.8,
+                mw: 35.05,
+                description: "Strong base, volatile - use carefully"
+            },
+
+            // Buffers
             phosphate: {
-                name: "Phosphate Buffer",
+                name: "Phosphate Buffer (KH2PO4/K2HPO4)",
                 category: "buffer",
                 pKa: [2.15, 7.20, 12.35],
-                strength: 0.80,  // Buffer system
-                mw: 142.0
+                strength: 0.80,
+                mw: 136.09,
+                description: "pH 6-8, excellent buffering"
+            },
+            citrate: {
+                name: "Citrate Buffer",
+                category: "buffer",
+                pKa: [3.13, 4.76, 6.40],
+                strength: 0.65,
+                mw: 192.12,
+                description: "pH 3-6.5, gentle, natural"
+            },
+            acetate: {
+                name: "Acetate Buffer",
+                category: "buffer",
+                pKa: [4.76],
+                strength: 0.70,
+                mw: 82.03,
+                description: "pH 3.6-5.6, simple system"
+            },
+            lactate: {
+                name: "Lactate Buffer (Lactic/Sodium Lactate)",
+                category: "buffer",
+                pKa: [3.86],
+                strength: 0.75,
+                mw: 112.06,
+                description: "pH 3-5.5, skin-friendly, best choice"
+            },
+            tris: {
+                name: "Tris Buffer",
+                category: "buffer",
+                pKa: [8.06],
+                strength: 0.85,
+                mw: 121.14,
+                description: "pH 7-9, common in biochem"
+            },
+            carbonate: {
+                name: "Carbonate Buffer",
+                category: "buffer",
+                pKa: [6.35, 10.33],
+                strength: 0.72,
+                mw: 105.99,
+                description: "pH 9-11, alkaline buffering"
             }
         };
 
@@ -590,6 +798,24 @@
             selectedAdjuster = adjusterKey;
             document.querySelectorAll('.adjuster-card').forEach(card => card.classList.remove('selected'));
             event.target.closest('.adjuster-card').classList.add('selected');
+        }
+
+        function selectAdjusterFromDropdown() {
+            const select = document.getElementById('adjuster-select');
+            selectedAdjuster = select.value;
+            const infoDiv = document.getElementById('adjuster-info');
+
+            if (selectedAdjuster && ADJUSTERS[selectedAdjuster]) {
+                const adjuster = ADJUSTERS[selectedAdjuster];
+                infoDiv.innerHTML = `
+                    <strong>${adjuster.name}</strong><br>
+                    ${adjuster.description}<br>
+                    <small>Category: ${adjuster.category} | MW: ${adjuster.mw.toFixed(2)} g/mol | pKa: ${adjuster.pKa.join(', ')}</small>
+                `;
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+            }
         }
 
         function updatePHVisual() {
@@ -919,7 +1145,6 @@
 
         // Initialize
         updatePHVisual();
-        console.log('Formulation pH Adjustment Calculator Ready');
     </script>
 </body>
 </html>
